@@ -1,0 +1,26 @@
+generated: '2026-10-09'
+method: searched
+source: https://developers.karbonhq.com/llms.txt
+versioning:
+  scheme: url-path major version
+  current: v3
+  statement: "Karbon exposes a versioned public REST API (currently v3)"
+  base: https://api.karbonhq.com/v3/
+  release_notes: https://developers.karbonhq.com/release-notes/2026-09-23/
+deprecation:
+  policy_published: false
+  sunset_headers_documented: false
+  deprecated_operations:
+  - method: GET
+    path: /v3/Timesheets
+    source: "openapi/karbonhq-openapi.yml (deprecated: true)"
+  - method: GET
+    path: /v3/Timesheets/{Timesheetkey}
+    source: "openapi/karbonhq-openapi.yml (deprecated: true)"
+preview_features:
+- name: Multi-type and batched webhook subscriptions
+  statement: "This is a **preview** — we don't expect breaking changes, but the shape may evolve based on feedback."
+  source: https://developers.karbonhq.com/release-notes/2026-09-08/
+status_page: https://status.karbonhq.com/
+sla: null
+note: No written deprecation policy or SLA found in the developer docs; status.karbonhq.com answered 200.

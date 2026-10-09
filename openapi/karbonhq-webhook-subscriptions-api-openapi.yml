@@ -1,0 +1,590 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Webhook Subscriptions API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Webhook Subscriptions across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Webhook Subscriptions
+  description: 'Integrate your system with Karbon to receive changes made to your data in Karbon.
+
+
+    Note: Webhook payloads take the following form:
+
+
+    ```JSON
+
+    {
+
+    "ResourcePermaKey": "{EntityKey}",
+
+    "ResourceType": "{EntityType}",
+
+    "ActionType": "{ActionType}"
+
+    "TimeStamp": "{YYYY-MM-DDTHH:mm:ssZ}"
+
+    }
+
+    ```'
+paths:
+  /v3/WebhookSubscriptions/{WebhookType}:
+    get:
+      tags:
+      - Webhook Subscriptions
+      summary: Gets a Webhook Subscription
+      parameters:
+      - required: true
+        in: path
+        name: WebhookType
+        schema:
+          type: string
+          enum:
+          - Contact
+          - CustomField
+          - Work
+          - Note
+          - User
+          - IntegrationTask
+          - Invoice
+          - EstimateSummary
+          - Multi
+        example: Contact
+        description: The type of Karbon entity, which the Webhook Subscription must be associated with. Use `Multi` to retrieve the multi-type subscription created via `WebhookTypes`.
+      description: 'Use the `GET` method on this endpoint to receive the details of a Webhook Subscriptions associated with the Karbon entity specified using the `WebhookType`.
+
+
+        **Only one** Webhook Subscription can exist per entity.
+
+
+        **Polling cadence:** a subscription is not expected to be recreated regularly. Check it exists with `GET` at most every 3-4 hours, and only `POST` a replacement if that check returns `404`.'
+      operationId: getWebhookSubscriptionsByWebhookType
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWebhookSubscriptions'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                No existing Subscriptions:
+                  $ref: '#/components/examples/Webhook_Subscription_Key_Not_Found_404'
+                Invalid Subscription Type:
+                  $ref: '#/components/examples/Webhook_Subscription_Type_Not_Found_404'
+                HTTP Resource Not Found:
+                  $ref: '#/components/examples/HTTP_Resource_Not_Found'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    delete:
+      tags:
+      - Webhook Subscriptions
+      summary: Deletes a Webhook Subscription
+      parameters:
+      - required: true
+        in: path
+        name: WebhookType
+        schema:
+          type: string
+          enum:
+          - Contact
+          - CustomField
+          - Work
+          - Note
+          - User
+          - IntegrationTask
+          - Invoice
+          - EstimateSummary
+          - Multi
+        example: Contact
+        description: The type of Karbon entity, which the Webhook Subscription must be associated with. Use `Multi` to delete the multi-type subscription created via `WebhookTypes`.
+      description: Use the `DELETE` method on this endpoint to delete a Webhook Subscription associated with the Karbon entity specified using the `WebhookType`.
+      operationId: delWebhookSubscriptionsByWebhookType
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Invalid Subscription Type:
+                  $ref: '#/components/examples/Webhook_Subscription_Type_Not_Found_404'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    patch:
+      tags:
+      - Webhook Subscriptions
+      summary: Updates the multi-type Webhook Subscription's subscribed types
+      description: Use the `PATCH` method on this endpoint to replace the full set of `WebhookTypes` on the multi-type Webhook Subscription. This is a whole-list replace, not a merge. Only applies to the multi-type subscription addressed at `/v3/WebhookSubscriptions/Multi`.
+      operationId: patchWebhookSubscription
+      parameters:
+      - required: true
+        in: path
+        name: WebhookType
+        schema:
+          type: string
+          enum:
+          - Multi
+        example: Multi
+        description: Must be `Multi` — this action only applies to the multi-type Webhook Subscription.
+      requestBody:
+        description: The full replacement set of subscribed resource types.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                WebhookTypes:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - Contact
+                    - CustomField
+                    - Work
+                    - Note
+                    - User
+                    - IntegrationTask
+                    - Invoice
+                    - EstimateSummary
+                  description: The full replacement set of resource types this subscription receives notifications for.
+                  example:
+                  - Contact
+                  - Work
+                  - Note
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                No existing multi-type subscription:
+                  value:
+                    error:
+                      code: '4004'
+                      message: No existing multi-type webhook subscription. Create one via WebhookTypes first.
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/WebhookSubscriptions:
+    post:
+      tags:
+      - Webhook Subscriptions
+      summary: Creates a new Webhook Subscription
+      description: 'Use the `POST` method on create and associate a Webhook Subscriptions with a Karbon entity.
+
+
+        You can create **only one** Webhook Subcription per entity.
+
+
+        Payload delivery for a webhook subscription will be retried 10 times, with increasing delays. If unsuccessful after 10 tries (no 2xx HTTP response), the subscription ends and needs to be recreated to receive further updates.
+
+
+        **Do not call this on every poll.** A subscription lasts until it''s deleted or auto-cancelled after 10 failed deliveries — check with `GET /v3/WebhookSubscriptions/{WebhookType}` at most every 3-4 hours and only `POST` here when that check returns `404`. Repeatedly recreating an already-active subscription is unnecessary load on both sides.'
+      operationId: createWebhookSubscription
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWebhookSubscriptions'
+          headers:
+            Location:
+              description: The endpoint URL to the newly created Webhook Subscription.
+              schema:
+                type: string
+                example: https://api.karbonhq.com/v3/WebhookSubscriptions('https://example.com/webhook')
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Incorrect or Missing Data:
+                  $ref: '#/components/examples/Missing_Create_Data'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+                Bad Model:
+                  $ref: '#/components/examples/Bad_Model'
+                Invalid Subscription Type:
+                  $ref: '#/components/examples/Webhook_Subscription_Type_Not_Found_404'
+                WebhookType and WebhookTypes both provided:
+                  value:
+                    error:
+                      code: '4002'
+                      message: Provide either WebhookType or WebhookTypes, not both
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body. Provide either `WebhookType` (single-type subscription) or `WebhookTypes` (multi-type subscription) — not both.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                TargetUrl:
+                  type: string
+                  required: true
+                  format: uri
+                  description: The URL to your server that is waiting to receive information about the `WebhookType` from Karbon
+                  example: https://example.com/webhook
+                  maxLength: 2000
+                WebhookType:
+                  type: string
+                  enum:
+                  - Contact
+                  - CustomField
+                  - Work
+                  - Note
+                  - User
+                  - IntegrationTask
+                  - Invoice
+                  - EstimateSummary
+                  description: The type of Karbon entity which the Webhook Subscription is associated with. To receive ClientGroup, Contact and Organization updates, pass WebhookType as `Contact`. To receive Custom Field value updates, pass WebhookType as `CustomField`. To receive WorkItem updates, pass WebhookType as `Work`. To receive Note and NoteComment updates, pass WebhookType as `Note`. To receive an update when a User has accepted an invite to Karbon, pass WebhookType as `User`. To receive an update when an Invoice changes status, pass WebhookType as `Invoice`. To receive an update when an EstimateSummary is updated, pass WebhookType as `EstimateSummary`. Integration partners using the Integration Task feature can use `IntegrationTask` as the webhook subscription type to receive a notification when an integration task is added to a Work Item or a new Work Item is created from a Work Template that contains one or more Integraition Tasks. Mutually exclusive with `WebhookTypes`.
+                  example: Contact
+                WebhookTypes:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - Contact
+                    - CustomField
+                    - Work
+                    - Note
+                    - User
+                    - IntegrationTask
+                    - Invoice
+                    - EstimateSummary
+                  description: Creates a multi-type subscription covering this set of resource types under one subscription with one `TargetUrl`, addressed afterwards at `/v3/WebhookSubscriptions/Multi`. Mutually exclusive with `WebhookType` — providing both returns a 400. There can only be one multi-type subscription per API application.
+                  example:
+                  - Contact
+                  - Work
+                SigningKey:
+                  oneOf:
+                  - type: string
+                    minLength: 16
+                    pattern: ^[A-Za-z0-9-_]+$
+                    example: 96434E14-3C96-4F07-9FC2-CCC736827309
+                  - type: 'null'
+                  description: An optional key that will be used to sign webhook payloads, may contain letters, numbers, dashes or underscores
+                BatchSize:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                  description: The number of notifications to accumulate before delivering them together as a JSON array in a single `POST`. A hard cap — once a batch reaches this size, further events start a new batch. Omit, or set to `1`, to keep the existing payload format of one notification object per `POST`. Applies to both single-type and multi-type subscriptions.
+                  example: 10
+                BatchMaxDelaySeconds:
+                  type: integer
+                  description: An additional delay, in seconds, added on top of the standard 60-second dispatch window before a batch is sent. `0` means no extra delay beyond that window. Only applies when `BatchSize` is set to more than `1`.
+                  example: 0
+    delete:
+      tags:
+      - Webhook Subscriptions
+      summary: Deletes all Webhook Subscriptions
+      description: Use the `DELETE` method on this endpoint to delete all Webhook Subscriptions associated with Contact, Work, and Note.
+      operationId: delAllWebhookSubscriptions
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  examples:
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+    Webhook_Subscription_Key_Not_Found_404:
+      description: The error returned when a Webhook Subscription request cannot be fulfilled because there are no Webhook Subscriptions for the provided Webhook Type
+      value:
+        error:
+          code: '4004'
+          message: No existing webhook subscription for Contact
+    Webhook_Subscription_Type_Not_Found_404:
+      description: The error returned when a Webhook Subscription request cannot be fulfilled because the provided Webhook Type is not one of the valid types
+      value:
+        error:
+          code: '4004'
+          message: 'No Webhook Type found for the provided WebhookType input value : <Input type>. Valid WebhookTypes are Contact, Work, Note'
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Missing_Create_Data:
+      description: The error returned when the request payload is missing a required value
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: <Entity>'
+    Bad_Model:
+      description: A response shown when a badly formed Webhook Subscription request is sent
+      value:
+        error:
+          code: '4002'
+          message: WebhookSubscription model cannot be null.
+    HTTP_Resource_Not_Found:
+      description: The error returned when the request path and request method does not match any configured API path and method
+      value:
+        error:
+          code: '4002'
+          message: No HTTP resource was found that matches the request URI 'http://api.karbonhq.com/v3/<endpoint>
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+  schemas:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    GetWebhookSubscriptions:
+      description: The details of a specific Webhook Subscription
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response
+          example: https://api.karbonhq.com/v3/$metadata#WebhookSubscriptions/$entity
+        TargetUrl:
+          type: string
+          description: The URL to your server that is waiting to receive information about the `WebhookType` from Karbon
+          example: https://example.com/webhook
+          maxLength: 2000
+        WebhookType:
+          type:
+          - string
+          - 'null'
+          description: The type of Karbon entity, which the Webhook Subscription is associated with. `Multi` on the response to the `POST` that created a multi-type subscription; `null` when that same subscription is retrieved afterwards via `GET` — use `WebhookTypes` instead.
+          example: Contact
+          enum:
+          - Contact
+          - CustomField
+          - Work
+          - Note
+          - User
+          - IntegrationTask
+          - Invoice
+          - EstimateSummary
+          - Multi
+          - null
+        WebhookTypes:
+          type: array
+          items:
+            type: string
+          description: Present on a multi-type subscription. The set of resource types this subscription receives notifications for.
+          example:
+          - Contact
+          - Work
+        BatchSize:
+          type: integer
+          description: The number of notifications accumulated before delivery as a single batch.
+        BatchMaxDelaySeconds:
+          type: integer
+          description: The additional delay, in seconds, applied on top of the standard 60-second dispatch window before a batch is sent.
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

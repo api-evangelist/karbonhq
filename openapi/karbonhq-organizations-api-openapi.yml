@@ -1,0 +1,2179 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Organizations API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Organizations across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Organizations
+  description: Create an organization to represent marriages and couples and client groups to represent families. Read more
+paths:
+  /v3/Organizations:
+    get:
+      tags:
+      - Organizations
+      summary: Gets a list of Organizations
+      parameters:
+      - in: query
+        name: $filter
+        schema:
+          type: string
+        examples:
+          fullName:
+            value: FullName eq 'Sample Company'
+            summary: The full name of the organization equals 'Sample Company'
+          emailAddress:
+            value: EmailAddress eq 'karbon@example.com'
+            summary: The email address of the organization equals 'karbon@example.com'
+          contactTypeEquals:
+            value: ContactType eq 'Prospect'
+            summary: The ContactType of the organization equals 'Prospect'
+          contactTypeContains:
+            value: contains(ContactType, 'Client')
+            summary: The ContactType of the organization contains 'Client', would return Organizations with the ContactType 'Client', 'Client - VIP' and 'Inactive Client'
+          externalKey:
+            value: ExternalKey eq '123987456'
+            summary: The ExternalKey of the organization equals '123987456'. ExternalKey is the identifier from an integrated external system - XPM Client ID, Xero Contact ID, or QuickBooks Online Intuit Customer ID.
+        description: When this parameter is combined with the URI, this endpoint will return a subset of the Organizations that satisfy the `$filter` expression.
+      - in: query
+        name: $orderby
+        schema:
+          type: string
+          enum:
+          - FullName
+          - FullName desc
+          - LastModifiedDateTime
+          - LastModifiedDateTime desc
+          default: OrganizationKey
+        example: FullName
+        description: 'When this parameter is combined with the URI, this endpoint will return a list of Organizations, sorted by the available properties.
+
+          '
+      - $ref: '#/components/parameters/SkipRecords'
+      - $ref: '#/components/parameters/TopRecords'
+      description: 'Use the `GET` method on this endpoint to receive a paginated list of Organizations from your tenant. Using the query parameters available to this endpoint, you can also filter the list of Organizations by their full name, email address, or external key.
+
+
+        **Notes**
+
+
+        * This endpoint returns a maximum of 100 Organizations at once.
+
+        * If the query results in more than 100 Organizations, a link to the next set of the results will be given in the `@odata.nextLink` field of the response.
+
+        * The `$filter` query parameter supports 2 logical operators - `eq` and `and` - and 3 properties to help you form an expression. Usage examples below
+
+
+        Logical Operators
+
+        Purpose
+
+        FullName
+
+        EmailAddress
+
+        ExternalKey
+
+
+        eq
+
+        Full-text search
+
+        /v3/Organizations?$filter=FullName eq ''Sample Company''
+
+        /v3/Organizations?$filter=EmailAddress eq ''info@samplecompany.com''
+
+        /v3/Organizations?$filter=ExternalKey eq ''123987456''
+
+
+        and
+
+        Combines properties
+
+        /v3/Organizations?$filter=FullName eq ''Sample Company'' and EmailAddress eq ''info@samplecompany.com'''
+      operationId: getAllOrganizations
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrganizations'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Property:
+                  $ref: '#/components/examples/Unsupported_Property_Filter'
+                Unsupported Orderby Property:
+                  $ref: '#/components/examples/Orderby_Unsupported_Property'
+                $top limit exceeded:
+                  $ref: '#/components/examples/Limit_Exceeded_Top'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    post:
+      tags:
+      - Organizations
+      summary: Creates a new Organization
+      description: Use the `POST` method on this endpoint to create a new Organization in your tenant.
+      operationId: createOrganization
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOrganizationResponse'
+              example:
+                '@odata.context': https://api.karbonhq.com/v3/$metadata#Organizations/KarbonService.OrganizationDTO/$entity
+                '@odata.type': '#KarbonService.OrganizationDTO'
+                OrganizationKey: 2Nw8tnxwQCVf
+                FullName: Sample Company
+                ClientOwner: rodney.muller@samplecompany.com
+                ClientManager: jessica.tse@samplecompany.com
+                ContactType: Prospect
+                UserDefinedIdentifier: SAMPLECO
+                RestrictionLevel: Public
+                LastModifiedDateTime: '2022-07-05T07:30:13.7188114Z'
+                EntityDescription:
+                  Text: John Doe is the Managing Director of this organization.
+                AccountingDetail:
+                  ContactPermaKey: null
+                  OrganizationPermaKey: 2Nw8tnxwQCVf
+                  BirthDate: null
+                  DeathDate: null
+                  Salutation: null
+                  Sex: null
+                  FinancialYearEndDay: 11
+                  FinancialYearEndMonth: 2
+                  IncorporationDate: '2021-05-16T00:00:00Z'
+                  IncorporationState: New South Wales
+                  LegalName: Sample Company Pty. Ltd.
+                  LineOfBusiness: Fast Fashion
+                  EntityType: Partnership
+                  TaxCountryCode: AU
+                  TradingName: null
+                  AnnualRevenue: 6000000.5
+                  BaseCurrency: null
+                  GstBasis: Accruals
+                  GstPeriod: Monthly
+                  IncomeTaxInstallmentPeriod: Quarterly
+                  IsVATRegistered: null
+                  OrganizationValuation: null
+                  PaysTax: null
+                  PrepareGST: null
+                  ProvisionalTaxBasic: null
+                  ProvisionalTaxRatio: null
+                  RevenueModel: Markup
+                  SalesTaxBasis: null
+                  SalesTaxPeriod: null
+                  Sells: Products
+                  RegistrationNumbers:
+                  - RegistrationNumber: 444 333 222
+                    Type: Australian Company Number (ACN)
+                  - RegistrationNumber: 444 353 222
+                    Type: Australian Business Number (ABN)
+                  Notes:
+                  - Body: This is a sample note text.
+                    Type: Basic
+          headers:
+            Location:
+              description: The endpoint URL to the newly created Organization.
+              schema:
+                type: string
+                example: https://api.karbonhq.com/v3/Organizations('2Nw8tnxwQCVf')/KarbonService.OrganizationDTO
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Permission Denied:
+                  $ref: '#/components/examples/RestrictionLevel_Permission_Denied'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Duplicate UDI:
+                  $ref: '#/components/examples/Duplicate_UDI'
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganization'
+            example:
+              FullName: Sample Company
+              ClientOwner: rodney.muller@samplecompany.com
+              ClientManager: jessica.tse@samplecompany.com
+              ContactType: Prospect
+              UserDefinedIdentifier: SAMPLECO
+              EntityDescription:
+                Text: John Doe is the Managing Director of this organization.
+              AccountingDetail:
+                ContactPermaKey: null
+                OrganizationPermaKey: 2Nw8tnxwQCVf
+                BirthDate: null
+                DeathDate: null
+                Salutation: null
+                Sex: null
+                FinancialYearEndDay: 11
+                FinancialYearEndMonth: 2
+                IncorporationDate: '2021-05-16T00:00:00Z'
+                IncorporationState: New South Wales
+                LegalName: Sample Company Pty. Ltd.
+                LineOfBusiness: Fast Fashion
+                EntityType: Partnership
+                TaxCountryCode: AU
+                TradingName: null
+                AnnualRevenue: 6000000.5
+                BaseCurrency: null
+                GstBasis: Accruals
+                GstPeriod: Monthly
+                IncomeTaxInstallmentPeriod: Quarterly
+                IsVATRegistered: null
+                OrganizationValuation: null
+                PaysTax: null
+                PrepareGST: null
+                ProvisionalTaxBasic: null
+                ProvisionalTaxRatio: null
+                RevenueModel: Markup
+                SalesTaxBasis: null
+                SalesTaxPeriod: null
+                Sells: Products
+                RegistrationNumbers:
+                - RegistrationNumber: 444 333 222
+                  Type: Australian Company Number (ACN)
+                - RegistrationNumber: 444 353 222
+                  Type: Australian Business Number (ABN)
+                Notes:
+                - Body: This is a sample note text.
+                  Type: Basic
+              BusinessCards:
+              - BusinessCardKey: 2tBHyXtJBxBy
+                EntityType: Organization
+                EntityKey: 2Nw8tnxwQCVf
+                IsPrimaryCard: true
+                WebSites:
+                - www.website.one
+                - www.website.two
+                EmailAddresses:
+                - sample@example.com
+                - sample.two@example.com
+                OrganizationKey: ZGNmtYyLm4z
+                RoleOrTitle: COO
+                FacebookLink: facebook.com/sampleName
+                LinkedInLink: linkedin.com/sampleName
+                TwitterLink: twitter.com/sampleName
+                SkypeLink: skype.com/sampleName
+                Addresses:
+                - AddressKey: e150a05a-2dea-4292-8bc8-03398c9384e4
+                  AddressLines: 45 Sample Street
+                  City: Alexandria
+                  StateProvinceCounty: NSW
+                  ZipCode: '2015'
+                  CountryCode: AU
+                  Label: Physical
+                PhoneNumbers:
+                - PhoneNumberKey: 6e0b9ace-24b1-4328-a922-3b8be5ef5052
+                  Number: '1234567890'
+                  CountryCode: AU
+                  Label: Work
+              ClientTeam:
+              - MemberKey: 2q2wx44pTBNh
+                MemberType: User
+                RoleType: ClientManager
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Organizations/GetOrganizationByUserDefinedIdentifier(UserDefinedIdentifier='{UserDefinedIdentifier}'):
+    get:
+      tags:
+      - Organizations
+      summary: Gets an Organization using UserDefinedIdentifier
+      parameters:
+      - required: true
+        in: path
+        name: UserDefinedIdentifier
+        schema:
+          type: string
+        example: SAMPLECO
+        description: A unique identifier that you had created to identify this Organization. This parameter is **not** case sensitive.
+      - in: query
+        name: $expand
+        schema:
+          type: string
+          enum:
+          - BusinessCards
+          - ServiceTypes
+        example: BusinessCards
+        description: 'When this parameter is combined with the URI, this endpoint will also return the Business Cards or Service Types of the Contact Organization.
+
+          '
+      description: 'Use the `GET` method on this endpoint to receive the details of an Organization specified using the UserDefinedIdentifier.
+
+
+        Using the query parameter available to this endpoint, you can also include Business Card details of the Organization in the response.'
+      operationId: getOrganizationByUDI
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithBusinessCardsCreateOrganizationResponse'
+              example:
+                '@odata.context': https://api.karbonhq.com/v3/$metadata#Organizations/KarbonService.OrganizationDTO/$entity
+                '@odata.type': '#KarbonService.OrganizationDTO'
+                OrganizationKey: 2Nw8tnxwQCVf
+                FullName: Sample Company
+                ClientOwner: rodney.muller@samplecompany.com
+                ClientManager: jessica.tse@samplecompany.com
+                ContactType: Prospect
+                UserDefinedIdentifier: SAMPLECO
+                RestrictionLevel: Public
+                LastModifiedDateTime: '2022-07-05T07:30:13.7188114Z'
+                EntityDescription:
+                  Text: John Doe is the Managing Director of this organization.
+                AccountingDetail:
+                  ContactPermaKey: null
+                  OrganizationPermaKey: 2Nw8tnxwQCVf
+                  BirthDate: null
+                  DeathDate: null
+                  Salutation: null
+                  Sex: null
+                  FinancialYearEndDay: 11
+                  FinancialYearEndMonth: 2
+                  IncorporationDate: '2021-05-16T00:00:00Z'
+                  IncorporationState: New South Wales
+                  LegalName: Sample Company Pty. Ltd.
+                  LineOfBusiness: Fast Fashion
+                  EntityType: Partnership
+                  TaxCountryCode: AU
+                  TradingName: null
+                  AnnualRevenue: 6000000.5
+                  BaseCurrency: null
+                  GstBasis: Accruals
+                  GstPeriod: Monthly
+                  IncomeTaxInstallmentPeriod: Quarterly
+                  IsVATRegistered: null
+                  OrganizationValuation: null
+                  PaysTax: null
+                  PrepareGST: null
+                  ProvisionalTaxBasic: null
+                  ProvisionalTaxRatio: null
+                  RevenueModel: Markup
+                  SalesTaxBasis: null
+                  SalesTaxPeriod: null
+                  Sells: Products
+                  RegistrationNumbers:
+                  - RegistrationNumber: 444 333 222
+                    Type: Australian Company Number (ACN)
+                  - RegistrationNumber: 444 353 222
+                    Type: Australian Business Number (ABN)
+                  Notes:
+                  - Body: This is a sample note text.
+                    Type: Basic
+                BusinessCards:
+                - BusinessCardKey: PVvnQdX1RCH
+                  EntityType: Organization
+                  EntityKey: 2Nw8tnxwQCVf
+                  IsPrimaryCard: true
+                  WebSites:
+                  - www.website.one
+                  - www.website.two
+                  EmailAddresses:
+                  - sample@example.com
+                  - sample.two@example.com
+                  OrganizationKey: null
+                  RoleOrTitle: null
+                  FacebookLink: facebook.com/samplecompany
+                  LinkedInLink: linkedin.com/samplecompany
+                  TwitterLink: twitter.com/samplecompany
+                  SkypeLink: skype.com/samplecompany
+                  Addresses:
+                  - AddressKey: e150a05a-2dea-4292-8bc8-03398c9384e4
+                    AddressLines: 45 Sample Street
+                    City: Alexandria
+                    StateProvinceCounty: NSW
+                    ZipCode: '2015'
+                    CountryCode: AU
+                    Label: Physical
+                  PhoneNumbers:
+                  - PhoneNumberKey: 6e0b9ace-24b1-4328-a922-3b8be5ef5052
+                    Number: '1234567890'
+                    CountryCode: AU
+                    Label: Work
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                UDI Is Empty:
+                  $ref: '#/components/examples/UDI_Is_Empty'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                UDI Not Found:
+                  $ref: '#/components/examples/UDI_Not_Found_Organization'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Organizations/{Organizationkey}:
+    get:
+      tags:
+      - Organizations
+      summary: Gets an Organization using Organizationkey
+      parameters:
+      - name: Organizationkey
+        in: path
+        required: true
+        description: The Karbon-generated Organization key
+        schema:
+          type: string
+        example: 2Nw8tnxwQCVf
+      - in: query
+        name: $expand
+        schema:
+          type: string
+        examples:
+          BusinessCards:
+            value: BusinessCards
+            summary: Include the Business Card for the Organization the API response
+          ClientTeam:
+            value: ClientTeam
+            summary: Include the Client Team assigned to the Organization in the API response
+          Contacts:
+            value: Contacts
+            summary: Include the Contacts related to the Organization in the API response
+          ServiceTypes:
+            value: ServiceTypes
+            summary: Include the Service Types assigned to the Organization in the API response
+          BusinessCardAndClientTeam:
+            value: BusinessCard,ClientTeam
+            summary: Include the Business Card and the Client Team assigned to the Organization in the API response
+        description: 'When this parameter is combined with the URI, this endpoint will also return Business Cards, Client Team, Contacts and/or Service Types associated with the Organization. Multiple properties can be returned by specifying a comma separated list.
+
+          '
+      description: 'Use the `GET` method on this endpoint to receive the details of an Organization specified using the `Organizationkey`.
+
+
+        Using the query parameter available to this endpoint, you can also include the Business Card details of the Organization in the response.'
+      operationId: getOrganizationByID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/WithBusinessCardsCreateOrganizationResponse'
+                - type: object
+                  properties:
+                    Contacts:
+                      $ref: '#/components/schemas/ContactsCardList'
+                - type: object
+                  properties:
+                    ClientTeam:
+                      $ref: '#/components/schemas/ClientTeam'
+              example:
+                '@odata.context': https://api.karbonhq.com/v3/$metadata#Organizations/KarbonService.OrganizationDTO/$entity
+                '@odata.type': '#KarbonService.OrganizationDTO'
+                OrganizationKey: 2Nw8tnxwQCVf
+                FullName: Sample Company
+                ClientOwner: rodney.muller@samplecompany.com
+                ClientManager: jessica.tse@samplecompany.com
+                ContactType: Prospect
+                UserDefinedIdentifier: SAMPLECO
+                RestrictionLevel: Public
+                LastModifiedDateTime: '2022-07-05T07:30:13.7188114Z'
+                EntityDescription:
+                  Text: John Doe is the Managing Director of this organization.
+                AccountingDetail:
+                  ContactPermaKey: null
+                  OrganizationPermaKey: 2Nw8tnxwQCVf
+                  BirthDate: null
+                  DeathDate: null
+                  Salutation: null
+                  Sex: null
+                  FinancialYearEndDay: 11
+                  FinancialYearEndMonth: 2
+                  IncorporationDate: '2021-05-16T00:00:00Z'
+                  IncorporationState: New South Wales
+                  LegalName: Sample Company Pty. Ltd.
+                  LineOfBusiness: Fast Fashion
+                  EntityType: Partnership
+                  TaxCountryCode: AU
+                  TradingName: null
+                  AnnualRevenue: 6000000.5
+                  BaseCurrency: null
+                  GstBasis: Accruals
+                  GstPeriod: Monthly
+                  IncomeTaxInstallmentPeriod: Quarterly
+                  IsVATRegistered: null
+                  OrganizationValuation: null
+                  PaysTax: null
+                  PrepareGST: null
+                  ProvisionalTaxBasic: null
+                  ProvisionalTaxRatio: null
+                  RevenueModel: Markup
+                  SalesTaxBasis: null
+                  SalesTaxPeriod: null
+                  Sells: Products
+                  RegistrationNumbers:
+                  - RegistrationNumber: 444 333 222
+                    Type: Australian Company Number (ACN)
+                  - RegistrationNumber: 444 353 222
+                    Type: Australian Business Number (ABN)
+                  Notes:
+                  - Body: This is a sample note text.
+                    Type: Basic
+                BusinessCards:
+                - BusinessCardKey: PVvnQdX1RCH
+                  EntityType: Organization
+                  EntityKey: 2Nw8tnxwQCVf
+                  IsPrimaryCard: true
+                  WebSites:
+                  - www.website.one
+                  - www.website.two
+                  EmailAddresses:
+                  - sample@example.com
+                  - sample.two@example.com
+                  OrganizationKey: null
+                  RoleOrTitle: null
+                  FacebookLink: facebook.com/samplecompany
+                  LinkedInLink: linkedin.com/samplecompany
+                  TwitterLink: twitter.com/samplecompany
+                  SkypeLink: skype.com/samplecompany
+                  Addresses:
+                  - AddressKey: e150a05a-2dea-4292-8bc8-03398c9384e4
+                    AddressLines: 45 Sample Street
+                    City: Alexandria
+                    StateProvinceCounty: NSW
+                    ZipCode: '2015'
+                    CountryCode: AU
+                    Label: Physical
+                  PhoneNumbers:
+                  - PhoneNumberKey: 6e0b9ace-24b1-4328-a922-3b8be5ef5052
+                    Number: '1234567890'
+                    CountryCode: AU
+                    Label: Work
+                Contacts:
+                - ContactKey: 443pbkv8Vx3Y
+                  FullName: Qutubuddin Musekhan
+                  PreferredName: Qutub
+                  Salutation: Dr
+                  ClientOwner: null
+                  ClientManager: null
+                  Address: null
+                  EmailAddress: qutub@company.com
+                  PhoneNumber: 123-456-7890
+                  RoleOrTitle: CIO
+                  UserDefinedIdentifier: HD567
+                  LastModifiedDateTime: '2022-02-03T03:34:11Z'
+                ClientTeam:
+                - MemberKey: JTphCpQqQYg
+                  MemberType: User
+                  RoleType: ClientOwner
+                - MemberKey: nRML2ngs7WJ
+                  MemberType: User
+                  RoleType: ClientManager
+                - MemberKey: 3fv7lflmd1Z7
+                  MemberType: User
+                  RoleType: UserDefinedRole2
+                - MemberKey: 3v9YJmt55hLY
+                  MemberType: User
+                  RoleType: UserDefinedRole1
+                - MemberKey: 3zdQh89xCmZM
+                  MemberType: User
+                  RoleType: null
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Property:
+                  $ref: '#/components/examples/Unsupported_Property_Filter'
+                Unsupported Orderby Property:
+                  $ref: '#/components/examples/Orderby_Unsupported_Property'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Key Not Found:
+                  $ref: '#/components/examples/Organization_Key_Not_Found_404'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    put:
+      tags:
+      - Organizations
+      summary: Updates an Organization (Full)
+      parameters:
+      - required: true
+        in: path
+        name: Organizationkey
+        schema:
+          type: string
+        example: 2Nw8tnxwQCVf
+        description: The Karbon-generated Organization key
+      description: 'Use the `PUT` method on this endpoint to update full details of an Organization specified using the `Organizationkey`.
+
+
+        Using the query parameter `$expand` with this endpoint, you can also update the Business Card details of the Organization.
+
+
+        **Note:** When updating business cards, you must include `BusinessCardKey`, `EntityType` and `EntityKey` properties for existing Business Cards - or the existing card and any associated Client Requests may be removed.
+
+
+        **BusinessCards is optional:** If the `BusinessCards` array is omitted from the request body, the existing Business Cards on the Organization are left untouched. Include the `BusinessCards` array only when you intend to update it.
+
+
+        **RegistrationNumber null/empty values delete the entry:** If a `RegistrationNumbers` entry is included with a null, empty, or whitespace `RegistrationNumber` value, any existing registration number of that `Type` is deleted. If no entry exists for that `Type`, the request is a no-op. Non-blank values continue to upsert as before.'
+      operationId: putOrganizationByID
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Incorrect or Missing Data:
+                  $ref: '#/components/examples/Missing_Update_Data'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Permission Denied:
+                  $ref: '#/components/examples/RestrictionLevel_Permission_Denied'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Resource Not Found:
+                  $ref: '#/components/examples/HTTP_Resource_Not_Found'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Non existent Key:
+                  $ref: '#/components/examples/Shortened_5001'
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+        '409':
+          description: Conflict — the resource was modified by another request. Refetch the latest version and retry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Stale Object State:
+                  $ref: '#/components/examples/Conflict_StaleObjectState'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganization'
+            example:
+              FullName: Sample Company
+              ClientOwner: rodney.muller@samplecompany.com
+              ClientManager: jessica.tse@samplecompany.com
+              ContactType: Client
+              UserDefinedIdentifier: SAMPLECO
+              EntityDescription:
+                Text: John Doe is the Managing Director of this organization.
+              AccountingDetail:
+                ContactKey: null
+                OrganizationKey: SCwCq2M9pFm
+                BirthDate: null
+                DeathDate: null
+                Salutation: null
+                Sex: null
+                FinancialYearEndDay: 31
+                FinancialYearEndMonth: 3
+                IncorporationDate: null
+                IncorporationState: null
+                LegalName: The Sample Company
+                LineOfBusiness: Manufacturing
+                EntityType: Corporation
+                TaxCountryCode: US
+                TradingName: null
+                AnnualRevenue: 10000000
+                BaseCurrency: null
+                GstBasis: null
+                GstPeriod: null
+                IncomeTaxInstallmentPeriod: null
+                IsVATRegistered: null
+                OrganizationValuation: 0
+                PaysTax: null
+                PrepareGST: null
+                ProvisionalTaxBasis: null
+                ProvisionalTaxRatio: null
+                RevenueModel: null
+                SalesTaxBasis: null
+                SalesTaxPeriod: null
+                Sells: null
+                RegistrationNumbers:
+                - RegistrationNumber: '123456789'
+                  Type: Tax ID
+                Notes:
+                - Body: Example text
+                  Type: Basic
+              BusinessCards:
+              - BusinessCardKey: 2tBHyXtJBxBy
+                EntityType: Organization
+                EntityKey: SCwCq2M9pFm
+                IsPrimaryCard: true
+                WebSites:
+                - www.website.one
+                - www.website.two
+                EmailAddresses:
+                - sample@example.com
+                - sample.two@example.com
+                OrganizationKey: null
+                RoleOrTitle: null
+                FacebookLink: facebook.com/sampleName
+                LinkedInLink: linkedin.com/sampleName
+                TwitterLink: twitter.com/sampleName
+                SkypeLink: skype.com/sampleName
+                Addresses:
+                - AddressKey: e150a05a-2dea-4292-8bc8-03398c9384e4
+                  AddressLines: 45 Sample Street
+                  City: Alexandria
+                  StateProvinceCounty: NSW
+                  ZipCode: '2015'
+                  CountryCode: AU
+                  Label: Physical
+                PhoneNumbers:
+                - PhoneNumberKey: 6e0b9ace-24b1-4328-a922-3b8be5ef5052
+                  Number: '1234567890'
+                  CountryCode: AU
+                  Label: Work
+              ClientTeam:
+              - MemberKey: 2q2wx44pTBNh
+                MemberType: User
+                RoleType: ClientManager
+    patch:
+      tags:
+      - Organizations
+      summary: Updates an Organization (Partial)
+      parameters:
+      - required: true
+        in: path
+        name: Organizationkey
+        schema:
+          type: string
+        example: 2Nw8tnxwQCVf
+        description: The Karbon-generated Organization key
+      - required: false
+        in: header
+        name: Prefer
+        schema:
+          type: string
+        example: return=representation
+        description: Return the record after it has been updated
+      description: 'Use the `PATCH` method on this endpoint to update partial details of an Organization specified using the `Organizationkey`.
+
+
+        This method **only supports** editing the `FullName` and `RestrictionLevel` properties.'
+      operationId: patchOrganizationByID
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  '@odata.context':
+                    type: string
+                    description: The information about Karbon controllers generating this response.
+                  '@odata.type':
+                    type: string
+                    description: The information about Karbon Objects generating this response.
+                  OrganizationKey:
+                    type: string
+                    description: A Karbon-generated value that is used to identify the Organization
+                  FullName:
+                    type: string
+                    description: The full name of the Organization
+                  ClientOwner:
+                    type: string
+                    description: The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
+                  ClientManager:
+                    type: string
+                    description: The team member in your firm who manages the work for the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
+                  ContactType:
+                    type: string
+                    description: The Contact Type for this Organization. You can only use existing Contact Type.
+                  UserDefinedIdentifier:
+                    type: string
+                    description: A unique key that you can use to identify this Organization.
+                  RestrictionLevel:
+                    type: string
+                    description: 'The privacy level for this Organization.
+
+
+                      <ul><li>Public Organization can be managed by anyone in the firm</li> <li>Private Organization can only be managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team). Basic details (name of the Organization and the Work Items) related to such Organization are visible to anyone in the firm.</li> <li>Hidden Organization are only be visible to and managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team).</li>
+
+                      '
+                    default: Public
+                    enum:
+                    - Public
+                    - Private
+                    - Hidden
+                  LastModifiedDateTime:
+                    type: string
+                    format: date-time
+                    description: The date and time at which this Contact was last modified.
+                    example: '2022-07-05T07:30:13.7188114Z'
+                  EntityDescription:
+                    type: object
+                    properties:
+                      Text:
+                        type: string
+                        description: Free-form text that can be used to add more information about the Organization
+                        example: Birthday on June 23.
+                  AccountingDetail:
+                    type:
+                    - string
+                    - 'null'
+                    description: The accounting details associated with the Organization. This property will be `null`.
+              example:
+                '@odata.context': https://api.karbonhq.com/v3/$metadata#Organizations/KarbonService.OrganizationDTO/$entity
+                '@odata.type': '#KarbonService.OrganizationDTO'
+                OrganizationKey: 2Nw8tnxwQCVf
+                FullName: Sample Company
+                ClientOwner: rodney.muller@samplecompany.com
+                ClientManager: jessica.tse@samplecompany.com
+                ContactType: Prospect
+                UserDefinedIdentifier: SAMPLECO
+                RestrictionLevel: Public
+                LastModifiedDateTime: '2022-07-05T07:30:13.7188114Z'
+                EntityDescription:
+                  Text: John Doe is the Managing Director of this organization.
+                AccountingDetail: null
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Incorrect or Missing Data:
+                  $ref: '#/components/examples/Missing_Update_Data'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+                Invalid Property:
+                  $ref: '#/components/examples/Invalid_Property'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Permission Denied:
+                  $ref: '#/components/examples/RestrictionLevel_Permission_Denied'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Key Not Found:
+                  $ref: '#/components/examples/ResourceNotFound'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Non existent Key:
+                  $ref: '#/components/examples/Shortened_5001'
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+        '409':
+          description: Conflict — the resource was modified by another request. Refetch the latest version and retry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Stale Object State:
+                  $ref: '#/components/examples/Conflict_StaleObjectState'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                FullName:
+                  type: string
+                  description: The full name of the Organization
+                  example: Sample Company Pty. Ltd.
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  examples:
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+    Unsupported_Property_Filter:
+      description: The error returned when an unsupported filter is used in a request
+      value:
+        error:
+          code: '4002'
+          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
+    Organization_Key_Not_Found_404:
+      description: The error returned when an Organization cannot be found for the provided Organization Key
+      value:
+        error:
+          code: '4004'
+          message: No organization exists with a key of <OrganizationKey>.
+    Missing_Update_Data:
+      description: The error returned when the payload for an update is missing or invalid
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: update'
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    Shortened_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Internal Error.
+    Duplicate_UDI:
+      description: The error returned when the request payload includes a User Defined Identifier which is already in use
+      value:
+        error:
+          code: '5001'
+          message: User defined identifier already in use
+    HTTP_Resource_Not_Found:
+      description: The error returned when the request path and request method does not match any configured API path and method
+      value:
+        error:
+          code: '4002'
+          message: No HTTP resource was found that matches the request URI 'http://api.karbonhq.com/v3/<endpoint>
+    Orderby_Unsupported_Property:
+      description: The error returned when an unsupported sort order is used in a request
+      value:
+        error:
+          code: '4002'
+          message: The property '<Property Name>' cannot be used in the $orderby query option.
+    UDI_Is_Empty:
+      description: The error returned when a Client Group request cannot be fulfilled because a User Defined Identifier has not been provided
+      value:
+        error:
+          code: '4002'
+          message: UserDefinedIdentifier is missing or empty
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested path
+      value:
+        statusCode: '404'
+        message: Resource not found
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    RestrictionLevel_Permission_Denied:
+      description: The error returned when a request sets RestrictionLevel to a value the calling API application does not have permission to use
+      value:
+        error:
+          code: '4021'
+          message: This API application does not have permission to set RestrictionLevel to Hidden.
+    Invalid_Property:
+      description: The error returned when attempting to use PATCH to update a property that can only be updated as part of a PUT
+      value:
+        error:
+          code: '4002'
+          message: Invalid property to update. Only <Property name> can be patched.
+    Limit_Exceeded_Top:
+      description: The error returned when the limit is used in a request exceeds the maximum set for the API
+      value:
+        error:
+          code: '4002'
+          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
+    Conflict_StaleObjectState:
+      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
+      value:
+        error:
+          code: '4020'
+          message: The resource was modified by another request. Refetch the latest version and retry.
+    UDI_Not_Found_Organization:
+      description: The error returned when an Organization request cannot be fulfilled because the provided User Defined Identifier does not exist
+      value:
+        error:
+          code: '4004'
+          message: No Organization found for provided UserDefinedIdentifer
+  schemas:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    ContactsCardOrganization:
+      description: A contact related to an Organization
+      type: object
+      properties:
+        ContactKey:
+          type: string
+          example: m29BvD0lyT
+          description: A Karbon-generated value that is used to identify the Contact
+        FullName:
+          type: string
+          example: Jane River
+          description: The full name of the Contact
+        PreferredName:
+          type: string
+          example: Jane
+          description: The preferred name of the Contact
+        Salutation:
+          type: string
+          example: Ms
+          description: The title to address the Contact
+        ClientOwner:
+          type:
+          - string
+          - 'null'
+          example: jessica.tse@samplecompany.com
+          description: The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the Contact. You can only use the UserKey or the email address of an existing team member.
+        ClientManager:
+          type:
+          - string
+          - 'null'
+          example: rodney.muller@samplecompany.com
+          description: The team member in your firm who manages the work for Contact. You can only use the UserKey or the email address of an existing team member.
+        Address:
+          type:
+          - string
+          - 'null'
+          example: ''
+          description: The Address of the Contact
+        EmailAddress:
+          type: string
+          description: The Email Address of the Contact
+        PhoneNumber:
+          oneOf:
+          - type: string
+            maxLength: 20
+            example: 555-1234
+          - type: 'null'
+          description: The phone number associated with the Contact
+        RoleOrTitle:
+          type: string
+          example: COO
+          description: The business role or title of the Contact
+        UserDefinedIdentifier:
+          type: string
+          example: JR_1001_2022
+          description: A unique key that you can use to identify this Contact.
+        LastModifiedDateTime:
+          type: string
+          format: date-time
+          example: '2023-06-12T14:00:00Z'
+          description: The date and time at which this Contact was last modified.
+    WithBusinessCardsCreateOrganizationResponse:
+      description: The response returned when a business card is created and $expand=BusinessCards is specified in the URL
+      allOf:
+      - $ref: '#/components/schemas/CreateOrganizationResponse'
+      - type: object
+        properties:
+          BusinessCards:
+            $ref: '#/components/schemas/BusinessCardsRequestAsArray'
+    BusinessCardsRequestAsArray:
+      description: A collection of business cards
+      type: array
+      items:
+        $ref: '#/components/schemas/BusinessCardRequest'
+    ContactsCardList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ContactsCardOrganization'
+      Description: A list of contacts related to an Organization via their Business Cards
+    CreateOrganization:
+      description: A single Organization
+      required:
+      - FullName
+      type: object
+      properties:
+        FullName:
+          type: string
+          description: The full name of the Organization
+          example: Example Business
+        ClientOwner:
+          type: string
+          description: The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
+          example: client.owner@example.com
+        ClientManager:
+          type: string
+          description: The team member in your firm who manages the work for the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
+          example: client.manager@example.com
+        ContactType:
+          type: string
+          description: The Contact Type for this Organization. You can only use existing Contact Type.
+          example: Client
+        UserDefinedIdentifier:
+          type: string
+          description: A unique key that you can use to identify this Organization.
+          example: EXAMPLEB_001
+        RestrictionLevel:
+          type: string
+          description: 'The privacy level for this Organization.
+
+
+            <ul><li>Public Organization can be managed by anyone in the firm</li> <li>Private Organization can only be managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team). Basic details (name of the Organization and the Work Items) related to such Organization are visible to anyone in the firm.</li> <li>Hidden Organization are only be visible to and managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team).</li>
+
+            Setting `Private` requires the calling API application to have the `IncludePrivate` permission; setting `Hidden` requires `IncludeHidden`. `Public` is always allowed. Omitting this field on a PUT leaves the existing value unchanged.
+
+            '
+          default: Public
+          enum:
+          - Public
+          - Private
+          - Hidden
+          example: Public
+        BusinessCards:
+          type: array
+          items:
+            $ref: '#/components/schemas/BusinessCardRequest'
+        EntityDescription:
+          type: object
+          properties:
+            Text:
+              type: string
+              description: Free-form text that can be used to add more information about the Organization
+              example: This organization has a sibling Organization called Example Trust
+        AccountingDetail:
+          $ref: '#/components/schemas/DetailsOfAccounting'
+        ClientTeam:
+          $ref: '#/components/schemas/ClientTeam'
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+    UpdateOrganization:
+      description: A single Organization
+      required:
+      - FullName
+      type: object
+      properties:
+        FullName:
+          type: string
+          description: The full name of the Organization
+        ClientOwner:
+          type: string
+          description: The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
+        ClientManager:
+          type: string
+          description: The team member in your firm who manages the work for the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
+        ContactType:
+          type: string
+          description: The Contact Type for this Organization. You can only use existing Contact Type.
+        UserDefinedIdentifier:
+          type: string
+          description: A unique key that you can use to identify this Organization.
+        RestrictionLevel:
+          type: string
+          description: 'The privacy level for this Organization.
+
+
+            <ul><li>Public Organization can be managed by anyone in the firm</li> <li>Private Organization can only be managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team). Basic details (name of the Organization and the Work Items) related to such Organization are visible to anyone in the firm.</li> <li>Hidden Organization are only be visible to and managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team).</li>
+
+            Setting `Private` requires the calling API application to have the `IncludePrivate` permission; setting `Hidden` requires `IncludeHidden`. `Public` is always allowed. Omitting this field leaves the existing value unchanged.
+
+            '
+          default: Public
+          enum:
+          - Public
+          - Private
+          - Hidden
+        AccountingDetail:
+          $ref: '#/components/schemas/DetailsOfAccounting'
+        BusinessCards:
+          type: array
+          items:
+            $ref: '#/components/schemas/BusinessCardRequest'
+        EntityDescription:
+          type: object
+          properties:
+            Text:
+              type: string
+              description: Free-form text that can be used to add more information about the Organization
+        ClientTeam:
+          $ref: '#/components/schemas/ClientTeam'
+    CreateOrganizationResponse:
+      description: A single Organization
+      required:
+      - '@odata.context'
+      - '@odata.type'
+      - OrganizationKey
+      - FullName
+      - RestrictionLevel
+      - UserDefinedIdentifier
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+        '@odata.type':
+          type: string
+          description: The information about Karbon Objects generating this response.
+        OrganizationKey:
+          type: string
+          description: A Karbon-generated value that is used to identify the Organization
+          example: mC82l11VBk
+        FullName:
+          type: string
+          description: The full name of the Organization
+          example: Example Business
+        ClientOwner:
+          type: string
+          description: The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
+          example: client.owner@example.com
+        ClientManager:
+          type: string
+          description: The team member in your firm who manages the work for the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
+          example: client.manager@example.com
+        ContactType:
+          type: string
+          description: The Contact Type for this Organization. You can only use existing Contact Type.
+          example: Client
+        UserDefinedIdentifier:
+          type: string
+          description: A unique key that you can use to identify this Organization.
+          example: Example Business
+        RestrictionLevel:
+          type: string
+          description: 'The privacy level for this Organization.
+
+
+            <ul><li>Public Organization can be managed by anyone in the firm</li> <li>Private Organization can only be managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team). Basic details (name of the Organization and the Work Items) related to such Organization are visible to anyone in the firm.</li> <li>Hidden Organization are only be visible to and managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team).</li>
+
+            '
+          default: Public
+          enum:
+          - Public
+          - Private
+          - Hidden
+        LastModifiedDateTime:
+          type: string
+          format: date-time
+          description: The date and time at which this Contact was last modified.
+          example: '2022-07-05T07:30:13.7188114Z'
+        EntityDescription:
+          type: object
+          properties:
+            Text:
+              type: string
+              description: Free-form text that can be used to add more information about the Organization
+              example: Birthday on June 23.
+        AccountingDetail:
+          $ref: '#/components/schemas/DetailsOfAccounting'
+    DetailsOfAccounting:
+      type: object
+      description: The details specific to the Accounting firm related to this entity
+      properties:
+        ContactPermaKey:
+          type:
+          - string
+          - 'null'
+          description: A Karbon-generated key that is used to identify the Contact (if a person).
+        OrganizationPermaKey:
+          type:
+          - string
+          - 'null'
+          description: A Karbon-generated key that is used to identify the Contact (if a business or an organization).
+        BirthDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The day at which the contact (if a person) was born.
+        DeathDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The day at which the contact (if a person) died.
+        Salutation:
+          type:
+          - string
+          - 'null'
+          description: The title of the contact (if a person)
+          enum:
+          - Mr
+          - Mrs
+          - Ms
+          - Miss
+          - Dr
+          - Prof
+          - Rev
+          - null
+        Sex:
+          type:
+          - string
+          - 'null'
+          description: The gender of the contact (if a person)
+          enum:
+          - M
+          - F
+          - null
+        FinancialYearEndDay:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: The day of month in which the fiscal year ends for the contact
+        FinancialYearEndMonth:
+          type:
+          - integer
+          - 'null'
+          format: int32
+          description: The month in which the fiscal year ends for the contact. Note that this is a 0 index value, so January is 0 and December is 11
+        IncorporationDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date at which the contact (if a business or an organization) was incorporated.
+        IncorporationState:
+          type:
+          - string
+          - 'null'
+          description: The state in which the contact (if a business or an organization) was incorporated.
+        LegalName:
+          type:
+          - string
+          - 'null'
+          description: The legal name of the contact
+        LineOfBusiness:
+          type:
+          - string
+          - 'null'
+          description: The industry this contact is associated with.
+        EntityType:
+          type:
+          - string
+          - 'null'
+          description: The entity type of the contact (if a business or an organization)
+          enum:
+          - Corporation
+          - Club or Society
+          - Estate or Trust
+          - Exempt Organization
+          - Partnership
+          - Private Foundation
+          - S Corporation
+          - Person
+          - Sole Proprietor
+          - Limited Liability
+          - Charitable Incorporated Organisation
+          - Company Limited by Guarantee
+          - Community Interest Company
+          - Limited Liability Partnership
+          - Local Authority
+          - Non Departmental Public Body
+          - Pension Scheme
+          - Royal Charter
+          - Unincorporated Association
+          - Other/None
+          - null
+        TaxCountryCode:
+          type:
+          - string
+          - 'null'
+          description: The code of the country where the contact pays their tax.
+          enum:
+          - US
+          - AU
+          - UK
+          - NZ
+          - CA
+          - ZA
+          - HK
+          - FR
+          - SG
+          - IE
+          - SE
+          - FI
+          - DK
+          - 'NO'
+          - IN
+          - CH
+          - null
+        TradingName:
+          type:
+          - string
+          - 'null'
+          description: The trading name of the contact (if a business or an organization)
+        AnnualRevenue:
+          type:
+          - number
+          - 'null'
+          format: decimal
+          description: The total annual revenue generated by the contact
+        BaseCurrency:
+          type:
+          - string
+          - 'null'
+          description: The 3-letter code, denoting the currency of annual revenue
+        GstBasis:
+          type:
+          - string
+          - 'null'
+          description: The method of accounting for GST/BAS
+          enum:
+          - Cash
+          - Accruals
+          - None
+          - Close
+          - null
+        GstPeriod:
+          type:
+          - string
+          - 'null'
+          description: The GST period
+        IncomeTaxInstallmentPeriod:
+          type:
+          - string
+          - 'null'
+          description: The income tax installment period
+          enum:
+          - Monthly
+          - Quarterly
+          - Yearly
+          - null
+        IsVATRegistered:
+          type:
+          - boolean
+          - 'null'
+          description: Set to true if the business or organization is registered for VAT
+        OrganizationValuation:
+          type:
+          - number
+          - 'null'
+          format: decimal
+          description: The present value of the company
+        PaysTax:
+          type:
+          - boolean
+          - 'null'
+          description: Set to true, if the contact has to pay tax
+        PrepareGST:
+          type:
+          - boolean
+          - 'null'
+          description: <>
+        ProvisionalTaxBasic:
+          type:
+          - string
+          - 'null'
+          description: <>
+        ProvisionalTaxRatio:
+          type:
+          - string
+          - 'null'
+          description: <>
+        RevenueModel:
+          type:
+          - string
+          - 'null'
+          description: The revenue model of the business or organization
+          enum:
+          - Advertising
+          - Commission
+          - E-Commerce
+          - Fee for Service
+          - Licensing
+          - Markup
+          - Production
+          - Subscription
+          - null
+        SalesTaxBasis:
+          type:
+          - string
+          - 'null'
+          description: The tax method
+          enum:
+          - Cash
+          - Accruals
+          - None
+          - Close
+          - null
+        SalesTaxPeriod:
+          type:
+          - string
+          - 'null'
+          description: The tax period
+        Sells:
+          type:
+          - string
+          - 'null'
+          description: The item that is primarily supplied by the company
+          enum:
+          - Services
+          - Products
+          - Products and Services
+          - Other
+          - null
+        DateSignedEngagement:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: ''
+        Bank:
+          type: array
+          description: A user definable list of banks the client uses
+          items:
+            type: string
+            example: Commonwealth Bank
+        Payroll:
+          type: array
+          description: A user definable list of payroll services the client uses
+          items:
+            type: string
+            example: ''
+        BillPay:
+          type: array
+          description: A user definable list of bill payment services the client uses
+          items:
+            type: string
+            example: ''
+        Benefits:
+          type: array
+          description: A user definable list of benefits services the client uses
+          items:
+            type: string
+            example: ''
+        Revenue:
+          type: array
+          description: A user definable list of revenue management services the client uses
+          items:
+            type: string
+            example: ''
+        Expenses:
+          type: array
+          description: A user definable list of expense management services the client uses
+          items:
+            type: string
+            example: ''
+        FileManagement:
+          type: array
+          description: A user definable list of file management services the client uses
+          items:
+            type: string
+            example: SharePoint
+        Accounting:
+          type: array
+          description: A user definable list of accounting tools and services the client uses
+          items:
+            type: string
+            example: QuickBooks Online
+        RegistrationNumbers:
+          type: array
+          description: The registration numbers associated with the contact.
+          items:
+            required:
+            - RegistrationNumber
+            - Type
+            type: object
+            properties:
+              RegistrationNumber:
+                type: string
+                description: The registration number
+                maxLength: 50
+              Type:
+                type: string
+                description: The type of registration
+                enum:
+                - Australian Business Number (ABN)
+                - Australian Company Number (ACN)
+                - Tax File Number (TFN)
+                - Social Security Number (SSN)
+                - Tax ID
+                - VAT Number
+                - Company Registration Number
+                - PAYE Reference Number
+                - PAYE Accounts Office Reference
+                - CT Reference
+                - Unique Taxpayer Reference (UTR)
+                - NZ Business Number
+                - GST Number
+                - IRD Number
+                - Business Number
+                - Social Insurance Number (SIN)
+                - Registration Number
+                - Income Tax Number
+                - PAYE Number
+                - DOL UIF Number
+                - SDL Number
+                - DOL Workman Compensation
+                - Company Number
+                - Business Registration Number
+                - Charity Number
+                - MPF provider
+                - RCS
+                - SIRET
+                - UEN
+                - RCT Reference
+                - Companies Office Number
+                - KUND ID
+                - Organisation Number
+                - Finnish Business ID
+                - CVR Number
+                - GST Identification Number (GSTIN)
+                - Permanent Account Number (PAN)
+        LegalFirm:
+          description: The legal firm(s) that represent the client, these can be strings or references to Karbon organizations
+          type:
+          - object
+          - 'null'
+          properties:
+            Name:
+              type: string
+              example: Polygon Legal
+              description: The name of the legal firm that represents the client
+            OrganizationKey:
+              type:
+              - string
+              - 'null'
+              description: The Organization key of the Karbon organization client record
+              example: 4cYDk82rZDRn
+        TaxProvider:
+          description: The provider of tax services to the client, these can be strings or references to Karbon organizations
+          type:
+          - object
+          - 'null'
+          properties:
+            Name:
+              type: string
+              example: Orbit Tax
+              description: The name of the tax provider
+            OrganizationKey:
+              type:
+              - string
+              - 'null'
+              description: The optional Organization key of the Tax Provider client record in Karbon
+              example: null
+        Notes:
+          type: array
+          items:
+            required:
+            - Body
+            - Type
+            type: object
+            properties:
+              Body:
+                type: string
+                description: The free-form text in the note
+              Type:
+                type: string
+                description: The section (within the accounting details) where the note resides
+                enum:
+                - Basic
+                - Tax
+                - System
+                - Owner
+                - Officer
+    GetOrganizations:
+      description: A list of Organizations
+      required:
+      - value
+      - '@odata.context'
+      - '@odata.count'
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#Organizations/KarbonService.OrganizationSummaryDTO
+        '@odata.count':
+          type: integer
+          format: int64
+          example: 323
+          description: The total number of Organizations that satisfy the query criteria.
+        value:
+          type: array
+          items:
+            required:
+            - FullName
+            - LastModifiedDateTime
+            - OrganizationKey
+            - '@odata.type'
+            type: object
+            properties:
+              '@odata.type':
+                type: string
+                example: '#KarbonService.OrganizationSummaryDTO'
+                description: The information about Karbon Objects generating this response.
+              OrganizationKey:
+                type: string
+                example: 29YXnqWcqCf3
+                description: A Karbon-generated unique identifier for the Organization
+              FullName:
+                type: string
+                example: Sample Company
+                description: The full name of the Organization
+              PhoneNumber:
+                type:
+                - string
+                - 'null'
+                example: 0987888686
+                description: The phone number associated with the Organization
+              EmailAddress:
+                type: string
+                example: info@samplecompany.com
+                description: The Email Address of the Organization
+              Website:
+                type: string
+                example: www.samplecompany.com
+                description: The website of the Organization
+              ContactType:
+                type: string
+                example: Client
+                description: The Contact Type for this Organization. You can only use existing Contact Types, these are available from the TenantSettings endpoint.
+              LastModifiedDateTime:
+                type: string
+                format: date-time
+                description: The date and time at which the Organization was most recently modified.
+                example: '2021-12-29T07:01:53Z'
+              UserDefinedIdentifier:
+                type:
+                - string
+                - 'null'
+                example: ACME-001
+                description: Your own identifier for the Organization, if one has been set. This matches the behaviour already available on /v3/Contacts.
+        '@odata.nextLink':
+          type: string
+          example: https://api.karbonhq.com/v3/Organizations?$skip=100
+          description: The link to next set of Organizations. @odata.nextLink field will only appear if you have more than 100 Organizations.
+    ClientTeam:
+      description: The Client Team associated with a contact or organization
+      type: array
+      items:
+        type: object
+        properties:
+          MemberKey:
+            type: string
+            example: JTphCpQqQYg
+            description: The unique key of the user or team assigned to the client team role
+          MemberType:
+            type: string
+            example: User
+            description: The type of member assigned to the client team, can be either User or Team
+            enum:
+            - User
+            - Team
+          RoleType:
+            type:
+            - string
+            - 'null'
+            example: ClientOwner
+            description: The specific role the user or team is assigned to, can be null if a member of the client team without a specific role
+            enum:
+            - ClientOwner
+            - ClientManager
+            - UserDefinedRole1
+            - UserDefinedRole2
+            - null
+    BusinessCardRequest:
+      description: A business card associated with a contact or organization
+      type: object
+      properties:
+        BusinessCardKey:
+          type: string
+          description: A Karbon-generated unique identifier for the Business Card
+          example: ''
+          required: true
+        EntityType:
+          type: string
+          description: The type of entity this Business Card belongs to.
+          example: Contact
+          enum:
+          - Contact
+          - Organization
+          - ClientGroup
+        EntityKey:
+          type: string
+          description: A Karbon-generated key to indicate the entity (Contact, Organization, or ClientGroup) this Business Card belongs to.
+          example: 67zlxNyJSr8e
+        IsPrimaryCard:
+          type: boolean
+          description: Set to true, if this business card is also the primary business card for this entity.
+          example: true
+        OrganizationKey:
+          type:
+          - string
+          - 'null'
+          description: Used on the Business Card for a Contact to specify the Organization that the Contact is related to. Will always be null for an Organization business card.
+          example: 7NN1ySxv89B
+        WebSites:
+          description: The websites associated with this Business card.
+          type: array
+          items:
+            type: string
+          example:
+          - www.website.one
+          - www.website.two
+        EmailAddresses:
+          description: The email addresses associated with this Business card.
+          type: array
+          items:
+            type: string
+          example:
+          - sample@example.com
+          - sample.two@example.com
+        RoleOrTitle:
+          type:
+          - string
+          - 'null'
+          description: The business role or title of the contact this Business Cards belongs to
+          example: COO
+        FacebookLink:
+          type: string
+          description: The URL to the entity's Facebook profile
+          example: facebook.com/sampleName
+        LinkedInLink:
+          type: string
+          description: The URL to the entity's LinkedIn profile
+          example: linkedin.com/sampleName
+        TwitterLink:
+          type: string
+          description: The URL to the entity's Twitter profile
+          example: twitter.com/sampleName
+        SkypeLink:
+          type: string
+          description: The URL to the entity's Skype profile
+          example: skype.com/sampleName
+        Addresses:
+          type: array
+          items:
+            type: object
+            properties:
+              AddressLines:
+                type: string
+                description: Street Address
+                example: 45 Sample Street
+                maxLength: 200
+              City:
+                type: string
+                description: City
+                example: Alexandria
+                maxLength: 100
+              StateProvinceCounty:
+                type: string
+                description: State / Province / County
+                example: NSW
+                maxLength: 100
+              ZipCode:
+                type: string
+                description: ZipCode / PostCode
+                example: '2015'
+                maxLength: 20
+              CountryCode:
+                type: string
+                format: ISO 3166-1 alpha-2
+                description: Two letter Country Code
+                example: AU
+              Label:
+                type: string
+                description: The tag to indicate the type of Address
+                example: Physical
+                enum:
+                - Physical
+                - Mailing
+                - Legal
+                - Home
+        PhoneNumbers:
+          type: array
+          items:
+            type: object
+            properties:
+              Number:
+                type: string
+                description: The phone number of the entity
+                example: '1234567890'
+                maxLength: 20
+              CountryCode:
+                type: string
+                description: The phone number country code
+                example: AU
+              Label:
+                type: string
+                description: The tag to indicate the type of phone number
+                example: Work
+                enum:
+                - Work
+                - Mobile
+                - Office
+                - Fax
+                - Home
+                - Other
+  parameters:
+    SkipRecords:
+      in: query
+      name: $skip
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+      example: 50
+      description: Skip the first n items
+    TopRecords:
+      in: query
+      name: $top
+      schema:
+        type: integer
+        minimum: 0
+      example: 10
+      description: Limit the number of items returned
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

@@ -1,0 +1,1220 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Work Items API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Work Items across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Work Items
+  description: Manage a Work Item to best fit your workflow, including timelines, tasks and work teams. Read more
+paths:
+  /v3/WorkItems:
+    get:
+      tags:
+      - Work Items
+      summary: Gets a list of Work Items
+      parameters:
+      - in: query
+        name: $filter
+        schema:
+          type: string
+        examples:
+          AssigneeEmailAddress:
+            value: AssigneeEmailAddress eq 'karbon@example.com'
+            summary: Returns only the Work Items where the Assignee Email is 'karbonhq@example.com'
+          ClientKey:
+            value: ClientKey eq '2nvhdM1TmZk3'
+            summary: Returns only the Work Items where the unqiue key of the Client Group, Contact, Organization or User is '2nvhdM1TmZk3'
+          PrimaryStatus:
+            value: PrimaryStatus eq 'In Progress'
+            summary: Returns only the Work Items where the Work Primary Status is 'In Progress', a complete list of Primary Status values can be retrieved the TenantSettings endpoint
+          StartDate:
+            value: StartDate ge 2024-01-01
+            summary: Return only the Work Items where the Start Date is on or after January 1, 2024
+          Title:
+            value: contains(ContactType, 'Client')
+            summary: Return only the WorkItems which have a Title that contains the word 'Tax'
+          WorkScheduleKey:
+            value: WorkScheduleKey eq 'FXcWYY9xZfd'
+            summary: Return only the Work Items that are part of the Work Schedule with the unique key 'FXcWYY9xZfd'
+          WorkTemplateKey:
+            value: WorkTemplateKey eq '2vBsCfGk9hJD'
+            summary: Return only the Work Items that were created from the Work Template with the unique key '2vBsCfGk9hJD'
+          WorkStatus:
+            value: WorkStatus eq 'InProgress'
+            summary: Return only the Work Items with the Work Status 'In progress'
+          WorkType:
+            value: WorkType eq 'Payroll'
+            summary: Return only the Work Items with the Work Type 'Payroll'
+        description: 'When this parameter is combined with the URI, this endpoint will return a subset of the Work Items that satisfy the `$filter` expression.
+
+          '
+      - in: query
+        name: $orderby
+        schema:
+          type: string
+          enum:
+          - StartDate
+          - StartDate desc
+          - DeadlineDate
+          - DeadlineDate desc
+          default: WorkItemKey
+        example: StartDate
+        description: 'When this parameter is combined with the URI, this endpoint will return a list of Work Items, sorted by the available properties. Using the `desc` variant will return items in most to least recent order.
+
+          '
+      - $ref: '#/components/parameters/SkipRecords'
+      - $ref: '#/components/parameters/TopRecords'
+      description: 'Use the `GET` method on this endpoint to receive a paginated list of Work Items from your tenant. Using the query parameters available to this endpoint, you can also filter the list of Work Items by their AssigneeEmailAddress, ClientKey, PrimaryStatus, StartDate, Title, WorkScheduleKey, WorkStatus, WorkTemplateKey, and WorkType.
+
+
+        **Notes**
+
+
+        * This endpoint returns a maximum of 100 Work Items at once.
+
+        * If the query results in more than 100 Work Items, a link to the next set of the results will be given in the `@odata.nextLink` field of the response.
+
+        * The `$filter` query parameter supports multiple logical operators and 7 properties to help you form an expression. They are listed below with examples of usage.
+
+
+        ### $filter operators for StartDate property
+
+
+        OperatorsPurposeStartDate
+
+
+        geGreater than and equals/v3/WorkItems?$filter=StartDate ge 2021-04-27T00:00:00Z
+
+
+        leLesser than and equals/v3/WorkItems?$filter=StartDate le 2021-04-27T00:00:00Z
+
+
+        andCombines properties/v3/WorkItems?$filter=StartDate ge 2021-04-27T00:00:00Z and PrimaryStatus eq ''Planned''
+
+
+        ### $filter operators for rest of the properties
+
+
+        Propertyeq [For full-text search]and [For combined-property search]contains [For partial-text search]
+
+
+        AssigneeEmailAddress/v3/WorkItems?$filter=AssigneeEmailAddress eq ''joe@samplecompany.com''/v3/WorkItems?$filter=AssigneeEmailAddress eq ''joe@samplecompany.com'' and PrimaryStatus eq ''Planned''/v3/WorkItems?$filter=(contains(AssigneeEmailAddress , ''joe''))
+
+
+        ClientKey/v3/WorkItems?$filter=ClientKey eq ''2nvhdM1TmZk3''/v3/WorkItems?$filter=ClientKey eq ''2nvhdM1TmZk3'' and contains(AssigneeEmailAddress , ''joe'')N/A
+
+
+        PrimaryStatus/v3/WorkItems?$filter=PrimaryStatus eq ''Planned''/v3/WorkItems?$filter=AssigneeEmailAddress eq ''joe@samplecompany.com'' and PrimaryStatus eq ''Planned''N/A
+
+
+        Title/v3/WorkItems?$filter=Title eq ''Payroll 31 Aug - 15 Sep 2022''/v3/WorkItems?$filter=Title eq ''Payroll 31 Aug - 15 Sep 2022'' and PrimaryStatus eq ''Planned''/v3/WorkItems?$filter=(contains(Title, ''pay''))
+
+
+        WorkScheduleKey/v3/WorkItems?$filter=WorkScheduleKey eq ''FXcWYY9xZfd''/v3/WorkItems?$filter=WorkScheduleKey eq ''FXcWYY9xZfd'' and PrimaryStatus eq ''Planned''N/A
+
+
+        WorkStatus/v3/WorkItems?$filter=WorkStatus eq ''Ready To Start''/v3/WorkItems?$filter=WorkStatus eq ''Ready To Start'' and (contains(Title, ''Pay''))/v3/WorkItems?$filter=(contains(WorkStatus , ''joe''))
+
+
+        WorkType/v3/WorkItems?$filter=WorkType eq ''Payroll''/v3/WorkItems?$filter=WorkType eq ''Payroll'' and PrimaryStatus eq ''Planned''/v3/WorkItems?$filter=(contains(WorkType , ''pay''))'
+      operationId: getAllWorkItems
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWorkItems'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Property:
+                  $ref: '#/components/examples/Unsupported_Property_Filter'
+                Unsupported Orderby Property:
+                  $ref: '#/components/examples/Orderby_Unsupported_Property'
+                $top limit exceeded:
+                  $ref: '#/components/examples/Limit_Exceeded_Top'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    post:
+      tags:
+      - Work Items
+      summary: Creates a new Work Item
+      description: Use the `POST` method on this endpoint to create a new Work Item in your tenant.
+      operationId: createWorkItem
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    '@odata.context':
+                      type: string
+                      description: The information about Karbon controllers generating this response.
+                      example: https://api.karbonhq.com/v3/$metadata#WorkItems/KarbonService.WorkItemDTO/$entity
+                    '@odata.type':
+                      type: string
+                      description: The information about Karbon Objects generating this response.
+                      example: '#KarbonService.WorkItemDTO'
+                - $ref: '#/components/schemas/WorkItemWithFeeSettings'
+                - type: object
+                  properties:
+                    Description:
+                      type: string
+                      description: A free form text field to add more information about the Work Item
+                      example: Send to Jo for review
+                    ClientTaskRecipient:
+                      type: string
+                      description: The details about the recipient of the Client Tasks related to this Work Item. This property will always return `null`.
+                      example: null
+          headers:
+            Location:
+              description: The endpoint URL to the newly created Work Item.
+              schema:
+                type: string
+                example: https://api.karbonhq.com/v3/WorkItems('2VfHzHkJZPVV')/KarbonService.WorkItemDTO
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/EnhancedErrorMessages'
+                - $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Client Not a member of ClientGroup:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Client_Not_a_member_of_ClientGroup'
+                Incorrect Assignee Email Address:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Incorrect_EmailAddress'
+                Incorrect Client Key:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Incorrect_ClientKey'
+                Incorrect Client Type:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Incorrect_ClientType'
+                Incorrect Work Template Key:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Incorrect_WorkTemplate_Key'
+                Incorrect Work Type:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Incorrect_WorkType'
+                Missing Create Data:
+                  $ref: '#/components/examples/Missing_Create_Data'
+                Required Property is empty:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Empty_Property'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCreateWorkItem'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/WorkItems/{WorkItemKey}:
+    get:
+      tags:
+      - Work Items
+      summary: Gets a Work Item using WorkItemKey
+      parameters:
+      - required: true
+        in: path
+        name: WorkItemKey
+        schema:
+          type: string
+        example: 2LPSrkzbYrn4
+        description: The Karbon-generated Work Item key
+      description: Use the `GET` method on this endpoint to receive the details of a Work Item specified using the WorkItemKey.
+      operationId: getWorkItemByID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    '@odata.context':
+                      type: string
+                      description: The information about Karbon controllers generating this response.
+                      example: https://api.karbonhq.com/v3/$metadata#WorkItems/KarbonService.WorkItemDTO/$entity
+                    '@odata.type':
+                      type: string
+                      description: The information about Karbon Objects generating this response.
+                      example: '#KarbonService.WorkItemDTO'
+                - $ref: '#/components/schemas/WorkItemWithFeeSettingsAndUserRoleAssignments'
+                - type: object
+                  properties:
+                    Description:
+                      type: string
+                      description: A free form text field to add more information about the Work Item
+                      example: Send to Jo for review
+                    ClientTaskRecipient:
+                      type: string
+                      description: The details about the recipient of the Client Tasks related to this Work Item. This property will always return `null`.
+                      example: null
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Key Not Found:
+                  $ref: '#/components/examples/WorkItem_Key_Not_Found_404'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    put:
+      tags:
+      - Work Items
+      summary: Updates a Work Item (Full)
+      parameters:
+      - required: true
+        in: path
+        name: WorkItemKey
+        schema:
+          type: string
+        example: 2LPSrkzbYrn4
+        description: The Karbon-generated Work Item key
+      description: Use the `PUT` method on this endpoint to update full details of a Work Item (specified using the WorkItemKey).
+      operationId: putWorkItemByID
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/EnhancedErrorMessages'
+                - $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Client Not a member of ClientGroup:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Client_Not_a_member_of_ClientGroup'
+                Incorrect Assignee Email Address:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Incorrect_EmailAddress'
+                Incorrect Client Key:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Incorrect_ClientKey'
+                Incorrect Client Type:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Incorrect_ClientType'
+                Incorrect Work Template Key:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Incorrect_WorkTemplate_Key'
+                Incorrect Work Type:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Incorrect_WorkType'
+                Missing Create Data:
+                  $ref: '#/components/examples/Missing_Create_Data'
+                Required Property is empty:
+                  $ref: '#/components/examples/Bad_Model_WorkItem_Empty_Property'
+                Incorrect or Missing Data:
+                  $ref: '#/components/examples/Missing_Update_Data'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Work Item Key Not Found:
+                  $ref: '#/components/examples/WorkItem_Key_Not_Found_404'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+        '409':
+          description: Conflict — the resource was modified by another request. Refetch the latest version and retry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Stale Object State:
+                  $ref: '#/components/examples/Conflict_StaleObjectState'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCreateWorkItem'
+    patch:
+      tags:
+      - Work Items
+      summary: Updates a Work Item (Partial)
+      parameters:
+      - in: path
+        name: WorkItemKey
+        schema:
+          type: string
+        required: true
+        example: 2LPSrkzbYrn4
+        description: The Karbon-generated Work Item key
+      description: 'Use the `PATCH` method on this endpoint to update partial details of a Work Item (specified using the WorkItemKey).
+
+
+        This method supports editing the `Title`, `Description`, `StartDate`, `DueDate`, `DeadlineDate`, `AssigneeEmailAddress`, `WorkType`, and `UserRoleAssignments` properties. Sending any other property in the request body returns a `400`.
+
+
+        `UserRoleAssignments` replaces the full set of role assignments on the Work Item. Reassigning a role also moves any time estimates on that role to the new user.'
+      operationId: patchWorkItemByID
+      responses:
+        '204':
+          description: No Content
+          content: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Incorrect or Missing Data:
+                  $ref: '#/components/examples/Missing_Update_Data'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+                Invalid Property:
+                  $ref: '#/components/examples/Invalid_Property'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Work Item Key Not Found:
+                  $ref: '#/components/examples/WorkItem_Key_Not_Found_404'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+        '409':
+          description: Conflict — the resource was modified by another request. Refetch the latest version and retry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Stale Object State:
+                  $ref: '#/components/examples/Conflict_StaleObjectState'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWorkItem'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  examples:
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+    Unsupported_Property_Filter:
+      description: The error returned when an unsupported filter is used in a request
+      value:
+        error:
+          code: '4002'
+          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
+    Bad_Model_WorkItem_Empty_Property:
+      description: 'A response shown when a required field is not provided when creating or updating a Work Item '
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.<property_name>
+            message: The <property_name> field is required.
+    Bad_Model_WorkItem_Incorrect_WorkType:
+      description: 'A response shown when a Work Type is provided when creating or updating a Work Item '
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.WorkType
+            message: Work Type is not valid
+    Missing_Update_Data:
+      description: The error returned when the payload for an update is missing or invalid
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: update'
+    Missing_Create_Data:
+      description: The error returned when the request payload is missing a required value
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: <Entity>'
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    Bad_Model_WorkItem_Incorrect_ClientType:
+      description: 'A response shown when an invalid Client Type is provided when creating or updating a Work Item '
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.ClientType
+            message: ClientType must be Contact, Organization, or ClientGroup
+    Bad_Model_WorkItem_Incorrect_ClientKey:
+      description: 'A response shown when an invalid Contact key is provided when creating or updating a Work Item '
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.ClientKey
+            message: ClientKey is not a valid Contact Key
+    Orderby_Unsupported_Property:
+      description: The error returned when an unsupported sort order is used in a request
+      value:
+        error:
+          code: '4002'
+          message: The property '<Property Name>' cannot be used in the $orderby query option.
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Bad_Model_WorkItem_Client_Not_a_member_of_ClientGroup:
+      description: A response shown when an invalid Client Group is provided when creating or updating a Work Item
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.<key>
+            message: Cannot assign Related Client Group as Client is not a member of this Group
+    Bad_Model_WorkItem_Incorrect_EmailAddress:
+      description: 'A response shown when an invalid email is provided when creating or updating a Work Item '
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.AssigneeEmailAddress
+            message: Assignee Email Address is not a valid Email Address
+    Invalid_Property:
+      description: The error returned when attempting to use PATCH to update a property that can only be updated as part of a PUT
+      value:
+        error:
+          code: '4002'
+          message: Invalid property to update. Only <Property name> can be patched.
+    Limit_Exceeded_Top:
+      description: The error returned when the limit is used in a request exceeds the maximum set for the API
+      value:
+        error:
+          code: '4002'
+          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
+    Conflict_StaleObjectState:
+      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
+      value:
+        error:
+          code: '4020'
+          message: The resource was modified by another request. Refetch the latest version and retry.
+    Bad_Model_WorkItem_Incorrect_WorkTemplate_Key:
+      description: A response shown when an invalid Work Template is provided when creating a Work Item
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.WorkTemplateKey
+            message: WorkTemplateKey is not a valid Work Template
+    WorkItem_Key_Not_Found_404:
+      description: The error returned when a Work Item cannot be found for the provided Work Item Key
+      value:
+        error:
+          code: '4004'
+          message: No Work Item found for provided key
+  schemas:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    WorkItemUserRoleAssignments:
+      description: The User assignments for specific Roles on a Work Item
+      properties:
+        UserRoleAssignments:
+          type: array
+          description: The array that describes the roles of the users associated with this Work Item.
+          items:
+            type: object
+            required:
+            - RoleKey
+            - UserProfileKey
+            properties:
+              RoleKey:
+                type: string
+                description: A Karbon-generated value used to identify the role of the user
+                example: 2mYzTtly89Lq
+              UserProfileKey:
+                type: string
+                description: A Karbon-generated value used to identify the user
+                example: 2Qy48WVCRBcP
+    RequestCreateWorkItem:
+      description: A single work item
+      allOf:
+      - $ref: '#/components/schemas/WorkItemUpdate'
+      - $ref: '#/components/schemas/WorkFeeSettings'
+      - $ref: '#/components/schemas/WorkItemUserRoleAssignments'
+    WorkItemWithFeeSettings:
+      description: A Work Item with Fee Settings
+      allOf:
+      - $ref: '#/components/schemas/WorkItem'
+      - $ref: '#/components/schemas/WorkFeeSettings'
+    WorkFeeSettings:
+      description: The Fee Settings for a Work Item
+      properties:
+        FeeSettings:
+          description: The Fee Settings describe how the work will be billed, for FixedFee work the Fee Settings can include the value to be billed
+          type: object
+          properties:
+            FeeType:
+              type: string
+              description: The way the fee is calculated for the Work Item
+              enum:
+              - FixedFee
+              - TimeAndMaterials
+              - NonBillable
+              example: FixedFee
+            FeeValue:
+              type:
+              - number
+              - 'null'
+              description: The value of the fee in the currency of the Karbon account, this value must be null if FeeType is not FixedFee
+              example: 5150.2
+    EnhancedErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          - details
+          type: object
+          properties:
+            code:
+              type: string
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              description: The error message
+            details:
+              type: array
+              description: The details of error message
+              items:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    description: Error Summary
+                  target:
+                    type: string
+                    description: Property that has encountered issue
+                  message:
+                    type: string
+                    description: The detailed error message
+    WorkItemWithFeeSettingsAndUserRoleAssignments:
+      description: A Work Item with Fee Settings and User Role assignments
+      allOf:
+      - $ref: '#/components/schemas/WorkItem'
+      - $ref: '#/components/schemas/WorkFeeSettings'
+      - $ref: '#/components/schemas/WorkItemUserRoleAssignments'
+    UpdateWorkItem:
+      description: The properties that can be updated on a Work Item with the PATCH method
+      type: object
+      anyOf:
+      - properties:
+          Title:
+            type: string
+            maxLength: 200
+            description: The title of the Work Item. Must be non-empty and no longer than 200 characters when included.
+            example: Q2 review prep
+      - properties:
+          Description:
+            type: string
+            description: A free form text field to add more information about the Work Item
+            example: Reviewed and approved by Jo.
+      - properties:
+          StartDate:
+            oneOf:
+            - type: string
+              example: '2024-02-01T00:00:00Z'
+              format: date-time
+            - type: string
+              example: '2024-02-01'
+              format: date
+            description: The start date of the Work Item as an ISO 8601 date or date-time. Must be non-null when included.
+      - properties:
+          DueDate:
+            oneOf:
+            - type:
+              - string
+              - 'null'
+              example: '2024-02-01T00:00:00Z'
+              format: date-time
+            - type:
+              - string
+              - 'null'
+              example: '2024-02-01'
+              format: date
+            description: The due date of the Work Item as an ISO 8601 date or date-time. Pass `null` to clear the existing due date.
+      - properties:
+          DeadlineDate:
+            oneOf:
+            - type:
+              - string
+              - 'null'
+              example: '2024-02-01T00:00:00Z'
+              format: date-time
+            - type:
+              - string
+              - 'null'
+              example: '2024-02-01'
+              format: date
+            description: The deadline of the workitem as ISO8601 formated datestamp or timestamp
+      - properties:
+          AssigneeEmailAddress:
+            type: string
+            format: email
+            description: The email address of the Karbon user the Work Item should be assigned to. Validated against existing users; unknown values return a `400`.
+            example: alex@example.com
+      - properties:
+          WorkType:
+            type: string
+            description: The work type label, validated against work types configured on the account. Unknown values return a `400`.
+            example: Tax Return
+      - properties:
+          UserRoleAssignments:
+            type: array
+            description: The full set of user role assignments for the Work Item. Replaces the existing assignments. Reassigning a role also moves any time estimates on that role to the new user.
+            items:
+              type: object
+              required:
+              - RoleKey
+              - UserProfileKey
+              properties:
+                RoleKey:
+                  type: string
+                  description: A Karbon-generated value used to identify the role of the user
+                  example: 2mYzTtly89Lq
+                UserProfileKey:
+                  type: string
+                  description: A Karbon-generated value used to identify the user
+                  example: 2Qy48WVCRBcP
+    GetWorkItems:
+      description: A collection of work items
+      required:
+      - value
+      - '@odata.context'
+      - '@odata.count'
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#WorkItems/KarbonService.WorkItemSummaryDTO
+        '@odata.count':
+          type: integer
+          format: int64
+          example: 323
+          description: The total number of Work Items that satisfy the query criteria.
+        value:
+          type: array
+          items:
+            allOf:
+            - type: object
+              properties:
+                '@odata.type':
+                  type: string
+                  example: '#KarbonService.WorkItemSummaryDTO'
+                  description: The information about Karbon Objects generating this response.
+            - $ref: '#/components/schemas/WorkItem'
+        '@odata.nextLink':
+          type: string
+          example: https://api.karbonhq.com/v3/WorkItems?$skip=100
+          description: The link to next set of Work Items. @odata.nextLink field will only appear if you have more than 100 Work Items.
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+    WorkItemUpdate:
+      type: object
+      description: The core parameters when updating a Work Item
+      required:
+      - AssigneeEmailAddress
+      - Title
+      - ClientKey
+      - ClientType
+      - StartDate
+      properties:
+        AssigneeEmailAddress:
+          type: string
+          example: joe@samplecompany.com
+          description: The email address of the user to whom the Work Item has been assigned
+        Title:
+          type: string
+          example: Payroll 31 Aug - 15 Sep 2022
+          description: The title of the Work Item
+        ClientKey:
+          type: string
+          example: 4ncPZ7q96SGc
+          description: A Karbon-generated value used to identify the Client for whom the Work Item is prepared
+        ClientType:
+          type: string
+          enum:
+          - Contact
+          - Organization
+          - ClientGroup
+          example: Organization
+          description: The type of the Client
+        RelatedClientGroupKey:
+          type: string
+          example: 3LCPr987gNrc
+          description: A Karbon-generated value used to identify the Client Group of the Client
+        StartDate:
+          type: string
+          format: date-time
+          description: The date and time at which the Work Item should start
+          example: '2021-12-29T00:00:00Z'
+        DueDate:
+          type: string
+          format: date-time
+          description: The date and time by which the Work Item should be complete
+          example: '2022-01-30T00:00:00Z'
+        DeadlineDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date and time by which an external party has specified that the Work Item should be complete
+          example: '2022-01-31T00:00:00Z'
+        WorkType:
+          type: string
+          description: The type of work related to the Work Item. Enter an existing Work Type.
+          example: Payroll
+        WorkStatus:
+          type: string
+          description: The current status of the Work Item
+          example: Ready To Start - Send client requests
+        PrimaryStatus:
+          type: string
+          enum:
+          - Planned
+          - ReadyToStart
+          - InProgress
+          - Waiting
+          - Completed
+          description: 'The current parent-level Status of the Work Item. If `WorkStatus` and `PrimaryStatus` have different values, `PrimaryStatus` will be the source of truth for Work Item status.
+
+            '
+          example: ReadyToStart
+        SecondaryStatus:
+          type: string
+          description: The current child-level Status of the Work Item
+          example: Send client requests
+        WorkTemplateKey:
+          type: string
+          description: A Karbon-generated value used to identify the Template that will be used to generate this Work Item
+          example: p56mtcBhwb9
+        WorkScheduleKey:
+          type: string
+          description: A Karbon-generated value used to identify the Work Schedule for this Work Item
+          example: 4f3gHnLC323
+        EstimatedBudget:
+          deprecated: true
+          type: number
+          format: decimal
+          description: The estimated budget for the Work Item
+          example: 1200.05
+        Description:
+          type: string
+          description: A free form text field to add more information about the Work Item
+          example: Send to Jo for review
+        ClientTaskRecipient:
+          type: object
+          required:
+          - RecipientKey
+          - LinkType
+          description: The details about the recipient of the Client Tasks related to this Work Item.
+          properties:
+            RecipientKey:
+              type: string
+              description: A Karbon-generated value used to identify the Client
+              example: 4ncPZ7q96SGc
+            LinkType:
+              type: string
+              enum:
+              - Contact
+              - Organization
+              description: The Karbon entity, from which to pull the email address in case the email address of the Client Task recipient is empty.
+              example: Organization
+            EmailAddress:
+              type: string
+              description: The email address of the recipient.
+              example: acme@corp.com
+    WorkItem:
+      description: The base data for a Work Item
+      required:
+      - ClientKey
+      - StartDate
+      - Title
+      - WorkItemKey
+      type: object
+      properties:
+        WorkItemKey:
+          type: string
+          example: 2LPSrkzbYrn4
+          description: A Karbon-generated unique identifier for the Work Item
+        AssigneeEmailAddress:
+          type: string
+          example: joe@samplecompany.com
+          description: The email address of the user to whom the Work Item has been assigned
+        AssigneeKey:
+          type: string
+          example: 4gHCvnbFFqsq
+          description: A Karbon-generated value used to identify the user to whom the Work Item has been assigned
+        AssigneeName:
+          type: string
+          example: Joe Min
+          description: The name of the user to whom the Work Item has been assigned
+        Title:
+          type: string
+          example: Payroll 31 Aug - 15 Sep 2022
+          description: The title of the Work Item
+        ClientKey:
+          type: string
+          example: 4ncPZ7q96SGc
+          description: A Karbon-generated value used to identify the Client for whom the Work Item is prepared
+        ClientName:
+          type: string
+          example: Acme Corporation
+          description: The name of the Client for whom the Work Item is prepared
+        ClientType:
+          type: string
+          enum:
+          - Contact
+          - Organization
+          - ClientGroup
+          example: Organization
+          description: The type of the Client
+        ClientUserDefinedIdentifier:
+          type: string
+          example: ACMECORP
+          description: A unique identifier that you had created to identify the Client. This parameter is not case sensitive.
+        RelatedClientGroupKey:
+          type: string
+          example: 3LCPr987gNrc
+          description: A Karbon-generated value used to identify the Client Group of the Client
+        ClientGroupKey:
+          type: string
+          example: 3LCPr987gNrc
+          description: A Karbon-generated value used to identify the Client Group of the Client
+        RelatedClientGroupName:
+          type: string
+          example: Smith Family Group
+          description: The name of the related Client Group
+        StartDate:
+          type: string
+          format: date-time
+          description: The date and time at which the Work Item should start
+          example: '2021-12-29T00:00:00Z'
+        DueDate:
+          type: string
+          format: date-time
+          description: The date and time by which the Work Item should be complete
+          example: '2022-01-30T00:00:00Z'
+        DeadlineDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The date and time by which the Work Item should be complete according to a party outside of your firm. e.g. A tax filing date or payroll processing cut-off date.
+          example: '2022-01-31T00:00:00Z'
+        CompletedDate:
+          type: string
+          format: date-time
+          description: The date and time at which the Work Item was completed
+          example: '2022-02-01T00:00:00Z'
+        ToDoPeriod:
+          type: string
+          format: date-time
+          description: The period, in which the Work Item should start.
+          example: '2021-12-29T00:00:00Z'
+        WorkType:
+          type: string
+          description: The type of work related to the Work Item
+          example: Payroll
+        WorkStatus:
+          type: string
+          description: The current status of the Work Item
+          example: Ready To Start - Send client requests
+        PrimaryStatus:
+          type: string
+          enum:
+          - Planned
+          - ReadyToStart
+          - InProgress
+          - Waiting
+          - Completed
+          description: 'The current parent-level Status of the Work Item. If `WorkStatus` and `PrimaryStatus` have different values, `PrimaryStatus` will be the source of truth for Work Item status.
+
+            '
+          example: ReadyToStart
+        SecondaryStatus:
+          type: string
+          description: The current child-level Status of the Work Item
+          example: Send client requests
+        WorkTemplateKey:
+          type: string
+          description: A Karbon-generated value used to identify the Template that generated this Work Item
+          example: p56mtcBhwb9
+        WorkTemplateTile:
+          type: string
+          description: The title of the Work Template
+          example: Payroll processing
+        WorkScheduleKey:
+          type: string
+          description: A Karbon-generated value used to identify the Work Schedule for this Work Item
+          example: 4f3gHnLC323
+        EstimatedBudget:
+          deprecated: true
+          type: number
+          format: decimal
+          description: Deprecated! - previously used as the estimated budget for the Work Item
+          example: 1200.05
+  parameters:
+    SkipRecords:
+      in: query
+      name: $skip
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+      example: 50
+      description: Skip the first n items
+    TopRecords:
+      in: query
+      name: $top
+      schema:
+        type: integer
+        minimum: 0
+      example: 10
+      description: Limit the number of items returned
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

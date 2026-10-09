@@ -1,0 +1,1176 @@
+{
+  "@context": {
+    "@vocab": "https://karbonhq.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "karbonhq": "https://karbonhq.com/schema#",
+    "BillingBaseInvoice": "karbonhq:BillingBaseInvoice",
+    "InvoiceKey": {
+      "@id": "karbonhq:InvoiceKey",
+      "@type": "xsd:string"
+    },
+    "InvoiceNumber": {
+      "@id": "karbonhq:InvoiceNumber",
+      "@type": "xsd:string"
+    },
+    "TotalAmountDue": {
+      "@id": "karbonhq:TotalAmountDue",
+      "@type": "xsd:decimal"
+    },
+    "InvoiceTotal": {
+      "@id": "karbonhq:InvoiceTotal",
+      "@type": "xsd:decimal"
+    },
+    "InvoiceSubTotal": {
+      "@id": "karbonhq:InvoiceSubTotal",
+      "@type": "xsd:decimal"
+    },
+    "InvoiceTaxTotal": {
+      "@id": "karbonhq:InvoiceTaxTotal",
+      "@type": "xsd:decimal"
+    },
+    "InvoiceDate": {
+      "@id": "karbonhq:InvoiceDate",
+      "@type": "xsd:string"
+    },
+    "PaymentDueDate": {
+      "@id": "karbonhq:PaymentDueDate",
+      "@type": "xsd:string"
+    },
+    "UpdatedAt": {
+      "@id": "karbonhq:UpdatedAt",
+      "@type": "xsd:string"
+    },
+    "CurrencyCode": {
+      "@id": "karbonhq:CurrencyCode",
+      "@type": "xsd:string"
+    },
+    "PaymentInstructions": {
+      "@id": "karbonhq:PaymentInstructions",
+      "@type": "xsd:string"
+    },
+    "InvoiceStatus": {
+      "@id": "karbonhq:InvoiceStatus",
+      "@type": "xsd:string"
+    },
+    "BillingInvoiceWithPayment": "karbonhq:BillingInvoiceWithPayment",
+    "InvoiceMagicLink": {
+      "@id": "karbonhq:InvoiceMagicLink",
+      "@type": "xsd:string"
+    },
+    "InvoicePdfUrl": {
+      "@id": "karbonhq:InvoicePdfUrl",
+      "@type": "xsd:string"
+    },
+    "BillingInvoiceData": "karbonhq:BillingInvoiceData",
+    "Data": {
+      "@id": "karbonhq:Data",
+      "@container": "@list"
+    },
+    "BillingInvoiceDataItem": "karbonhq:BillingInvoiceDataItem",
+    "EntityKey": {
+      "@id": "karbonhq:EntityKey",
+      "@type": "xsd:string"
+    },
+    "EntityType": {
+      "@id": "karbonhq:EntityType",
+      "@type": "xsd:string"
+    },
+    "Billed": {
+      "@id": "karbonhq:Billed",
+      "@type": "xsd:decimal"
+    },
+    "Expenses": {
+      "@id": "karbonhq:Expenses",
+      "@type": "@id"
+    },
+    "Service": {
+      "@id": "karbonhq:Service",
+      "@type": "@id"
+    },
+    "Work": {
+      "@id": "karbonhq:Work",
+      "@type": "@id"
+    },
+    "BillingInvoiceDataTax": "karbonhq:BillingInvoiceDataTax",
+    "TaxRate": {
+      "@id": "karbonhq:TaxRate",
+      "@type": "xsd:decimal"
+    },
+    "TaxRateName": {
+      "@id": "karbonhq:TaxRateName",
+      "@type": "xsd:string"
+    },
+    "TaxAmount": {
+      "@id": "karbonhq:TaxAmount",
+      "@type": "xsd:decimal"
+    },
+    "BillingInvoiceDataExpense": "karbonhq:BillingInvoiceDataExpense",
+    "BillingInvoiceDataWorkTimeEntry": "karbonhq:BillingInvoiceDataWorkTimeEntry",
+    "TimeEntryKey": {
+      "@id": "karbonhq:TimeEntryKey",
+      "@type": "xsd:string"
+    },
+    "ColleagueKey": {
+      "@id": "karbonhq:ColleagueKey",
+      "@type": "xsd:string"
+    },
+    "RoleName": {
+      "@id": "karbonhq:RoleName",
+      "@type": "xsd:string"
+    },
+    "TaskTypeName": {
+      "@id": "karbonhq:TaskTypeName",
+      "@type": "xsd:string"
+    },
+    "BillingInvoiceLineItems": "karbonhq:BillingInvoiceLineItems",
+    "LineItems": {
+      "@id": "karbonhq:LineItems",
+      "@container": "@list"
+    },
+    "BillingInvoicePayments": "karbonhq:BillingInvoicePayments",
+    "Payments": {
+      "@id": "karbonhq:Payments",
+      "@container": "@list"
+    },
+    "BillingClient": "karbonhq:BillingClient",
+    "Client": {
+      "@id": "karbonhq:Client"
+    },
+    "BillingTaxLineItems": "karbonhq:BillingTaxLineItems",
+    "TaxLineItems": {
+      "@id": "karbonhq:TaxLineItems",
+      "@container": "@list"
+    },
+    "BusinessCardRequest": "karbonhq:BusinessCardRequest",
+    "BusinessCardKey": {
+      "@id": "karbonhq:BusinessCardKey",
+      "@type": "xsd:string"
+    },
+    "IsPrimaryCard": {
+      "@id": "karbonhq:IsPrimaryCard",
+      "@type": "xsd:boolean"
+    },
+    "OrganizationKey": {
+      "@id": "karbonhq:OrganizationKey",
+      "@type": "xsd:string"
+    },
+    "WebSites": {
+      "@id": "karbonhq:WebSites",
+      "@container": "@list"
+    },
+    "EmailAddresses": {
+      "@id": "karbonhq:EmailAddresses",
+      "@container": "@list"
+    },
+    "RoleOrTitle": {
+      "@id": "karbonhq:RoleOrTitle",
+      "@type": "xsd:string"
+    },
+    "FacebookLink": {
+      "@id": "karbonhq:FacebookLink",
+      "@type": "xsd:string"
+    },
+    "LinkedInLink": {
+      "@id": "karbonhq:LinkedInLink",
+      "@type": "xsd:string"
+    },
+    "TwitterLink": {
+      "@id": "karbonhq:TwitterLink",
+      "@type": "xsd:string"
+    },
+    "SkypeLink": {
+      "@id": "karbonhq:SkypeLink",
+      "@type": "xsd:string"
+    },
+    "Addresses": {
+      "@id": "karbonhq:Addresses",
+      "@container": "@list"
+    },
+    "PhoneNumbers": {
+      "@id": "karbonhq:PhoneNumbers",
+      "@container": "@list"
+    },
+    "BusinessCard": "karbonhq:BusinessCard",
+    "CustomFieldDefinitions": "karbonhq:CustomFieldDefinitions",
+    "value": {
+      "@id": "karbonhq:value",
+      "@container": "@list"
+    },
+    "CustomFieldDefinition": "karbonhq:CustomFieldDefinition",
+    "Name": {
+      "@id": "karbonhq:Name",
+      "@type": "xsd:string"
+    },
+    "Type": {
+      "@id": "karbonhq:Type",
+      "@type": "xsd:string"
+    },
+    "IsVisibleToContacts": {
+      "@id": "karbonhq:IsVisibleToContacts",
+      "@type": "xsd:boolean"
+    },
+    "IsVisibleToOrganizations": {
+      "@id": "karbonhq:IsVisibleToOrganizations",
+      "@type": "xsd:boolean"
+    },
+    "ListOptions": {
+      "@id": "karbonhq:ListOptions",
+      "@container": "@list"
+    },
+    "CustomFieldValue": "karbonhq:CustomFieldValue",
+    "Key": {
+      "@id": "karbonhq:Key",
+      "@type": "xsd:string"
+    },
+    "Value": {
+      "@id": "karbonhq:Value",
+      "@container": "@list"
+    },
+    "CustomFieldValues": "karbonhq:CustomFieldValues",
+    "DetailsOfAccounting": "karbonhq:DetailsOfAccounting",
+    "ContactPermaKey": {
+      "@id": "karbonhq:ContactPermaKey",
+      "@type": "xsd:string"
+    },
+    "OrganizationPermaKey": {
+      "@id": "karbonhq:OrganizationPermaKey",
+      "@type": "xsd:string"
+    },
+    "BirthDate": {
+      "@id": "karbonhq:BirthDate",
+      "@type": "xsd:dateTime"
+    },
+    "DeathDate": {
+      "@id": "karbonhq:DeathDate",
+      "@type": "xsd:dateTime"
+    },
+    "Salutation": {
+      "@id": "karbonhq:Salutation",
+      "@type": "xsd:string"
+    },
+    "Sex": {
+      "@id": "karbonhq:Sex",
+      "@type": "xsd:string"
+    },
+    "FinancialYearEndDay": {
+      "@id": "karbonhq:FinancialYearEndDay",
+      "@type": "xsd:integer"
+    },
+    "FinancialYearEndMonth": {
+      "@id": "karbonhq:FinancialYearEndMonth",
+      "@type": "xsd:integer"
+    },
+    "IncorporationDate": {
+      "@id": "karbonhq:IncorporationDate",
+      "@type": "xsd:dateTime"
+    },
+    "IncorporationState": {
+      "@id": "karbonhq:IncorporationState",
+      "@type": "xsd:string"
+    },
+    "LegalName": {
+      "@id": "karbonhq:LegalName",
+      "@type": "xsd:string"
+    },
+    "LineOfBusiness": {
+      "@id": "karbonhq:LineOfBusiness",
+      "@type": "xsd:string"
+    },
+    "TaxCountryCode": {
+      "@id": "karbonhq:TaxCountryCode",
+      "@type": "xsd:string"
+    },
+    "TradingName": {
+      "@id": "karbonhq:TradingName",
+      "@type": "xsd:string"
+    },
+    "AnnualRevenue": {
+      "@id": "karbonhq:AnnualRevenue",
+      "@type": "xsd:decimal"
+    },
+    "BaseCurrency": {
+      "@id": "karbonhq:BaseCurrency",
+      "@type": "xsd:string"
+    },
+    "GstBasis": {
+      "@id": "karbonhq:GstBasis",
+      "@type": "xsd:string"
+    },
+    "GstPeriod": {
+      "@id": "karbonhq:GstPeriod",
+      "@type": "xsd:string"
+    },
+    "IncomeTaxInstallmentPeriod": {
+      "@id": "karbonhq:IncomeTaxInstallmentPeriod",
+      "@type": "xsd:string"
+    },
+    "IsVATRegistered": {
+      "@id": "karbonhq:IsVATRegistered",
+      "@type": "xsd:boolean"
+    },
+    "OrganizationValuation": {
+      "@id": "karbonhq:OrganizationValuation",
+      "@type": "xsd:decimal"
+    },
+    "PaysTax": {
+      "@id": "karbonhq:PaysTax",
+      "@type": "xsd:boolean"
+    },
+    "PrepareGST": {
+      "@id": "karbonhq:PrepareGST",
+      "@type": "xsd:boolean"
+    },
+    "ProvisionalTaxBasic": {
+      "@id": "karbonhq:ProvisionalTaxBasic",
+      "@type": "xsd:string"
+    },
+    "ProvisionalTaxRatio": {
+      "@id": "karbonhq:ProvisionalTaxRatio",
+      "@type": "xsd:string"
+    },
+    "RevenueModel": {
+      "@id": "karbonhq:RevenueModel",
+      "@type": "xsd:string"
+    },
+    "SalesTaxBasis": {
+      "@id": "karbonhq:SalesTaxBasis",
+      "@type": "xsd:string"
+    },
+    "SalesTaxPeriod": {
+      "@id": "karbonhq:SalesTaxPeriod",
+      "@type": "xsd:string"
+    },
+    "Sells": {
+      "@id": "karbonhq:Sells",
+      "@type": "xsd:string"
+    },
+    "DateSignedEngagement": {
+      "@id": "karbonhq:DateSignedEngagement",
+      "@type": "xsd:dateTime"
+    },
+    "Bank": {
+      "@id": "karbonhq:Bank",
+      "@container": "@list"
+    },
+    "Payroll": {
+      "@id": "karbonhq:Payroll",
+      "@container": "@list"
+    },
+    "BillPay": {
+      "@id": "karbonhq:BillPay",
+      "@container": "@list"
+    },
+    "Benefits": {
+      "@id": "karbonhq:Benefits",
+      "@container": "@list"
+    },
+    "Revenue": {
+      "@id": "karbonhq:Revenue",
+      "@container": "@list"
+    },
+    "FileManagement": {
+      "@id": "karbonhq:FileManagement",
+      "@container": "@list"
+    },
+    "Accounting": {
+      "@id": "karbonhq:Accounting",
+      "@container": "@list"
+    },
+    "RegistrationNumbers": {
+      "@id": "karbonhq:RegistrationNumbers",
+      "@container": "@list"
+    },
+    "LegalFirm": {
+      "@id": "karbonhq:LegalFirm"
+    },
+    "TaxProvider": {
+      "@id": "karbonhq:TaxProvider"
+    },
+    "Notes": {
+      "@id": "karbonhq:Notes",
+      "@container": "@list"
+    },
+    "GetComment": "karbonhq:GetComment",
+    "CommentKey": {
+      "@id": "karbonhq:CommentKey",
+      "@type": "xsd:string"
+    },
+    "CommentTypeKey": {
+      "@id": "karbonhq:CommentTypeKey",
+      "@type": "xsd:string"
+    },
+    "CommentBody": {
+      "@id": "karbonhq:CommentBody",
+      "@type": "xsd:string"
+    },
+    "CreatedDate": {
+      "@id": "karbonhq:CreatedDate",
+      "@type": "xsd:string"
+    },
+    "AuthorKey": {
+      "@id": "karbonhq:AuthorKey",
+      "@type": "xsd:string"
+    },
+    "GetClientGroup": "karbonhq:GetClientGroup",
+    "GetContacts": "karbonhq:GetContacts",
+    "GetTenantSettings": "karbonhq:GetTenantSettings",
+    "ContactTypes": {
+      "@id": "karbonhq:ContactTypes",
+      "@container": "@list"
+    },
+    "TenantKey": {
+      "@id": "karbonhq:TenantKey",
+      "@type": "xsd:string"
+    },
+    "ClientAccessActivated": {
+      "@id": "karbonhq:ClientAccessActivated",
+      "@type": "xsd:boolean"
+    },
+    "WorkStatuses": {
+      "@id": "karbonhq:WorkStatuses",
+      "@container": "@list"
+    },
+    "WorkTypes": {
+      "@id": "karbonhq:WorkTypes",
+      "@container": "@list"
+    },
+    "ServiceTypes": {
+      "@id": "karbonhq:ServiceTypes",
+      "@container": "@list"
+    },
+    "GetOrganizations": "karbonhq:GetOrganizations",
+    "BillingKarbonPayment": "karbonhq:BillingKarbonPayment",
+    "KarbonPayment": {
+      "@id": "karbonhq:KarbonPayment"
+    },
+    "WorkItem": "karbonhq:WorkItem",
+    "WorkItemKey": {
+      "@id": "karbonhq:WorkItemKey",
+      "@type": "xsd:string"
+    },
+    "AssigneeEmailAddress": {
+      "@id": "karbonhq:AssigneeEmailAddress",
+      "@type": "xsd:string"
+    },
+    "AssigneeKey": {
+      "@id": "karbonhq:AssigneeKey",
+      "@type": "xsd:string"
+    },
+    "AssigneeName": {
+      "@id": "karbonhq:AssigneeName",
+      "@type": "xsd:string"
+    },
+    "Title": {
+      "@id": "karbonhq:Title",
+      "@type": "xsd:string"
+    },
+    "ClientKey": {
+      "@id": "karbonhq:ClientKey",
+      "@type": "xsd:string"
+    },
+    "ClientName": {
+      "@id": "karbonhq:ClientName",
+      "@type": "xsd:string"
+    },
+    "ClientType": {
+      "@id": "karbonhq:ClientType",
+      "@type": "xsd:string"
+    },
+    "ClientUserDefinedIdentifier": {
+      "@id": "karbonhq:ClientUserDefinedIdentifier",
+      "@type": "xsd:string"
+    },
+    "RelatedClientGroupKey": {
+      "@id": "karbonhq:RelatedClientGroupKey",
+      "@type": "xsd:string"
+    },
+    "ClientGroupKey": {
+      "@id": "karbonhq:ClientGroupKey",
+      "@type": "xsd:string"
+    },
+    "RelatedClientGroupName": {
+      "@id": "karbonhq:RelatedClientGroupName",
+      "@type": "xsd:string"
+    },
+    "StartDate": {
+      "@id": "karbonhq:StartDate",
+      "@type": "xsd:dateTime"
+    },
+    "DueDate": {
+      "@id": "karbonhq:DueDate",
+      "@type": "xsd:dateTime"
+    },
+    "DeadlineDate": {
+      "@id": "karbonhq:DeadlineDate",
+      "@type": "xsd:dateTime"
+    },
+    "CompletedDate": {
+      "@id": "karbonhq:CompletedDate",
+      "@type": "xsd:dateTime"
+    },
+    "ToDoPeriod": {
+      "@id": "karbonhq:ToDoPeriod",
+      "@type": "xsd:dateTime"
+    },
+    "WorkType": {
+      "@id": "karbonhq:WorkType",
+      "@type": "xsd:string"
+    },
+    "WorkStatus": {
+      "@id": "karbonhq:WorkStatus",
+      "@type": "xsd:string"
+    },
+    "PrimaryStatus": {
+      "@id": "karbonhq:PrimaryStatus",
+      "@type": "xsd:string"
+    },
+    "SecondaryStatus": {
+      "@id": "karbonhq:SecondaryStatus",
+      "@type": "xsd:string"
+    },
+    "WorkTemplateKey": {
+      "@id": "karbonhq:WorkTemplateKey",
+      "@type": "xsd:string"
+    },
+    "WorkTemplateTile": {
+      "@id": "karbonhq:WorkTemplateTile",
+      "@type": "xsd:string"
+    },
+    "WorkScheduleKey": {
+      "@id": "karbonhq:WorkScheduleKey",
+      "@type": "xsd:string"
+    },
+    "EstimatedBudget": {
+      "@id": "karbonhq:EstimatedBudget",
+      "@type": "xsd:decimal"
+    },
+    "WorkItemUpdate": "karbonhq:WorkItemUpdate",
+    "Description": {
+      "@id": "karbonhq:Description",
+      "@type": "xsd:string"
+    },
+    "ClientTaskRecipient": {
+      "@id": "karbonhq:ClientTaskRecipient"
+    },
+    "WorkFeeSettings": "karbonhq:WorkFeeSettings",
+    "FeeSettings": {
+      "@id": "karbonhq:FeeSettings"
+    },
+    "WorkItemUserRoleAssignments": "karbonhq:WorkItemUserRoleAssignments",
+    "UserRoleAssignments": {
+      "@id": "karbonhq:UserRoleAssignments",
+      "@container": "@list"
+    },
+    "GetWorkItems": "karbonhq:GetWorkItems",
+    "ResponseCreateClientGroup": "karbonhq:ResponseCreateClientGroup",
+    "FullName": {
+      "@id": "karbonhq:FullName",
+      "@type": "xsd:string"
+    },
+    "ClientOwner": {
+      "@id": "karbonhq:ClientOwner",
+      "@type": "xsd:string"
+    },
+    "ClientManager": {
+      "@id": "karbonhq:ClientManager",
+      "@type": "xsd:string"
+    },
+    "ContactType": {
+      "@id": "karbonhq:ContactType",
+      "@type": "xsd:string"
+    },
+    "UserDefinedIdentifier": {
+      "@id": "karbonhq:UserDefinedIdentifier",
+      "@type": "xsd:string"
+    },
+    "RestrictionLevel": {
+      "@id": "karbonhq:RestrictionLevel",
+      "@type": "xsd:string"
+    },
+    "PrimaryContact": {
+      "@id": "karbonhq:PrimaryContact",
+      "@type": "xsd:string"
+    },
+    "LastModifiedDateTime": {
+      "@id": "karbonhq:LastModifiedDateTime",
+      "@type": "xsd:dateTime"
+    },
+    "Members": {
+      "@id": "karbonhq:Members",
+      "@container": "@list"
+    },
+    "EntityDescription": {
+      "@id": "karbonhq:EntityDescription"
+    },
+    "CreateClientGroup": "karbonhq:CreateClientGroup",
+    "ResponseCreateContact": "karbonhq:ResponseCreateContact",
+    "ContactKey": {
+      "@id": "karbonhq:ContactKey",
+      "@type": "xsd:string"
+    },
+    "FirstName": {
+      "@id": "karbonhq:FirstName",
+      "@type": "xsd:string"
+    },
+    "MiddleName": {
+      "@id": "karbonhq:MiddleName",
+      "@type": "xsd:string"
+    },
+    "LastName": {
+      "@id": "karbonhq:LastName",
+      "@type": "xsd:string"
+    },
+    "PreferredName": {
+      "@id": "karbonhq:PreferredName",
+      "@type": "xsd:string"
+    },
+    "Suffix": {
+      "@id": "karbonhq:Suffix",
+      "@type": "xsd:string"
+    },
+    "AvatarUrl": {
+      "@id": "karbonhq:AvatarUrl",
+      "@type": "xsd:string"
+    },
+    "AccountingDetail": {
+      "@id": "karbonhq:AccountingDetail",
+      "@type": "@id"
+    },
+    "BusinessCards": {
+      "@id": "karbonhq:BusinessCards",
+      "@type": "@id"
+    },
+    "ClientTeam": {
+      "@id": "karbonhq:ClientTeam",
+      "@type": "@id"
+    },
+    "ClientAccess": {
+      "@id": "karbonhq:ClientAccess",
+      "@type": "@id"
+    },
+    "ContactsCardOrganization": "karbonhq:ContactsCardOrganization",
+    "Address": {
+      "@id": "karbonhq:Address",
+      "@type": "xsd:string"
+    },
+    "EmailAddress": {
+      "@id": "karbonhq:EmailAddress",
+      "@type": "xsd:string"
+    },
+    "PhoneNumber": {
+      "@id": "karbonhq:PhoneNumber"
+    },
+    "CreateContact": "karbonhq:CreateContact",
+    "ExpenseRequest": "karbonhq:ExpenseRequest",
+    "Timeline": {
+      "@id": "karbonhq:Timeline"
+    },
+    "ExpenseDate": {
+      "@id": "karbonhq:ExpenseDate",
+      "@type": "xsd:dateTime"
+    },
+    "BillableValue": {
+      "@id": "karbonhq:BillableValue",
+      "@type": "xsd:decimal"
+    },
+    "NoteRequest": "karbonhq:NoteRequest",
+    "Subject": {
+      "@id": "karbonhq:Subject",
+      "@type": "xsd:string"
+    },
+    "Body": {
+      "@id": "karbonhq:Body",
+      "@type": "xsd:string"
+    },
+    "AuthorEmailAddress": {
+      "@id": "karbonhq:AuthorEmailAddress",
+      "@type": "xsd:string"
+    },
+    "TodoDate": {
+      "@id": "karbonhq:TodoDate",
+      "@type": "xsd:dateTime"
+    },
+    "Timelines": {
+      "@id": "karbonhq:Timelines",
+      "@container": "@list"
+    },
+    "NoteResponse": "karbonhq:NoteResponse",
+    "Id": {
+      "@id": "karbonhq:Id",
+      "@type": "xsd:string"
+    },
+    "Comments": {
+      "@id": "karbonhq:Comments",
+      "@container": "@list"
+    },
+    "CreateOrganizationResponse": "karbonhq:CreateOrganizationResponse",
+    "CreateOrganization": "karbonhq:CreateOrganization",
+    "UpdateOrganization": "karbonhq:UpdateOrganization",
+    "FileList": "karbonhq:FileList",
+    "TotalCount": {
+      "@id": "karbonhq:TotalCount",
+      "@type": "xsd:integer"
+    },
+    "Attachments": {
+      "@id": "karbonhq:Attachments",
+      "@container": "@list"
+    },
+    "FileListItem": "karbonhq:FileListItem",
+    "FileContextKey": {
+      "@id": "karbonhq:FileContextKey",
+      "@type": "xsd:string"
+    },
+    "Source": {
+      "@id": "karbonhq:Source",
+      "@type": "xsd:string"
+    },
+    "FileName": {
+      "@id": "karbonhq:FileName",
+      "@type": "xsd:string"
+    },
+    "FileSize": {
+      "@id": "karbonhq:FileSize",
+      "@type": "xsd:integer"
+    },
+    "MimeType": {
+      "@id": "karbonhq:MimeType",
+      "@type": "xsd:string"
+    },
+    "DownloadUrl": {
+      "@id": "karbonhq:DownloadUrl",
+      "@type": "xsd:string"
+    },
+    "DateCreated": {
+      "@id": "karbonhq:DateCreated",
+      "@type": "xsd:dateTime"
+    },
+    "IsArchived": {
+      "@id": "karbonhq:IsArchived",
+      "@type": "xsd:boolean"
+    },
+    "IsShared": {
+      "@id": "karbonhq:IsShared",
+      "@type": "xsd:boolean"
+    },
+    "GetSingleTimeSheet": "karbonhq:GetSingleTimeSheet",
+    "TimesheetKey": {
+      "@id": "karbonhq:TimesheetKey",
+      "@type": "xsd:string"
+    },
+    "EndDate": {
+      "@id": "karbonhq:EndDate",
+      "@type": "xsd:dateTime"
+    },
+    "UserKey": {
+      "@id": "karbonhq:UserKey",
+      "@type": "xsd:string"
+    },
+    "Status": {
+      "@id": "karbonhq:Status",
+      "@type": "xsd:string"
+    },
+    "WorkItemKeys": {
+      "@id": "karbonhq:WorkItemKeys",
+      "@container": "@list"
+    },
+    "TimeEntries": {
+      "@id": "karbonhq:TimeEntries",
+      "@container": "@list"
+    },
+    "GetTimeSheets": "karbonhq:GetTimeSheets",
+    "GetIndividualTimeEntry": "karbonhq:GetIndividualTimeEntry",
+    "IndividualTimeEntryKey": {
+      "@id": "karbonhq:IndividualTimeEntryKey",
+      "@type": "xsd:string"
+    },
+    "TaskTypeIsBillable": {
+      "@id": "karbonhq:TaskTypeIsBillable",
+      "@type": "xsd:boolean"
+    },
+    "Date": {
+      "@id": "karbonhq:Date",
+      "@type": "xsd:dateTime"
+    },
+    "Minutes": {
+      "@id": "karbonhq:Minutes",
+      "@type": "xsd:integer"
+    },
+    "HourlyRate": {
+      "@id": "karbonhq:HourlyRate",
+      "@type": "xsd:decimal"
+    },
+    "TotalCost": {
+      "@id": "karbonhq:TotalCost",
+      "@type": "xsd:decimal"
+    },
+    "BilledStatus": {
+      "@id": "karbonhq:BilledStatus",
+      "@type": "xsd:string"
+    },
+    "ModifiedDate": {
+      "@id": "karbonhq:ModifiedDate",
+      "@type": "xsd:dateTime"
+    },
+    "FeeType": {
+      "@id": "karbonhq:FeeType",
+      "@type": "xsd:string"
+    },
+    "GetIndividualTimeEntries": "karbonhq:GetIndividualTimeEntries",
+    "GetSingleUser": "karbonhq:GetSingleUser",
+    "GetUserById": "karbonhq:GetUserById",
+    "BillableRate": {
+      "@id": "karbonhq:BillableRate",
+      "@type": "xsd:decimal"
+    },
+    "CapacityMinutesPerWeek": {
+      "@id": "karbonhq:CapacityMinutesPerWeek",
+      "@type": "xsd:integer"
+    },
+    "Permissions": {
+      "@id": "karbonhq:Permissions",
+      "@container": "@list"
+    },
+    "Roles": {
+      "@id": "karbonhq:Roles",
+      "@container": "@list"
+    },
+    "Teams": {
+      "@id": "karbonhq:Teams",
+      "@container": "@list"
+    },
+    "GetUsers": "karbonhq:GetUsers",
+    "GetWebhookSubscriptions": "karbonhq:GetWebhookSubscriptions",
+    "TargetUrl": {
+      "@id": "karbonhq:TargetUrl",
+      "@type": "xsd:string"
+    },
+    "WebhookType": {
+      "@id": "karbonhq:WebhookType",
+      "@type": "xsd:string"
+    },
+    "WebhookTypes": {
+      "@id": "karbonhq:WebhookTypes",
+      "@container": "@list"
+    },
+    "BatchSize": {
+      "@id": "karbonhq:BatchSize",
+      "@type": "xsd:integer"
+    },
+    "BatchMaxDelaySeconds": {
+      "@id": "karbonhq:BatchMaxDelaySeconds",
+      "@type": "xsd:integer"
+    },
+    "UpdateWorkSchedule": "karbonhq:UpdateWorkSchedule",
+    "ScheduleEndDate": {
+      "@id": "karbonhq:ScheduleEndDate"
+    },
+    "AssigneeUserKey": {
+      "@id": "karbonhq:AssigneeUserKey",
+      "@type": "xsd:string"
+    },
+    "WorkScheduleRequest": "karbonhq:WorkScheduleRequest",
+    "CreatedFromWorkItemKey": {
+      "@id": "karbonhq:CreatedFromWorkItemKey",
+      "@type": "xsd:string"
+    },
+    "RecurrenceFrequency": {
+      "@id": "karbonhq:RecurrenceFrequency",
+      "@type": "xsd:string"
+    },
+    "CustomFrequencyUnits": {
+      "@id": "karbonhq:CustomFrequencyUnits",
+      "@type": "xsd:string"
+    },
+    "CustomFrequencyMultiple": {
+      "@id": "karbonhq:CustomFrequencyMultiple",
+      "@type": "xsd:integer"
+    },
+    "ScheduleStartDate": {
+      "@id": "karbonhq:ScheduleStartDate",
+      "@type": "xsd:dateTime"
+    },
+    "ScheduleDueDateMethod": {
+      "@id": "karbonhq:ScheduleDueDateMethod",
+      "@type": "xsd:string"
+    },
+    "ScheduleDueDateDays": {
+      "@id": "karbonhq:ScheduleDueDateDays",
+      "@type": "xsd:integer"
+    },
+    "ScheduleDueDateMonthMultiple": {
+      "@id": "karbonhq:ScheduleDueDateMonthMultiple",
+      "@type": "xsd:integer"
+    },
+    "ScheduleDeadlineDateMethod": {
+      "@id": "karbonhq:ScheduleDeadlineDateMethod",
+      "@type": "xsd:string"
+    },
+    "ScheduleDeadlineDateDays": {
+      "@id": "karbonhq:ScheduleDeadlineDateDays",
+      "@type": "xsd:integer"
+    },
+    "ScheduleDeadlineDateMonthMultiple": {
+      "@id": "karbonhq:ScheduleDeadlineDateMonthMultiple",
+      "@type": "xsd:integer"
+    },
+    "PreventStartEndOnWeekend": {
+      "@id": "karbonhq:PreventStartEndOnWeekend",
+      "@type": "xsd:boolean"
+    },
+    "InitializeBeforeStartDateUnits": {
+      "@id": "karbonhq:InitializeBeforeStartDateUnits",
+      "@type": "xsd:string"
+    },
+    "InitializeBeforeStartDateMultiple": {
+      "@id": "karbonhq:InitializeBeforeStartDateMultiple",
+      "@type": "xsd:integer"
+    },
+    "InitializeTasksBeforeStartDateUnits": {
+      "@id": "karbonhq:InitializeTasksBeforeStartDateUnits",
+      "@type": "xsd:string"
+    },
+    "InitializeTasksBeforeStartDateMultiple": {
+      "@id": "karbonhq:InitializeTasksBeforeStartDateMultiple",
+      "@type": "xsd:integer"
+    },
+    "WorkItemTitleDefinition": {
+      "@id": "karbonhq:WorkItemTitleDefinition",
+      "@type": "xsd:string"
+    },
+    "Team": "karbonhq:Team",
+    "TeamKey": {
+      "@id": "karbonhq:TeamKey",
+      "@type": "xsd:string"
+    },
+    "ParentTeamKey": {
+      "@id": "karbonhq:ParentTeamKey",
+      "@type": "xsd:string"
+    },
+    "Role": "karbonhq:Role",
+    "TeamMember": "karbonhq:TeamMember",
+    "GetTeams": "karbonhq:GetTeams",
+    "GetRoles": "karbonhq:GetRoles",
+    "AddTeamMembers": "karbonhq:AddTeamMembers",
+    "UserKeys": {
+      "@id": "karbonhq:UserKeys",
+      "@container": "@list"
+    },
+    "RemoveTeamMember": "karbonhq:RemoveTeamMember",
+    "GetWorkSchedule": "karbonhq:GetWorkSchedule",
+    "FrequencyDescription": {
+      "@id": "karbonhq:FrequencyDescription",
+      "@type": "xsd:string"
+    },
+    "WorkItemDescription": {
+      "@id": "karbonhq:WorkItemDescription",
+      "@type": "xsd:string"
+    },
+    "WorkItemTitleDisplayText": {
+      "@id": "karbonhq:WorkItemTitleDisplayText",
+      "@type": "xsd:string"
+    },
+    "GetSingleWorkTemplate": "karbonhq:GetSingleWorkTemplate",
+    "WorkTypeKey": {
+      "@id": "karbonhq:WorkTypeKey",
+      "@type": "xsd:string"
+    },
+    "HasScheduledClientTaskGroups": {
+      "@id": "karbonhq:HasScheduledClientTaskGroups",
+      "@type": "xsd:boolean"
+    },
+    "EstimatedTime": {
+      "@id": "karbonhq:EstimatedTime",
+      "@type": "xsd:string"
+    },
+    "DraftHasChanges": {
+      "@id": "karbonhq:DraftHasChanges",
+      "@type": "xsd:boolean"
+    },
+    "PublishedDate": {
+      "@id": "karbonhq:PublishedDate",
+      "@type": "xsd:dateTime"
+    },
+    "NumberOfWorkItemsCreated": {
+      "@id": "karbonhq:NumberOfWorkItemsCreated",
+      "@type": "xsd:decimal"
+    },
+    "DateLastWorkItemCreated": {
+      "@id": "karbonhq:DateLastWorkItemCreated",
+      "@type": "xsd:dateTime"
+    },
+    "DateModified": {
+      "@id": "karbonhq:DateModified",
+      "@type": "xsd:dateTime"
+    },
+    "ActorRoles": {
+      "@id": "karbonhq:ActorRoles",
+      "@container": "@list"
+    },
+    "GetWorkTemplates": "karbonhq:GetWorkTemplates",
+    "ErrorMessages": "karbonhq:ErrorMessages",
+    "error": {
+      "@id": "karbonhq:error"
+    },
+    "EnhancedErrorMessages": "karbonhq:EnhancedErrorMessages",
+    "RateLimitErrorMessage": "karbonhq:RateLimitErrorMessage",
+    "statusCode": {
+      "@id": "karbonhq:statusCode",
+      "@type": "xsd:string"
+    },
+    "message": {
+      "@id": "karbonhq:message",
+      "@type": "xsd:string"
+    },
+    "ManualPaymentNotFoundErrorMessage": "karbonhq:ManualPaymentNotFoundErrorMessage",
+    "ResourceNotFound": "karbonhq:ResourceNotFound",
+    "SettingContactType": "karbonhq:SettingContactType",
+    "ContactTypeKey": {
+      "@id": "karbonhq:ContactTypeKey",
+      "@type": "xsd:string"
+    },
+    "SettingWorkStatus": "karbonhq:SettingWorkStatus",
+    "Children": {
+      "@id": "karbonhq:Children",
+      "@container": "@list"
+    },
+    "SettingWorkType": "karbonhq:SettingWorkType",
+    "AvailableStatuses": {
+      "@id": "karbonhq:AvailableStatuses"
+    },
+    "SettingServiceType": "karbonhq:SettingServiceType",
+    "ServiceTypeKey": {
+      "@id": "karbonhq:ServiceTypeKey",
+      "@type": "xsd:string"
+    },
+    "WorkTypeKeys": {
+      "@id": "karbonhq:WorkTypeKeys",
+      "@container": "@list"
+    },
+    "IntegrationTaskDefinitions": "karbonhq:IntegrationTaskDefinitions",
+    "values": {
+      "@id": "karbonhq:values",
+      "@container": "@list"
+    },
+    "IntegrationTaskDefinition": "karbonhq:IntegrationTaskDefinition",
+    "TaskDefinitionKey": {
+      "@id": "karbonhq:TaskDefinitionKey",
+      "@type": "xsd:string"
+    },
+    "TaskName": {
+      "@id": "karbonhq:TaskName",
+      "@type": "xsd:string"
+    },
+    "TaskPrimaryLinkUrl": {
+      "@id": "karbonhq:TaskPrimaryLinkUrl"
+    },
+    "TaskPrimaryLinkLabel": {
+      "@id": "karbonhq:TaskPrimaryLinkLabel"
+    },
+    "TaskSecondaryLinkUrl": {
+      "@id": "karbonhq:TaskSecondaryLinkUrl"
+    },
+    "TaskSecondaryLinkLabel": {
+      "@id": "karbonhq:TaskSecondaryLinkLabel"
+    },
+    "Locales": {
+      "@id": "karbonhq:Locales",
+      "@container": "@list"
+    },
+    "AllowedTaskUrlHosts": {
+      "@id": "karbonhq:AllowedTaskUrlHosts",
+      "@container": "@list"
+    },
+    "IntegrationTasks": "karbonhq:IntegrationTasks",
+    "IntegrationTaskReadOnly": "karbonhq:IntegrationTaskReadOnly",
+    "CreatedAt": {
+      "@id": "karbonhq:CreatedAt",
+      "@type": "xsd:string"
+    },
+    "TaskKey": {
+      "@id": "karbonhq:TaskKey",
+      "@type": "xsd:string"
+    },
+    "Locale": {
+      "@id": "karbonhq:Locale",
+      "@type": "xsd:string"
+    },
+    "WorkItemClientKey": {
+      "@id": "karbonhq:WorkItemClientKey",
+      "@type": "xsd:string"
+    },
+    "IntegrationTaskWriteable": "karbonhq:IntegrationTaskWriteable",
+    "TaskStatus": {
+      "@id": "karbonhq:TaskStatus",
+      "@type": "xsd:string"
+    },
+    "TaskDueDate": {
+      "@id": "karbonhq:TaskDueDate",
+      "@type": "xsd:string"
+    },
+    "TaskData": {
+      "@id": "karbonhq:TaskData",
+      "@container": "@list"
+    },
+    "IntegrationTaskData": "karbonhq:IntegrationTaskData",
+    "contact-webhook": "karbonhq:contact-webhook",
+    "ResourcePermaKey": {
+      "@id": "karbonhq:ResourcePermaKey",
+      "@type": "xsd:string"
+    },
+    "ResourceType": {
+      "@id": "karbonhq:ResourceType",
+      "@type": "xsd:string"
+    },
+    "ActionType": {
+      "@id": "karbonhq:ActionType",
+      "@type": "xsd:string"
+    },
+    "TimeStamp": {
+      "@id": "karbonhq:TimeStamp",
+      "@type": "xsd:dateTime"
+    },
+    "customfield-webhook": "karbonhq:customfield-webhook",
+    "estimate-summary-webhook": "karbonhq:estimate-summary-webhook",
+    "integration-task-webhook": "karbonhq:integration-task-webhook",
+    "invoice-webhook": "karbonhq:invoice-webhook",
+    "note-webhook": "karbonhq:note-webhook",
+    "note-comment-webhook": "karbonhq:note-comment-webhook",
+    "ParentEntityType": {
+      "@id": "karbonhq:ParentEntityType",
+      "@type": "xsd:string"
+    },
+    "ParentEntityKey": {
+      "@id": "karbonhq:ParentEntityKey",
+      "@type": "xsd:string"
+    },
+    "user-webhook": "karbonhq:user-webhook",
+    "work-webhook": "karbonhq:work-webhook",
+    "webhook-batch-event": "karbonhq:webhook-batch-event",
+    "Timestamp": {
+      "@id": "karbonhq:Timestamp",
+      "@type": "xsd:dateTime"
+    },
+    "webhook-batch": "karbonhq:webhook-batch",
+    "BatchId": {
+      "@id": "karbonhq:BatchId",
+      "@type": "xsd:string"
+    },
+    "Count": {
+      "@id": "karbonhq:Count",
+      "@type": "xsd:integer"
+    },
+    "Events": {
+      "@id": "karbonhq:Events",
+      "@container": "@list"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Karbon API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Karbon's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-09) from openapi/karbonhq-openapi.yml.",
+  "dcterms:created": "2026-10-09",
+  "dcterms:source": [
+    "openapi/karbonhq-openapi.yml"
+  ]
+}

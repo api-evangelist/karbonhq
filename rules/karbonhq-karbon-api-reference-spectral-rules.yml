@@ -1,0 +1,13 @@
+# harvested from https://github.com/karbonhq/karbon-api-reference/blob/57cc9814d7cc6bc697895d0bfe52b0c422684d3c/vacuum-rules.yaml on 2026-10-09 — a Spectral ruleset published in the provider's own GitHub repository (karbonhq/karbon-api-reference); found by GitHub code search, fetched verbatim
+x-method: harvested
+x-stamped: 2026-10-09
+x-source-url: https://github.com/karbonhq/karbon-api-reference/blob/57cc9814d7cc6bc697895d0bfe52b0c422684d3c/vacuum-rules.yaml
+extends: [[spectral:oas, recommended]]
+rules:
+  severity: error
+  paths-kebab-case: false
+  no-ambiguous-paths: false
+  camel-case-properties: false
+  description-duplication: false
+  oas3-missing-example: false
+

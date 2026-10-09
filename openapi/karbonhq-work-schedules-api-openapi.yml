@@ -1,0 +1,1244 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Work Schedules API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Work Schedules across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Work Schedules
+  description: Set a Work Item to repeat on a defined schedule. Read more
+paths:
+  /v3/WorkSchedules:
+    post:
+      tags:
+      - Work Schedules
+      summary: Creates a new Work Schedule
+      description: Use the `POST` method on this endpoint to create a new Work Schedule in your tenant.
+      operationId: createWorkSchedule
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWorkSchedule'
+          headers:
+            Location:
+              description: The endpoint URL to the newly created Work Schedule.
+              schema:
+                type: string
+                example: https://api.karbonhq.com/v3/WorkSchedules('4yRJNlPnjgtL')
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Missing CreatedFromWorkItemKey:
+                  $ref: '#/components/examples/Missing_CreatedFromWorkItemKey'
+                Incorrect CustomFrequencyMultiple:
+                  $ref: '#/components/examples/Incorrect_CustomFrequencyMultiple'
+                Missing Create Data:
+                  $ref: '#/components/examples/Missing_Create_Data'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkScheduleRequest'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/WorkSchedules/{WorkSchedulekey}:
+    get:
+      tags:
+      - Work Schedules
+      summary: Gets a Work Schedule using WorkSchedulekey
+      parameters:
+      - required: true
+        in: path
+        name: WorkSchedulekey
+        schema:
+          type: string
+        example: Bm6CGxrWp8W
+        description: The Karbon-generated Work Schedule key
+      description: Use the `GET` method on this endpoint to receive the details of a Work Schedule specified using the WorkSchedulekey.
+      operationId: getWorkScheduleByID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWorkSchedule'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Key Not Found:
+                  $ref: '#/components/examples/WorkSchedule_Key_Not_Found_404'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    put:
+      tags:
+      - Work Schedules
+      summary: Updates a Work Schedule (Full)
+      parameters:
+      - required: true
+        in: path
+        name: WorkSchedulekey
+        schema:
+          type: string
+        example: Bm6CGxrWp8W
+        description: The Karbon-generated Work Schedule key
+      description: Use the `PUT` method on this endpoint to update full details of a Work Schedule specified using the WorkSchedulekey.
+      operationId: putWorkScheduleByID
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Missing Create Data:
+                  $ref: '#/components/examples/Missing_Create_Data'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Key Not Found:
+                  $ref: '#/components/examples/NotFound'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+        '409':
+          description: Conflict — the resource was modified by another request. Refetch the latest version and retry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Stale Object State:
+                  $ref: '#/components/examples/Conflict_StaleObjectState'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkSchedulePUTRequest'
+    patch:
+      tags:
+      - Work Schedules
+      summary: Updates a Work Schedule (Partial)
+      parameters:
+      - required: true
+        in: path
+        name: WorkSchedulekey
+        schema:
+          type: string
+        example: Bm6CGxrWp8W
+        description: The Karbon-generated Work Schedule key
+      description: 'Use the `PATCH` method on this endpoint to update partial details of a Work Schedule specified using the WorkSchedulekey.
+
+
+        This method **only supports** editing the `ScheduleEndDate` property. Pass `null` to clear an existing end date.'
+      operationId: patchWorkScheduleByID
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Incorrect or Missing Data:
+                  $ref: '#/components/examples/Missing_Update_Data'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+                Invalid Property:
+                  $ref: '#/components/examples/Invalid_Property'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Key Not Found:
+                  $ref: '#/components/examples/WorkSchedule_Key_Not_Found_404'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+        '409':
+          description: Conflict — the resource was modified by another request. Refetch the latest version and retry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Stale Object State:
+                  $ref: '#/components/examples/Conflict_StaleObjectState'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWorkSchedule'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  examples:
+    Incorrect_CustomFrequencyMultiple:
+      description: The error returned when creating a new Work Schedule with CustomFrequencyMultiple that is negative or not a number
+      value:
+        error:
+          code: '4002'
+          message: CustomFrequencyMultiple should be greater than 0
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+    NotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      value:
+        error:
+          code: '4004'
+          message: Not Found
+    Invalid_Property:
+      description: The error returned when attempting to use PATCH to update a property that can only be updated as part of a PUT
+      value:
+        error:
+          code: '4002'
+          message: Invalid property to update. Only <Property name> can be patched.
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Missing_CreatedFromWorkItemKey:
+      description: The error returned when a required Work Item Key is not provided when creating a new Work Schedule
+      value:
+        error:
+          code: '4002'
+          message: CreatedFromWorkItemKey not provided.
+    Conflict_StaleObjectState:
+      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
+      value:
+        error:
+          code: '4020'
+          message: The resource was modified by another request. Refetch the latest version and retry.
+    Missing_Update_Data:
+      description: The error returned when the payload for an update is missing or invalid
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: update'
+    Missing_Create_Data:
+      description: The error returned when the request payload is missing a required value
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: <Entity>'
+    WorkSchedule_Key_Not_Found_404:
+      description: The error returned when a Work Schedule cannot be found for the provided Work Schedule Key
+      value:
+        error:
+          code: '4004'
+          message: No Work Schedule found for provided key
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+  schemas:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    WorkScheduleRequest:
+      description: A single Work Schedule
+      required:
+      - CreatedFromWorkItemKey
+      - RecurrenceFrequency
+      - CustomFrequencyMultiple
+      - ScheduleStartDate
+      - ScheduleDueDateMethod
+      - PreventStartEndOnWeekend
+      - InitializeTasksBeforeStartDateUnits
+      - InitializeTasksBeforeStartDateMultiple
+      - WorkItemTitleDefinition
+      type: object
+      properties:
+        AssigneeUserKey:
+          type:
+          - string
+          - 'null'
+          example: 3VQ8Qrq944NW
+          description: The key of an existing Karbon user to assign the Work Schedule's generated Work Items to. On PUT, a null or omitted value leaves the current assignee unchanged. Once set, assignee cannot be cleared. Changing the assignee reassigns every incomplete Work Item in the series; completed Work Items are unchanged.
+        CreatedFromWorkItemKey:
+          type: string
+          description: The key of the Work Item, which the Work Schedule will be assigned to. This value will be `null`.
+          example: null
+        RecurrenceFrequency:
+          type: string
+          description: The unit of time at which this Work Schedule should repeat. Once set, the value of this property can not be changed.
+          enum:
+          - Day
+          - Week
+          - SemiMonth
+          - Fortnight
+          - Month
+          - Quarter
+          - Year
+          - Custom
+          example: Custom
+        CustomFrequencyUnits:
+          type:
+          - string
+          - 'null'
+          description: 'The unit of time at which this Work Schedule should repeat. Once set, the value of this property can not be changed.
+
+
+            This property is only applicable if `RecurrenceFrequency` is set to `Custom`.
+
+            '
+          enum:
+          - Days
+          - Weeks
+          - Months
+          - Years
+          - null
+          example: Days
+        CustomFrequencyMultiple:
+          type: integer
+          format: int32
+          minimum: 1
+          description: 'The multiple of time unit at which this Work Schedule should repeat.  This property is not applicable if `RecurrenceFrequency` is set to `SemiMonth`, `Fortnight`, or `Quarter`.
+
+            '
+          example: 3
+        ScheduleStartDate:
+          type: string
+          format: date-time
+          description: The date at which this Work Schedule should start running
+          example: '2021-07-01T00:00:00Z'
+        ScheduleEndDate:
+          type: string
+          format: date-time
+          description: 'The date at which this Work Schedule should stop running
+
+
+            To set the Work Schedule to run forever, set the value of this property to `null`.'
+          example: '2021-09-01T00:00:00Z'
+        ScheduleDueDateMethod:
+          type: string
+          description: The method that should be used to count the Due Date for the Work Item
+          enum:
+          - DaysFromStartDate
+          - DayOfMonth
+          - LastDayOfMonth
+          - DayOfNextMonth
+          - DayOfSubsequentMonth
+          - NoDueDate
+          example: DaysFromStartDate
+        ScheduleDueDateDays:
+          type: integer
+          format: int32
+          description: 'The value of the count for the Due Date
+
+
+            This property is not applicable if `ScheduleDueDateMethod` is set to `LastDayOfMonth` or `NoDueDate`.
+
+
+            Example of usage: <table> <thead>
+
+            <th>ScheduleDueDateMethod</th>
+
+            <th>ScheduleDueDateDays</th>
+
+            <th>Read Due Date as</th>
+
+            </thead> <tbody>
+
+            <tr>
+
+            <td>DaysFromStartDate</td>
+
+            <td>7</td>
+
+            <td>7 days after start date</td>
+
+            </tr>
+
+            <tr>
+
+            <td>DayOfMonth</td>
+
+            <td>7</td>
+
+            <td>7th day of the current month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>LastDayOfMonth</td>
+
+            <td>N/A</td>
+
+            <td>Last day of the current month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>DayOfNextMonth</td>
+
+            <td>7</td>
+
+            <td>7th day of the next month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>NoDueDate</td>
+
+            <td>N/A</td>
+
+            <td>Work has no due date</td>
+
+            </tr>
+
+            </tbody> </table>
+
+            '
+          example: 7
+        ScheduleDueDateMonthMultiple:
+          type: integer
+          format: int32
+          description: 'The value to denote the number of the months, if the due date is after 2 months.
+
+
+            This property is only applicable if `ScheduleDueDateMethod` is set to `DayOfSubsequentMonth`.
+
+
+            Example of usage: <table> <thead>
+
+            <th>ScheduleDueDateMethod</th>
+
+            <th>ScheduleDueDateDays</th>
+
+            <th>ScheduleDueDateMonthMultiple</th>
+
+            <th>Read Due Date as</th>
+
+            </thead> <tbody>
+
+            <tr>
+
+            <td>DaysFromStartDate</td>
+
+            <td>7</td>
+
+            <td>3</td>
+
+            <td>7th day of the 3rd month after start date</td>
+
+            </tr>
+
+            </tbody> </table>
+
+            '
+          example: 3
+        ScheduleDeadlineDateMethod:
+          type: string
+          description: 'The method that should be used to count the Deadline Date for the Work Item.
+
+
+            Companies House-driven and filing-date-driven deadline methods are not available through the API; setting `ScheduleDeadlineDateMethod` to `CompaniesHouseAccountsDueDate`, `CompaniesHouseConfirmationStatementDueDate` or `OnFilingDate` returns a `400`.
+
+
+            On `PUT`, omitting this property leaves the existing deadline date configuration unchanged. To remove a deadline date, set this to `NoDeadlineDate` explicitly.
+
+            '
+          enum:
+          - DaysFromStartDate
+          - DayOfMonth
+          - LastDayOfMonth
+          - DayOfNextMonth
+          - DayOfSubsequentMonth
+          - NoDeadlineDate
+          example: DaysFromStartDate
+        ScheduleDeadlineDateDays:
+          type: integer
+          format: int32
+          description: 'The value of the count for the Deadline Date
+
+
+            This property is not applicable if `ScheduleDeadlineDateMethod` is set to `LastDayOfMonth` or `NoDeadlineDate`.
+
+
+            Example of usage: <table> <thead>
+
+            <th>ScheduleDeadlineDateMethod</th>
+
+            <th>ScheduleDeadlineDateDays</th>
+
+            <th>Read Deadline Date as</th>
+
+            </thead> <tbody>
+
+            <tr>
+
+            <td>DaysFromStartDate</td>
+
+            <td>7</td>
+
+            <td>7 days after start date</td>
+
+            </tr>
+
+            <tr>
+
+            <td>DayOfMonth</td>
+
+            <td>7</td>
+
+            <td>7th day of the current month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>LastDayOfMonth</td>
+
+            <td>N/A</td>
+
+            <td>Last day of the current month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>DayOfNextMonth</td>
+
+            <td>7</td>
+
+            <td>7th day of the next month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>NoDeadlineDate</td>
+
+            <td>N/A</td>
+
+            <td>Work has no deadline date</td>
+
+            </tr>
+
+            </tbody> </table>
+
+            '
+          example: 7
+        ScheduleDeadlineDateMonthMultiple:
+          type: integer
+          format: int32
+          description: 'The value to denote the number of the months, if the deadline date is after 2 months.
+
+
+            This property is only applicable if `ScheduleDeadlineDateMethod` is set to `DayOfSubsequentMonth`.
+
+
+            Example of usage: <table> <thead>
+
+            <th>ScheduleDeadlineDateMethod</th>
+
+            <th>ScheduleDeadlineDateDays</th>
+
+            <th>ScheduleDeadlineDateMonthMultiple</th>
+
+            <th>Read Deadline Date as</th>
+
+            </thead> <tbody>
+
+            <tr>
+
+            <td>DaysFromStartDate</td>
+
+            <td>7</td>
+
+            <td>3</td>
+
+            <td>7th day of the 3rd month after start date</td>
+
+            </tr>
+
+            </tbody> </table>
+
+            '
+          example: 3
+        PreventStartEndOnWeekend:
+          type: boolean
+          description: If the value of this property is set to `true`, the Work Item will not start on Weekends.
+          example: true
+        InitializeBeforeStartDateUnits:
+          type: string
+          description: 'You can automatically create a Work Item before its Start date. Use this property to set the unit of delay between Start date and Work Item creation date.
+
+            '
+          enum:
+          - Days
+          - Weeks
+          - Months
+          - Years
+          example: Days
+        InitializeBeforeStartDateMultiple:
+          type: integer
+          format: int32
+          description: You can automatically create a Work Item before its Start date. Use this property to set the multiple of delay unit between Start date and Work Item creation date.
+          example: 3
+        InitializeTasksBeforeStartDateUnits:
+          type: string
+          description: You can automatically create budget and tasks for a Work Item before its Start date. Use this property to set the unit of delay between Start date and task creation date.
+          enum:
+          - Days
+          - Weeks
+          - Months
+          - Years
+          example: Days
+        InitializeTasksBeforeStartDateMultiple:
+          type: integer
+          format: int32
+          description: You can automatically create budget and tasks for a Work Item before its Start date. Use this property to set the multiple of delay unit between Start date and task creation date.
+          example: 3
+        WorkItemTitleDefinition:
+          type: string
+          description: 'Use this property to define the format of the Work Item title. Karbon offers a series of object that you can use to construct Work Item Title. For more information, see Technical Guide to Work Item Title Definition.
+
+            '
+          example: '[{"Text":"Payroll","Variable":null,"Format":null,"Offset":0},{"Text":null,"Variable":"RepeatPeriod","Format":"DD MMM, YYYY - DD MMM, YYYY","Offset":0}]'
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    UpdateWorkSchedule:
+      description: The properties that can be updated on a Work Schedule with the PATCH method
+      type: object
+      properties:
+        ScheduleEndDate:
+          oneOf:
+          - type:
+            - string
+            - 'null'
+            example: '2026-12-31T00:00:00Z'
+            format: date-time
+          - type:
+            - string
+            - 'null'
+            example: '2026-12-31'
+            format: date
+          description: The date the Work Schedule should stop producing new Work Items, as an ISO8601 formatted datestamp or timestamp. Pass `null` to clear an existing end date.
+        AssigneeUserKey:
+          type:
+          - string
+          - 'null'
+          example: 3VQ8Qrq944NW
+          description: The key of an existing Karbon user to assign the Work Schedule's generated Work Items to. Changing this reassigns every incomplete Work Item in the series; completed Work Items are unchanged. Once set, assignee cannot be cleared.
+    WorkSchedulePUTRequest:
+      description: A single Work Schedule
+      allOf:
+      - type: object
+        required:
+        - WorkScheduleKey
+        properties:
+          WorkScheduleKey:
+            type: string
+            description: The key of the WorkSchedule, this should match the key used in the URL
+            example: Bm6CGxrWp8W
+      - $ref: '#/components/schemas/WorkScheduleRequest'
+    GetWorkSchedule:
+      description: A single Work Schedule
+      required:
+      - '@odata.context'
+      - WorkScheduleKey
+      - ClientKey
+      - ClientType
+      - CreatedFromWorkItemKey
+      - RecurrenceFrequency
+      - CustomFrequencyMultiple
+      - ScheduleStartDate
+      - ScheduleDueDateMethod
+      - AssigneeUserKey
+      - PreventStartEndOnWeekend
+      - InitializeTasksBeforeStartDateUnits
+      - InitializeTasksBeforeStartDateMultiple
+      - WorkItemTitleDefinition
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#WorkSchedules/$entity
+        WorkScheduleKey:
+          type: string
+          description: A Karbon-generated unique identifier for the Work Schedule
+          example: 4yRJNlPnjgtL
+        ClientKey:
+          type: string
+          description: A Karbon-generated value used to identify the Client for whom the Work Item is prepared
+          example: 3xhJX26hfsR8
+        ClientType:
+          type: string
+          description: The type of the Client
+          enum:
+          - Contact
+          - Organization
+          - ClientGroup
+          example: Contact
+        CreatedFromWorkItemKey:
+          type: string
+          description: The key of the Work Item, which the Work Schedule will be assigned to. This value will be `null`.
+          example: null
+        RecurrenceFrequency:
+          type: string
+          description: The denominator of time period at which this Work Schedule should repeat. Once set, the value of this property can not be changed.
+          enum:
+          - Day
+          - Week
+          - SemiMonth
+          - Fortnight
+          - Month
+          - Quarter
+          - Year
+          - Custom
+          example: Custom
+        CustomFrequencyUnits:
+          type:
+          - string
+          - 'null'
+          description: 'The unit of time at which this Work Schedule should repeat. Once set, the value of this property can not be changed.
+
+
+            This property is only applicable if `RecurrenceFrequency` is set to `Custom`.
+
+            '
+          enum:
+          - Days
+          - Weeks
+          - Months
+          - Years
+          - null
+          example: Days
+        CustomFrequencyMultiple:
+          type: integer
+          format: int32
+          minimum: 1
+          description: 'The multiple of time unit at which this Work Schedule should repeat.  This property is not applicable if `RecurrenceFrequency` is set to `SemiMonth`, `Fortnight`, or `Quarter`.
+
+            '
+          example: 3
+        FrequencyDescription:
+          type: string
+          description: A description of the Frequency
+          example: Every 3 Days
+        ScheduleStartDate:
+          type: string
+          format: date-time
+          description: The date at which this Work Schedule should start running
+          example: '2021-07-01T00:00:00Z'
+        ScheduleEndDate:
+          type: string
+          format: date-time
+          description: 'The date at which this Work Schedule should stop running
+
+
+            To set the Work Schedule to run forever, set the value of this property to `0001-01-01`.'
+          example: '2021-09-01T00:00:00Z'
+        ScheduleDueDateMethod:
+          type: string
+          description: The method that should be used to count the Due Date for the Work Item
+          enum:
+          - DaysFromStartDate
+          - DayOfMonth
+          - LastDayOfMonth
+          - DayOfNextMonth
+          - DayOfSubsequentMonth
+          - NoDueDate
+          example: DaysFromStartDate
+        ScheduleDueDateDays:
+          type: integer
+          format: int32
+          description: 'The value of the count for the Due Date
+
+
+            This property is not applicable if `ScheduleDueDateMethod` is set to `LastDayOfMonth` or `NoDueDate`.
+
+
+            Example of usage:  <table>
+
+            <th>ScheduleDueDateMethod</th>
+
+            <th>ScheduleDueDateDays</th>
+
+            <th>Read Due Date as</th>
+
+            <tr>
+
+            <td>DaysFromStartDate</td>
+
+            <td>7</td>
+
+            <td>7 days after start date</td>
+
+            </tr>
+
+            <tr>
+
+            <td>DayOfMonth</td>
+
+            <td>7</td>
+
+            <td>7th day of the current month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>LastDayOfMonth</td>
+
+            <td>N/A</td>
+
+            <td>Last day of the current month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>DayOfNextMonth</td>
+
+            <td>7</td>
+
+            <td>7th day of the next month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>NoDueDate</td>
+
+            <td>N/A</td>
+
+            <td>Work has no due date</td>
+
+            </tr>
+
+            </table>
+
+            '
+          example: 7
+        ScheduleDueDateMonthMultiple:
+          type: integer
+          format: int32
+          description: 'The value to denote the number of the months, if the due date is after 2 months.
+
+
+            This property is only applicable if `ScheduleDueDateMethod` is set to `DayOfSubsequentMonth`.
+
+
+            Example of usage: <table> <thead>
+
+            <th>ScheduleDueDateMethod</th>
+
+            <th>ScheduleDueDateDays</th>
+
+            <th>ScheduleDueDateMonthMultiple</th>
+
+            <th>Read Due Date as</th>
+
+            </thead> <tbody>
+
+            <tr>
+
+            <td>DaysFromStartDate</td>
+
+            <td>7</td>
+
+            <td>3</td>
+
+            <td>7th day of the 3rd month after start
+
+            date</td>
+
+            </tr>
+
+            </tbody> </table>
+
+            '
+          example: 3
+        ScheduleDeadlineDateMethod:
+          type: string
+          description: 'The method that should be used to count the Deadline Date for the Work Item.
+
+
+            Companies House-driven and filing-date-driven deadline methods are not available through the API; setting `ScheduleDeadlineDateMethod` to `CompaniesHouseAccountsDueDate`, `CompaniesHouseConfirmationStatementDueDate` or `OnFilingDate` returns a `400`.
+
+            '
+          enum:
+          - DaysFromStartDate
+          - DayOfMonth
+          - LastDayOfMonth
+          - DayOfNextMonth
+          - DayOfSubsequentMonth
+          - NoDeadlineDate
+          example: DaysFromStartDate
+        ScheduleDeadlineDateDays:
+          type: integer
+          format: int32
+          description: 'The value of the count for the Deadline Date
+
+
+            This property is not applicable if `ScheduleDeadlineDateMethod` is set to `LastDayOfMonth` or `NoDeadlineDate`.
+
+
+            Example of usage:  <table>
+
+            <th>ScheduleDeadlineDateMethod</th>
+
+            <th>ScheduleDeadlineDateDays</th>
+
+            <th>Read Deadline Date as</th>
+
+            <tr>
+
+            <td>DaysFromStartDate</td>
+
+            <td>7</td>
+
+            <td>7 days after start date</td>
+
+            </tr>
+
+            <tr>
+
+            <td>DayOfMonth</td>
+
+            <td>7</td>
+
+            <td>7th day of the current month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>LastDayOfMonth</td>
+
+            <td>N/A</td>
+
+            <td>Last day of the current month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>DayOfNextMonth</td>
+
+            <td>7</td>
+
+            <td>7th day of the next month</td>
+
+            </tr>
+
+            <tr>
+
+            <td>NoDeadlineDate</td>
+
+            <td>N/A</td>
+
+            <td>Work has no deadline date</td>
+
+            </tr>
+
+            </table>
+
+            '
+          example: 7
+        ScheduleDeadlineDateMonthMultiple:
+          type: integer
+          format: int32
+          description: 'The value to denote the number of the months, if the deadline date is after 2 months.
+
+
+            This property is only applicable if `ScheduleDeadlineDateMethod` is set to `DayOfSubsequentMonth`.
+
+
+            Example of usage: <table> <thead>
+
+            <th>ScheduleDeadlineDateMethod</th>
+
+            <th>ScheduleDeadlineDateDays</th>
+
+            <th>ScheduleDeadlineDateMonthMultiple</th>
+
+            <th>Read Deadline Date as</th>
+
+            </thead> <tbody>
+
+            <tr>
+
+            <td>DaysFromStartDate</td>
+
+            <td>7</td>
+
+            <td>3</td>
+
+            <td>7th day of the 3rd month after start
+
+            date</td>
+
+            </tr>
+
+            </tbody> </table>
+
+            '
+          example: 3
+        AssigneeUserKey:
+          type: string
+          description: A Karbon-generated unique identifier to indicate the user, whom the Work Item has been assigned to
+          example: 3VQ8Qrq944NW
+        WorkItemDescription:
+          type: string
+          description: A free form text field for more information about the Work Item
+          example: Send to Jo for review
+        PreventStartEndOnWeekend:
+          type: boolean
+          description: If the value of this property is set to `true`, the Work Item will not start on Weekends.
+          example: true
+        InitializeBeforeStartDateUnits:
+          type: string
+          description: 'You can automatically create a Work Item before its Start date. Use this property to set the unit of delay between Start date and Work Item creation date.
+
+            '
+          enum:
+          - Days
+          - Weeks
+          - Months
+          - Years
+          example: Days
+        InitializeBeforeStartDateMultiple:
+          type: integer
+          format: int32
+          description: You can automatically create a Work Item before its Start date. Use this property to set the multiple of delay unit between Start date and Work Item creation date.
+          example: 3
+        WorkItemTitleDefinition:
+          type: string
+          description: 'Use this property to define the format of the Work Item title. Karbon offers a series of object that you can use to construct Work Item Title. For more information, see Technical Guide to Work Item Title Definition.
+
+            '
+          example: '[{"Text":"Payroll ","Variable":null,"Format":null,"Offset":0},{"Text":null,"Variable":"RepeatPeriod","Format":"DD MMM, YYYY - DD MMM, YYYY","Offset":0}]'
+        WorkItemTitleDisplayText:
+          type: string
+          description: The title of the related Work Item
+          example: Payroll 31 Aug - 15 Sep
+        InitializeTasksBeforeStartDateUnits:
+          type: string
+          description: You can automatically create budget and tasks for a Work Item before its Start date. Use this property to set the unit of delay between Start date and task creation date.
+          enum:
+          - Days
+          - Weeks
+          - Months
+          - Years
+          example: Days
+        InitializeTasksBeforeStartDateMultiple:
+          type: integer
+          format: int32
+          description: You can automatically create budget and tasks for a Work Item before its Start date. Use this property to set the multiple of delay unit between Start date and task creation date.
+          example: 3
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

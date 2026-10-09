@@ -1,0 +1,234 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Comments API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Comments across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Comments
+  description: Use comments on tasks to add notes or bring a colleague into the conversation to collaborate on the task. Read more
+paths:
+  /v3/Comments('{Commentkey}'):
+    get:
+      tags:
+      - Comments
+      summary: Gets a Comment using CommentKey
+      description: 'This endpoint can be used to get the comment attached to any Karbon entity (e.g., Work Item, Timesheet, Notes, Contacts).
+
+
+        To place a call using this endpoint, you will need the unique `Commentkey` that is used to identify a particular comment in Karbon.'
+      operationId: getComment
+      parameters:
+      - name: Commentkey
+        in: path
+        description: A Karbon-generated unique value that is used to identify the comment
+        required: true
+        schema:
+          type: string
+        example: Xn2r5u7xZe
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetComment'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Incorrect or Missing Data:
+                  $ref: '#/components/examples/Missing_Update_Data'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Key Not Found:
+                  $ref: '#/components/examples/CommentKey_Not_Found'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  examples:
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    CommentKey_Not_Found:
+      description: The error returned when a Comment cannot be found for the provided Comment Key
+      value:
+        error:
+          code: '4004'
+          message: 'Unable to find commentkey: <CommentKey>'
+    Missing_Update_Data:
+      description: The error returned when the payload for an update is missing or invalid
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: update'
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+  schemas:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    GetComment:
+      description: A comment on a Work Item, Note or Contact
+      required:
+      - CommentBody
+      - AuthorKey
+      - CreatedDate
+      properties:
+        '@odata.context':
+          type: string
+          example: https://api.karbonhq.com/v3/$metadata#Comments/$entity
+          description: The information about Karbon controllers generating this response.
+        CommentKey:
+          type: string
+          example: Xn2r5u7xZe
+          description: 'A Karbon-generated unique identifier for the comment
+
+            '
+        CommentTypeKey:
+          type: string
+          example: wF8D81TVZPu
+          description: 'A Karbon-generated value that is used to identify the Karbon entity (e.g., Work Item, Notes, Contacts) associated with the comment.
+
+            '
+        CommentBody:
+          type: string
+          example: Looks good! Lets go ahead with this.
+          description: 'The comment left behind by a Karbon user.
+
+            '
+        CreatedDate:
+          type: string
+          example: '2022-06-21T05:38:10.0608412+00:00'
+          description: 'The date and time at which the comment was created in Karbon. This value is automatically generated by Karbon.
+
+
+            The datetime format is UTC.
+
+            '
+        AuthorKey:
+          type: string
+          example: OgCjeo4gwu
+          description: A random value that indicates the email address of the Karbon user who created the comment.
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

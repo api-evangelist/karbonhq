@@ -1,0 +1,487 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Work Templates API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Work Templates across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Work Templates
+  description: Find and review templates that you created to fit your firm's unique workflows. Read more
+paths:
+  /v3/WorkTemplates:
+    get:
+      tags:
+      - Work Templates
+      summary: Gets a list of Work Templates
+      parameters:
+      - in: query
+        name: $filter
+        schema:
+          type: string
+        examples:
+          Title:
+            value: Title eq 'Payroll processing'
+            summary: Return only Work Templates with the Title 'Payroll processing'
+          WorkTypeKey:
+            value: WorkTypeKey eq '2Wj3ZqNzWtnQ'
+            summary: Return only Work Templates with the WorkType key '2Wj3ZqNzWtnQ'
+          HasScheduledClientTaskGroups:
+            value: HasScheduledClientTaskGroups eq false
+            summary: Return only Work Templates without scheduled ClientTaskGroups
+          DraftHasChanges:
+            value: DraftHasChanges eq false
+            summary: Return only Work Templates without changes
+          PublishedDate:
+            value: PublishedDate eq 2021-12-17T00:00:00Z
+            summary: Return only Work Templates published on December 17, 2021
+          NumberOfWorkItemsCreated:
+            value: NumberOfWorkItemsCreated eq 0
+            summary: Return only Work Templates which have been used to create 0 Work Items
+          DateLastWorkItemCreated:
+            value: DateLastWorkItemCreated eq 2022-11-07T00:00:00Z
+            summary: Return only Work Templates where the Last Work Item created was November 7, 2022
+          DateModified:
+            value: DateModified eq 2023-02-27T13:00:00Z
+            summary: Return only Work Templates last modified at 1pm on 2023-02-27 (UTC)
+        description: 'When this parameter is combined with the URI, this endpoint will return a subset of the Work Templates that satisfy the `$filter` expression.
+
+          '
+      - in: query
+        name: $orderby
+        schema:
+          type: string
+          enum:
+          - WorkTypeKey
+          - WorkTypeKey desc
+          - PublishedDate
+          - PublishedDate desc
+          - NumberOfWorkItemsCreated
+          - NumberOfWorkItemsCreated desc
+          - DateLastWorkItemCreated
+          - DateLastWorkItemCreateddesc
+          - DateModified
+          - DateModified desc
+          default: WorkTypeKey
+        example: PublishedDate
+        description: 'When this parameter is combined with the URI, this endpoint will return a list of Work Templates, sorted by the available properties.
+
+          '
+      - $ref: '#/components/parameters/SkipRecords'
+      - $ref: '#/components/parameters/TopRecords'
+      description: 'Use the `GET` method on this endpoint to receive a paginated list of Work Templates from your tenant. Using the query parameters available to this endpoint, you can also filter the list of Work Templates by their Title, WorkTypeKey, HasScheduledClientTaskGroups, DraftHasChanges, PublishedDate, NumberOfWorkItemsCreated, DateLastWorkItemCreated, or DateModified.
+
+
+        **Notes**
+
+
+        * This endpoint returns a maximum of 100 Work Templates at once.
+
+        * If the query results in more than 100 Work Templates, a link to the next set of the results will be given in the `@odata.nextLink` field of the response.
+
+        * The `$filter` query parameter supports 3 logical operators (`eq`, `startswith` and `and`) and 8 properties to help you form an expression. Usage examples below:
+
+
+        Propertieseq
+
+
+        [For full-text search]startswith
+
+
+        [For searching text that starts with specified characters]and
+
+
+        [For combined property search]
+
+
+        Title/v3/WorkTemplates?$filter=Title eq ''Payroll processing''/v3/WorkTemplates?$filter=startswith(Title,''Payroll'')/v3/WorkTemplates?$filter=startswith(Title,''Payroll'') and WorkTypeKey eq ''2Wj3ZqNzWtnQ''
+
+
+        WorkTypeKey/v3/WorkTemplates?$filter=WorkTypeKey eq ''2Wj3ZqNzWtnQ''/v3/WorkTemplates?$filter=startswith(WorkTypeKey,''2W'')
+
+
+        HasScheduledClientTaskGroups/v3/WorkTemplates?$filter=HasScheduledClientTaskGroups eq falseN/A
+
+
+        DraftHasChanges/v3/WorkTemplates?$filter=DraftHasChanges eq falseN/A
+
+
+        PublishedDate/v3/WorkTemplates?$filter=PublishedDate eq 2021-12-17T01:02:25ZN/A
+
+
+        NumberOfWorkItemsCreated/v3/WorkTemplates?$filter=NumberOfWorkItemsCreated eq 24N/A
+
+
+        DateLastWorkItemCreated/v3/WorkTemplates?$filter=PublishedDate eq 2022-01-09T01:02:25ZN/A
+
+
+        DateModified/v3/WorkTemplates?$filter=PublishedDate eq 2022-01-09T01:02:25ZN/A'
+      operationId: getAllWorkTemplates
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWorkTemplates'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Property:
+                  $ref: '#/components/examples/Unsupported_Property_Filter'
+                Unsupported Orderby Property:
+                  $ref: '#/components/examples/Orderby_Unsupported_Property'
+                $top limit exceeded:
+                  $ref: '#/components/examples/WorkTemplates_Limit_Exceeded_Top'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/WorkTemplates/{WorkTemplatekey}:
+    get:
+      tags:
+      - Work Templates
+      summary: Gets a Work Template using WorkTemplatekey
+      parameters:
+      - required: true
+        in: path
+        name: WorkTemplatekey
+        schema:
+          type: string
+        example: 4ckcnqp5rQYW
+        description: The Karbon-generated Work Template key
+      description: Use the `GET` method on this endpoint to receive the details of a Work Template specified using the WorkTemplatekey.
+      operationId: getWorkTemplateByID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    '@odata.context':
+                      type: string
+                      description: The information about Karbon controllers generating this response.
+                      example: https://api.karbonhq.com/v3/$metadata#WorkTemplates/$entity
+                - $ref: '#/components/schemas/GetSingleWorkTemplate'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Key Not Found:
+                  $ref: '#/components/examples/WorkTemplate_Key_Not_Found_404'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  examples:
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+    Unsupported_Property_Filter:
+      description: The error returned when an unsupported filter is used in a request
+      value:
+        error:
+          code: '4002'
+          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
+    WorkTemplate_Key_Not_Found_404:
+      description: The error returned when a Work Template cannot be found for the provided Work Template Key
+      value:
+        error:
+          code: '4004'
+          message: No Work Template found for provided key
+    WorkTemplates_Limit_Exceeded_Top:
+      description: The error returned when the limit is used in a request exceeds the maximum set for the API
+      value:
+        error:
+          code: '4002'
+          message: The limit of '10' for Top query has been exceeded. The value from the incoming request is '130'.
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Orderby_Unsupported_Property:
+      description: The error returned when an unsupported sort order is used in a request
+      value:
+        error:
+          code: '4002'
+          message: The property '<Property Name>' cannot be used in the $orderby query option.
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+  schemas:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    GetWorkTemplates:
+      description: A collection of Work Templates
+      required:
+      - value
+      - '@odata.context'
+      - '@odata.count'
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#WorkTemplates
+        '@odata.count':
+          type: integer
+          format: int64
+          example: 3
+          description: The total number of Work Templates that satisfy the query criteria.
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetSingleWorkTemplate'
+        '@odata.nextLink':
+          type: string
+          example: https://api.karbonhq.com/v3/WorkTemplates?$skip=10
+          description: The link to next set of Work Templates. @odata.nextLink field will only appear if you have more than 10 Work Templates.
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+    GetSingleWorkTemplate:
+      description: A single Work Template
+      required:
+      - WorkTemplateKey
+      - WorkTypeKey
+      - HasScheduledClientTaskGroups
+      - DraftHasChanges
+      - PublishedDate
+      - NumberOfWorkItemsCreated
+      - DateLastWorkItemCreated
+      - DateModified
+      type: object
+      properties:
+        WorkTemplateKey:
+          type: string
+          description: A Karbon-generated unique identifier for the Work Template
+          example: 2689zyQfqDzw
+        Title:
+          type: string
+          description: The title of the Work Template
+          example: Business tax return (Forms 1120/1120S/1065/990)
+        Description:
+          type: string
+          description: A free text field to add more information about the Work Template
+          example: Set the start date as the date to begin work (e.g. January 1) and the due date is the filing date (e.g. March 15 for partnerships/S Corps; or April 15 for C corps; or typically May 15 for Exempt orgs). Assign the work to the Admin initially. The work is expected to take 28 days.
+        WorkTypeKey:
+          type: string
+          description: A Karbon-generated unique identifier to denote the Work Type
+          example: 3GnmdG1vNVzm
+        HasScheduledClientTaskGroups:
+          type: boolean
+          description: This property is set to true, if the Work Template has scheduled Client Tasks
+          example: false
+        EstimatedBudget:
+          type:
+          - string
+          - 'null'
+          description: The estimated budget for the Work Items generated using this Work Template. This property value will be `null`.
+          example: null
+        EstimatedTime:
+          type: string
+          description: The estimated time required to complete the Work Items generated using this Work Template. This property value will be `null`.
+          example: null
+        DraftHasChanges:
+          type: boolean
+          description: This property is set to true, if the Work Template has unpublished changes
+          example: false
+        PublishedDate:
+          type: string
+          format: date-time
+          description: The date at which this Work Template was published
+          example: '2022-07-21T07:14:08Z'
+        NumberOfWorkItemsCreated:
+          type: number
+          format: int32
+          description: The number of Work Items created using this Work Template
+          example: 2
+        DateLastWorkItemCreated:
+          type: string
+          format: date-time
+          description: The most recent date at which a Work Item was created using this Work Template
+          example: '2022-07-21T07:14:08Z'
+        DateModified:
+          type: string
+          format: date-time
+          description: The most recent date at which this Work Template was modified
+          example: '2022-07-23T03:20:54Z'
+        ActorRoles:
+          type: array
+          description: The user roles who are required to action the Work Items created using this Work Template
+          items:
+            type: object
+            properties:
+              ActorKey:
+                type: string
+                description: A Karbon-generated unique identifier for the user role
+                example: 249zS1J5Jdkf
+              ActorName:
+                type: string
+                description: The name of the user role
+                example: Accountant
+  parameters:
+    TopRecords:
+      in: query
+      name: $top
+      schema:
+        type: integer
+        minimum: 0
+      example: 10
+      description: Limit the number of items returned
+    SkipRecords:
+      in: query
+      name: $skip
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+      example: 50
+      description: Skip the first n items
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

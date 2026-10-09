@@ -1,0 +1,26 @@
+generated: '2026-10-09'
+method: searched
+source: https://developers.karbonhq.com/llms.txt
+standards:
+- id: odata
+  conforms: partial
+  evidence: 'llms.txt: ''The API uses OData heavily on GET endpoints, allowing callers to filter and paginate results.'' The OpenAPI declares
+    $filter/$orderby/$top/$skip query params and @odata.nextLink/@odata.count response fields (openapi/karbonhq-openapi.yml); a /v3/$metadata
+    surface exists (https://api.karbonhq.com/v3/$metadata answered 401 unauthenticated, 2026-10-09), though the docs say not to derive endpoints
+    from it.'
+  domain_standard: true
+- id: openapi-3.1
+  conforms: true
+  evidence: openapi/karbonhq-openapi.yml declares openapi 3.1.0
+- id: rfc9457
+  conforms: false
+  evidence: Documented error body is {statusCode, message}, not application/problem+json (https://developers.karbonhq.com/guides/rate-limits/).
+- id: idempotency
+  conforms: false
+  evidence: No idempotency key documented in guides or OpenAPI.
+- id: webhook-hmac-sha256
+  conforms: true
+  evidence: Signature header carries a lowercase hex-encoded HMAC-SHA256 digest of the raw JSON request body (https://developers.karbonhq.com/guides/webhooks/).
+- id: oauth2
+  conforms: false
+  evidence: 'securitySchemes: ApiKeyAuth (apiKey), BearerAuth (http)'

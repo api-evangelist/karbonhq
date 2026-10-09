@@ -1,0 +1,64 @@
+generated: '2026-10-09'
+method: searched
+source: https://developers.karbonhq.com/llms.txt
+docs:
+  authentication: https://developers.karbonhq.com/guides/authentication/
+  pagination: https://developers.karbonhq.com/guides/pagination/
+  rate_limits: https://developers.karbonhq.com/guides/rate-limits/
+  webhooks: https://developers.karbonhq.com/guides/webhooks/
+auth:
+  style: two headers on every request — Authorization Bearer (Application ID) plus AccessKey (JWT)
+  see: authentication/karbonhq-authentication.yml
+identifiers:
+  name: PermaKey
+  description: "a 12-character immutable business key called a PermaKey"
+query_language:
+  standard: OData
+  statement: "The API uses OData heavily on GET endpoints, allowing callers to filter and paginate results."
+  params: [$filter, $orderby, $top, $skip, $expand]
+pagination:
+  style: OData offset with server-issued next link
+  params: [$top, $skip]
+  max_page_size: 100
+  response_fields: ['@odata.count', '@odata.nextLink', value]
+  guidance: "Use `@odata.nextLink` directly as the URL for your next request — don't construct it manually."
+  source: https://developers.karbonhq.com/guides/pagination/
+field_expansion:
+  param: $expand
+  example: $expand=BusinessCards
+compression: "Accept-Encoding: gzip"
+versioning:
+  style: URL path (/v3/)
+  see: lifecycle/karbonhq-lifecycle.yml
+error_envelope:
+  documented_example: '{"statusCode": "429", "message": "Rate limit is exceeded. Try again in 10 seconds."}'
+  fields: [statusCode, message]
+  problem_json: false
+  source: https://developers.karbonhq.com/guides/rate-limits/
+rate_limit_signaling:
+  status: 429
+  headers: [Retry-After]
+  see: rate-limits/karbonhq-rate-limits.yml
+request_id_tracing:
+  documented: false
+webhooks:
+  signature: "lowercase hex-encoded HMAC-SHA256 digest of the raw JSON request body, keyed with your `SigningKey`"
+  signature_header: Signature
+  auto_cancel: "If your endpoint fails to respond with an HTTP `2xx` status **10 consecutive times**, Karbon automatically cancels the subscription."
+  source: https://developers.karbonhq.com/guides/webhooks/
+idempotency:
+  coverage: none
+  note: No idempotency key or replay-protection mechanism is documented in the developer guides or declared in the OpenAPI (15 POST, 8 PUT, 7 PATCH, 4 DELETE operations).
+reversibility:
+  state: documented
+  note: Reversal paths exist only as DELETE operations on a few resources; the docs state no time window for any of them. Most writes (work items, contacts, invoices, expenses, time entries) have no documented reversal.
+  surfaces:
+  - write: create webhook subscription (POST /v3/WebhookSubscriptions)
+    reversal: delWebhookSubscriptionsByWebhookType / delAllWebhookSubscriptions
+    window: null
+  - write: record manual payment
+    reversal: deleteManualPayment (DELETE /v3/ManualPayments/{ManualPaymentKey})
+    window: null
+  - write: create custom field definition
+    reversal: DeleteCustomFieldDefinition (DELETE /v3/CustomFields/{CustomFieldDefinitionKey})
+    window: null

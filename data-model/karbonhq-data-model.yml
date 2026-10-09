@@ -1,0 +1,449 @@
+generated: '2026-10-09'
+method: derived
+generator: derive-data-model.py
+source:
+- openapi/karbonhq-openapi.yml
+notation: has_one = property $ref; has_many = array of $ref; belongs_to = <entity>_id field
+summary:
+  entities: 102
+  entities_in_spec: 102
+  relationships: 32
+entities:
+- name: AddTeamMembers
+  fields: 1
+  description: The user profile keys to add as members of a Team.
+- name: BillingBaseInvoice
+  fields: 12
+  description: A Karbon invoice
+- name: BillingClient
+  fields: 1
+  description: The details of the invoice recipient at the point in time the invoice was drafted or payment creator
+    at the point the payment was received
+- name: BillingInvoice
+  fields: 0
+  description: A Karbon Invoice record
+- name: BillingInvoiceData
+  fields: 1
+  description: A collection of the data associated with an invoice
+- name: BillingInvoiceDataExpense
+  fields: 2
+  description: A line item on a Karbon invoice
+- name: BillingInvoiceDataExpenseItem
+  fields: 0
+  description: An expense line item on a Karbon invoice
+- name: BillingInvoiceDataItem
+  fields: 6
+  description: A single component of the data used to create the rendered (HTML/PDF) invoice
+- name: BillingInvoiceDataService
+  fields: 0
+  description: A service line item on a Karbon invoice
+- name: BillingInvoiceDataTax
+  fields: 3
+  description: A breakdown of tax related to invoice, lineitems and data
+- name: BillingInvoiceDataWork
+  fields: 0
+  description: The breakdown of the billing that stems from work
+- name: BillingInvoiceDataWorkTimeEntry
+  fields: 5
+  description: The details of an invoiced time entry
+- name: BillingInvoiceLineItems
+  fields: 1
+  description: A breakdown of line items from the invoice
+- name: BillingInvoicePayments
+  fields: 1
+  description: Details of the payments related to the invoice
+- name: BillingInvoiceWithPayment
+  fields: 2
+  description: A Karbon invoice with associated payment records
+- name: BillingKarbonPayment
+  fields: 1
+  description: The Karbon Payment object
+- name: BillingPayment
+  fields: 0
+  description: A Karbon Payment record
+- name: BillingTaxLineItems
+  fields: 1
+  description: Details of the tax components of the invoice
+- name: BusinessCard
+  fields: 14
+  description: A business card associated with a contact or organization
+- name: BusinessCardRequest
+  fields: 14
+  description: A business card associated with a contact or organization
+- name: ContactsCardOrganization
+  fields: 12
+  description: A contact related to an Organization
+- name: CreateClientGroup
+  fields: 9
+  description: A single Client Group
+- name: CreateContact
+  fields: 15
+  description: A single Contact
+- name: CreateOrganization
+  fields: 10
+  description: A single Organization
+- name: CreateOrganizationResponse
+  fields: 12
+  description: A single Organization
+- name: CustomFieldDefinition
+  fields: 5
+  description: The structure that defines a Custom Field in Karbon
+- name: CustomFieldDefinitions
+  fields: 3
+  description: A list of the available custom fields in Karbon
+- name: CustomFieldValue
+  fields: 4
+  description: A collection of Custom Fields
+- name: CustomFieldValues
+  fields: 2
+  description: The set custom fields for a contact or organization and the associated values and options
+- name: DetailsOfAccounting
+  fields: 43
+  description: The details specific to the Accounting firm related to this entity
+- name: EnhancedErrorMessages
+  fields: 1
+  description: The details of an error associated with an API request
+- name: ErrorMessages
+  fields: 1
+  description: The details of an error associated with an API request
+- name: ExpenseRequest
+  fields: 5
+  description: A single Expense
+- name: ExpenseResponse
+  fields: 0
+  description: A single Expense
+- name: FileList
+  fields: 4
+  description: A collection of files associated with an entity in Karbon
+- name: FileListItem
+  fields: 9
+  description: A single File
+- name: GetClientGroup
+  fields: 4
+  description: A list of Client Groups
+- name: GetComment
+  fields: 6
+  description: A comment on a Work Item, Note or Contact
+- name: GetContacts
+  fields: 4
+  description: A list of Contacts
+- name: GetIndividualTimeEntries
+  fields: 4
+  description: A collection of individual time entries
+- name: GetIndividualTimeEntry
+  fields: 19
+  description: A single individual (non-aggregated) time entry
+- name: GetOrganizations
+  fields: 4
+  description: A list of Organizations
+- name: GetRoles
+  fields: 4
+  description: The API response containing a list of Roles in Karbon.
+- name: GetSingleTimeSheet
+  fields: 7
+  description: A single TimeSheet with TimeEntries
+- name: GetSingleUser
+  fields: 3
+  description: The unique id, name and email address for a single User
+- name: GetSingleWorkTemplate
+  fields: 13
+  description: A single Work Template
+- name: GetTeams
+  fields: 4
+  description: The API response containing a list of Teams in Karbon.
+- name: GetTenantSettings
+  fields: 6
+  description: A collection of customer specific Contact and Work settings
+- name: GetTimeSheets
+  fields: 4
+  description: A collection of TimeSheets
+- name: GetUserById
+  fields: 10
+  description: The details for a single User
+- name: GetUsers
+  fields: 4
+  description: A collection of Users
+- name: GetWebhookSubscriptions
+  fields: 6
+  description: The details of a specific Webhook Subscription
+- name: GetWorkItems
+  fields: 4
+  description: A collection of work items
+- name: GetWorkSchedule
+  fields: 26
+  description: A single Work Schedule
+- name: GetWorkTemplates
+  fields: 4
+  description: A collection of Work Templates
+- name: IntegrationTask
+  fields: 0
+  description: A single Integration Task
+- name: IntegrationTaskData
+  fields: 2
+  description: Optional integration task data key/value pairs
+- name: IntegrationTaskDefinition
+  fields: 8
+  description: A list of Integration Task Definitions
+- name: IntegrationTaskDefinitions
+  fields: 2
+  description: A list of Integration Task Definitions
+- name: IntegrationTaskReadOnly
+  fields: 7
+  description: The read-only properties of an Integration Task
+- name: IntegrationTaskWriteable
+  fields: 9
+  description: The writable properties of an Integration Task
+- name: IntegrationTasks
+  fields: 3
+  description: A list of Integration Tasks
+- name: ManualPaymentNotFoundErrorMessage
+  fields: 1
+  description: The error message returned when the API rate limit is hit
+- name: NoteRequest
+  fields: 7
+  description: A single Note
+- name: NoteResponse
+  fields: 10
+  description: A single Contact
+- name: RateLimitErrorMessage
+  fields: 2
+  description: The error message returned when the API rate limit is hit
+- name: RemoveTeamMember
+  fields: 1
+  description: The user profile key to remove from a Team.
+- name: RequestCreateWorkItem
+  fields: 0
+  description: A single work item
+- name: ResourceNotFound
+  fields: 2
+  description: A generic response shown when the API cannot find a requested entity
+- name: ResponseCreateClientGroup
+  fields: 13
+  description: A single Client Group
+- name: ResponseCreateContact
+  fields: 21
+  description: A single Contact
+- name: Role
+  fields: 2
+  description: A Karbon Role (internally an Actor in the Tenant pillar).
+- name: SettingContactType
+  fields: 2
+  description: The name and unique key for a Contact Type
+- name: SettingServiceType
+  fields: 3
+  description: The schema for a single Service Type entry
+- name: SettingWorkStatus
+  fields: 3
+  description: A Work Status, its child statuses with Name, Type and unique Key
+- name: SettingWorkType
+  fields: 3
+  description: The schema for a single Work Type entry
+- name: Team
+  fields: 4
+  description: A Karbon team containing a list of member Users and Teams.
+- name: TeamMember
+  fields: 3
+  description: A Karbon team member details, either a User or another Team.
+- name: TeamProfile
+  fields: 0
+  description: A single Team including its members.
+- name: UpdateOrganization
+  fields: 10
+  description: A single Organization
+- name: UpdateWorkItem
+  fields: 0
+  description: The properties that can be updated on a Work Item with the PATCH method
+- name: UpdateWorkSchedule
+  fields: 2
+  description: The properties that can be updated on a Work Schedule with the PATCH method
+- name: WithBusinessCardsCreateOrganizationResponse
+  fields: 0
+  description: The response returned when a business card is created and $expand=BusinessCards is specified in the
+    URL
+- name: WorkFeeSettings
+  fields: 1
+  description: The Fee Settings for a Work Item
+- name: WorkItem
+  fields: 25
+  description: The base data for a Work Item
+- name: WorkItemUpdate
+  fields: 17
+  description: The core parameters when updating a Work Item
+- name: WorkItemUserRoleAssignments
+  fields: 1
+  description: The User assignments for specific Roles on a Work Item
+- name: WorkItemWithFeeSettings
+  fields: 0
+  description: A Work Item with Fee Settings
+- name: WorkItemWithFeeSettingsAndUserRoleAssignments
+  fields: 0
+  description: A Work Item with Fee Settings and User Role assignments
+- name: WorkSchedulePUTRequest
+  fields: 0
+  description: A single Work Schedule
+- name: WorkScheduleRequest
+  fields: 19
+  description: A single Work Schedule
+- name: contact-webhook
+  fields: 4
+  description: The schema for Contact webhook payloads
+- name: customfield-webhook
+  fields: 6
+  description: The schema for Custom Field webhook payloads
+- name: estimate-summary-webhook
+  fields: 4
+  description: The schema for EstimateSummary webhook payloads
+- name: integration-task-webhook
+  fields: 7
+  description: The schema for Integration Task webhook payloads
+- name: invoice-webhook
+  fields: 4
+  description: The schema for Invoice webhook payloads
+- name: note-comment-webhook
+  fields: 6
+  description: The schema for Note webhook payloads
+- name: note-webhook
+  fields: 4
+  description: The schema for Note webhook payloads
+- name: user-webhook
+  fields: 4
+  description: The schema for User webhook payloads
+- name: webhook-batch
+  fields: 3
+  description: The schema for a batched webhook delivery, sent instead of a single-event payload when a Webhook
+    Subscription has `BatchSize` set to more than 1
+- name: webhook-batch-event
+  fields: 4
+  description: A single resource-change event within a batched webhook delivery
+- name: work-webhook
+  fields: 4
+  description: The schema for Work webhook payloads
+relationships:
+- from: BillingInvoiceData
+  to: BillingInvoiceDataItem
+  type: has_many
+  via: Data
+- from: BillingInvoiceDataItem
+  to: BillingInvoiceDataExpense
+  type: has_one
+  via: Expenses
+- from: BillingInvoiceDataItem
+  to: BillingInvoiceDataService
+  type: has_one
+  via: Service
+- from: BillingInvoiceDataItem
+  to: BillingInvoiceDataWork
+  type: has_one
+  via: Work
+- from: BillingInvoiceDataExpense
+  to: BillingInvoiceDataExpenseItem
+  type: has_many
+  via: Expenses
+- from: CustomFieldDefinitions
+  to: CustomFieldDefinition
+  type: has_many
+  via: value
+- from: CustomFieldValues
+  to: CustomFieldValue
+  type: has_many
+  via: CustomFieldValues
+- from: GetTenantSettings
+  to: SettingContactType
+  type: has_many
+  via: ContactTypes
+- from: GetTenantSettings
+  to: SettingWorkStatus
+  type: has_many
+  via: WorkStatuses
+- from: GetTenantSettings
+  to: SettingWorkType
+  type: has_many
+  via: WorkTypes
+- from: GetTenantSettings
+  to: SettingServiceType
+  type: has_many
+  via: ServiceTypes
+- from: GetWorkItems
+  to: WorkItem
+  type: has_many
+  via: value
+- from: ResponseCreateContact
+  to: DetailsOfAccounting
+  type: has_one
+  via: AccountingDetail
+- from: CreateContact
+  to: BusinessCardRequest
+  type: has_many
+  via: BusinessCards
+- from: CreateContact
+  to: DetailsOfAccounting
+  type: has_one
+  via: AccountingDetail
+- from: CreateOrganizationResponse
+  to: DetailsOfAccounting
+  type: has_one
+  via: AccountingDetail
+- from: CreateOrganization
+  to: BusinessCardRequest
+  type: has_many
+  via: BusinessCards
+- from: CreateOrganization
+  to: DetailsOfAccounting
+  type: has_one
+  via: AccountingDetail
+- from: UpdateOrganization
+  to: DetailsOfAccounting
+  type: has_one
+  via: AccountingDetail
+- from: UpdateOrganization
+  to: BusinessCardRequest
+  type: has_many
+  via: BusinessCards
+- from: FileList
+  to: FileListItem
+  type: has_many
+  via: Attachments
+- from: GetTimeSheets
+  to: GetSingleTimeSheet
+  type: has_many
+  via: value
+- from: GetIndividualTimeEntries
+  to: GetIndividualTimeEntry
+  type: has_many
+  via: value
+- from: GetUsers
+  to: GetSingleUser
+  type: has_many
+  via: value
+- from: TeamProfile
+  to: TeamMember
+  type: has_many
+  via: Members
+- from: GetTeams
+  to: Team
+  type: has_many
+  via: value
+- from: GetRoles
+  to: Role
+  type: has_many
+  via: value
+- from: GetWorkTemplates
+  to: GetSingleWorkTemplate
+  type: has_many
+  via: value
+- from: IntegrationTaskDefinitions
+  to: IntegrationTaskDefinition
+  type: has_many
+  via: values
+- from: IntegrationTasks
+  to: IntegrationTask
+  type: has_many
+  via: value
+- from: IntegrationTaskWriteable
+  to: IntegrationTaskData
+  type: has_many
+  via: TaskData
+- from: webhook-batch
+  to: webhook-batch-event
+  type: has_many
+  via: Events

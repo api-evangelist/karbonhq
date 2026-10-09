@@ -1,0 +1,60 @@
+name: Karbon plans and pricing
+generated: '2026-10-09'
+method: searched
+source: https://karbonhq.com/pricing/
+audience: business-product
+pricing_basis: per-seat
+published: true
+currency: USD
+delivery:
+  delivery: managed
+plan_count: 3
+api_access_note: "Access is restricted to Business and Enterprise plan customers (developers.karbonhq.com/llms.txt). The pricing page lists Karbon API under Integrations."
+plans:
+- name: Team
+  price: 59
+  price_text: $59/month, per user, paid annually
+  alt_price_text: Or $79/month per user, paid monthly
+  billing_period: month
+  description: The essential workflow and collaboration tools for small accounting firms.
+  features:
+  - Integrated Email
+  - Team Collaboration Tools
+  - Workflow and To-Do Lists
+  - Time Tracking & Budget Reporting
+  - Billing
+  - Payments
+  limits:
+  - Monthly subscription only available for teams of 4+
+- name: Business
+  price: 89
+  price_text: $89/month, per user, paid annually
+  alt_price_text: Or $99/month per user, paid monthly
+  billing_period: month
+  description: Workflow automation and integrations to increase efficiency and visibility for growing practices.
+  features:
+  - Includes everything in Team, plus
+  - Automatic Client Reminders
+  - Task Automation
+  - Industry Integrations
+  limits:
+  - Monthly subscription only available for teams of 4+
+- name: Enterprise
+  price: Custom pricing
+  price_text: Custom pricing
+  description: Collaboration, security and reporting tools for large accounting firms.
+  features:
+  - Enterprise Platform
+  - Dedicated Karbon Contact
+  - Customization
+  - Unlimited Usage Limits
+  limits: []
+add_ons:
+- name: Karbon Payments — Standard Cards
+  price_text: 2.6% + $0.30
+- name: Karbon Payments — Premium Cards
+  price_text: 3.6% + $0.30
+- name: Karbon Payments — American Express cards
+  price_text: 3.9% + $0.30
+- name: Karbon Payments — ACH Direct Debit
+  price_text: 1% + $0.30 (max $5.00)

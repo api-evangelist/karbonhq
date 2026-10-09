@@ -1,0 +1,67 @@
+generated: '2026-10-09'
+method: probed
+source: pre-flight dossier (docs platform, portal detections) + CNAME chains and response headers of the hosts apis.yml names
+registry: all/0-working/vendors.yml
+areas_vocabulary:
+- documentation
+- developer-portal
+- api-gateway
+- cdn
+- hosting
+- sdk-generation
+- api-collections
+- status-page
+- support
+- community
+- identity
+- mcp-hosting
+vendors:
+- vendor: azure-apim
+  name: Azure API Management
+  area: api-gateway
+  host: api.karbonhq.com
+  evidence: cname:azure-api.net
+  signal: cname
+  confidence: high
+  kin_score:
+  - openapi_published
+  - developer_portal
+- vendor: netlify
+  name: Netlify
+  area: hosting
+  host: karbonhq.com
+  evidence: header:x-nf-request-id
+  signal: header
+  confidence: high
+  kin_score: []
+- vendor: instatus
+  name: Instatus
+  area: status-page
+  host: status.karbonhq.com
+  evidence: cname:instatus.com
+  signal: cname
+  confidence: high
+  kin_score:
+  - status_page
+reliance:
+  areas_vendor_served:
+  - api-gateway
+  - hosting
+  - status-page
+  vendor_count: 3
+  areas_observed: 12
+  share_of_observable_areas: 0.25
+  note: areas where a third party was DETECTED serving this provider; an area absent here was either self-run or not observed, and this script
+    cannot tell those apart
+checked:
+- 'docs-platform: no-docs-host'
+- karbonhq.com (Website)
+- developers.karbonhq.com (DeveloperPortal)
+- karbonhq.github.io (APIReference)
+- developers.karbonhq.com (Documentation)
+- help.karbonhq.com (Support)
+- status.karbonhq.com (StatusPage)
+- karbonhq.com (GettingStarted)
+- app2.karbonhq.com (Login)
+- api.karbonhq.com (baseURL)
+- mcp.karbonhq.com (mcp)

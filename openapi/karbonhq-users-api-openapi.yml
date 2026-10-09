@@ -1,0 +1,965 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Users API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Users across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Users
+  description: Create and view the basics & defaults for colleagues, teams and job roles to customize Karbon to represent the way you and your team work. Read more
+paths:
+  /v3/Roles:
+    get:
+      tags:
+      - Users
+      summary: Gets a list of Roles
+      description: Returns the active, non-default Roles configured for your tenant, sorted by `Name` ascending. Returns a maximum of 200 Roles per page.
+      operationId: getAllRoles
+      parameters:
+      - in: query
+        name: $filter
+        schema:
+          type: string
+        examples:
+          name:
+            value: Name eq 'Manager'
+            summary: Return only the Role whose Name matches 'Manager'.
+        description: When this parameter is combined with the URI, this endpoint will return a subset of the Roles that satisfy the `$filter` expression. Only `Name` with the `eq` operator is supported.
+      - $ref: '#/components/parameters/SkipRecords'
+      - $ref: '#/components/parameters/TopRecords'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRoles'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Teams:
+    get:
+      tags:
+      - Users
+      summary: Gets a list of Teams
+      operationId: getAllTeams
+      parameters:
+      - in: query
+        name: $filter
+        schema:
+          type: string
+        examples:
+          name:
+            value: Name eq 'Audit'
+            summary: Return only the Team whose Name matches 'Audit'.
+        description: When this parameter is combined with the URI, this endpoint will return a subset of the Teams that satisfy the `$filter` expression. Only `Name` with the `eq` operator is supported.
+      - $ref: '#/components/parameters/SkipRecords'
+      - $ref: '#/components/parameters/TopRecords'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTeams'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Teams/{TeamKey}:
+    get:
+      tags:
+      - Users
+      summary: Gets a single Team, including its members
+      operationId: getTeamByKey
+      parameters:
+      - in: path
+        name: TeamKey
+        required: true
+        schema:
+          type: string
+        description: The key of the Team to retrieve.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamProfile'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Teams/{TeamKey}/AddMembers:
+    post:
+      tags:
+      - Users
+      summary: Adds one or more members to a Team
+      description: 'Adds one or more existing, active users to a Team. Users who are already members are skipped, so this endpoint is safe to call again with the same `UserKeys`.
+
+
+        Only individual users can be added. A Team can contain another Team as a sub-team, but adding a sub-team is not supported here — that can only be done in the Karbon app.
+
+
+        This is invoked as a bound OData action; despite the URL shape, it is always a `POST`.'
+      operationId: addTeamMembers
+      parameters:
+      - in: path
+        name: TeamKey
+        required: true
+        schema:
+          type: string
+        example: 2Nw8tnxwQCVf
+        description: The key of the Team to add members to.
+      requestBody:
+        description: The user profile keys to add as members of the Team.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTeamMembers'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Inactive Or Unknown User:
+                  value:
+                    error:
+                      code: '4002'
+                      message: Cannot find an active user for 3VQ8Qrq944NW
+                Empty UserKeys:
+                  value:
+                    error:
+                      code: '4002'
+                      message: '''User Keys'' must not be empty.'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Teams/{TeamKey}/RemoveMember:
+    post:
+      tags:
+      - Users
+      summary: Removes a member from a Team
+      description: 'Removes a single user from a Team. Returns `204 No Content` whether or not the user was a member, so this endpoint is safe to retry.
+
+
+        Only individual users can be removed this way. Removing a sub-team from a Team is not supported here — that can only be done in the Karbon app.
+
+
+        This is invoked as a bound OData action; despite the URL shape, it is always a `POST`.'
+      operationId: removeTeamMember
+      parameters:
+      - in: path
+        name: TeamKey
+        required: true
+        schema:
+          type: string
+        example: 2Nw8tnxwQCVf
+        description: The key of the Team to remove a member from.
+      requestBody:
+        description: The user profile key to remove from the Team.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveTeamMember'
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Users:
+    get:
+      tags:
+      - Users
+      summary: Gets a list of Users
+      parameters:
+      - in: query
+        name: $filter
+        schema:
+          type: string
+        examples:
+          Name:
+            value: Name eq 'John Smith'
+            summary: Return the Users with the name 'John Smith'
+          EmailAddress:
+            value: EmailAddress eq 'joe@samplecompany.com'
+            summary: Return the Users with the Email Eddress 'joe@samplecompany.com'
+        description: 'When this parameter is combined with the URI, this endpoint will return a subset of the Users that satisfy the `$filter` expression.
+
+          '
+      - $ref: '#/components/parameters/SkipRecords'
+      - $ref: '#/components/parameters/TopRecords'
+      description: 'Use the `GET` method on this endpoint to receive a paginated list of Users from your tenant. Using the query parameters available to this endpoint, you can also filter the list of Users by their Name, and EmailAddress.
+
+
+        **Notes**
+
+
+        * This endpoint returns a maximum of 100 Users at once.
+
+        * If the query results in more than 100 Users, a link to the next set of the results will be given in the `@odata.nextLink` field of the response.
+
+        * The `$filter` query parameter supports 3 logical operators (`eq`, `contains`, and `and`), and 2 properties to help you form an expression. They are listed below with examples of usage.
+
+
+        Logical Operators
+
+        Purpose
+
+        Name
+
+        EmailAddress
+
+
+        eq
+
+        Full-text search
+
+        /v3/Users?$filter=Name eq ''Joe Min''
+
+        /v3/Users?$filter=EmailAddress eq ''joe@samplecompany.com''
+
+
+        contains
+
+        Partial-text search
+
+        /v3/Users?$filter=(contains(Name, ''Min''))
+
+        /v3/Users?$filter=(contains(EmailAddress, ''joe''))
+
+
+        and
+
+        Combines properties
+
+        /v3/Users?$filter=Name eq ''Joe Min'' and contains(EmailAddress, ''joe'')'
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUsers'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Logical Operator:
+                  $ref: '#/components/examples/Unsupported_Logical_Operator'
+                $top limit exceeded:
+                  $ref: '#/components/examples/Limit_Exceeded_Top'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    post:
+      tags:
+      - Users
+      summary: Creates a new User
+      description: Use the `POST` method on this endpoint to create a new User in your tenant.
+      operationId: createUser
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    '@odata.context':
+                      type: string
+                      description: The information about Karbon controllers generating this response.
+                      example: https://api.karbonhq.com/v3/$metadata#Users/$entity
+                - $ref: '#/components/schemas/GetSingleUser'
+          headers:
+            Location:
+              description: The endpoint URL to the newly created User.
+              schema:
+                type: string
+                example: https://api.karbonhq.com/v3/Users('4LR9qmR5NQ6T')
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Incorrect or Missing Data:
+                  $ref: '#/components/examples/Missing_Create_Data'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Name or Email Is Empty:
+                  $ref: '#/components/examples/Name_or_Email_Is_Empty'
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - Name
+              - EmailAddress
+              properties:
+                Name:
+                  type: string
+                  description: The name of the User
+                  example: Joe Min
+                EmailAddress:
+                  type: string
+                  description: The email address of the User
+                  example: joe@samplecompany.com
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Users/{UserId}:
+    get:
+      tags:
+      - Users
+      summary: Gets the details of a single User
+      parameters:
+      - required: true
+        in: path
+        name: UserId
+        schema:
+          type: string
+        example: 2bYxtn94ZSdY
+        description: The unique ID of the User to get
+      description: Use the `GET` method on this endpoint to receive the details of a single User from your tenant.
+      operationId: getUserById
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserById'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  examples:
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+    Missing_Create_Data:
+      description: The error returned when the request payload is missing a required value
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: <Entity>'
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    Name_or_Email_Is_Empty:
+      description: The error returned when a Name and Email Address are not provided when creating a User
+      value:
+        error:
+          code: '5001'
+          message: Name and Email Address can not be null or empty
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Limit_Exceeded_Top:
+      description: The error returned when the limit is used in a request exceeds the maximum set for the API
+      value:
+        error:
+          code: '4002'
+          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
+    Unsupported_Logical_Operator:
+      description: The error returned when an unsupported operator is used in a request
+      value:
+        error:
+          code: '4002'
+          message: Logical operator '<Operator Name>' is not allowed. To allow it, set the 'AllowedLogicalOperators' property on EnableQueryAttribute or QueryValidationSettings.
+  schemas:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    TeamProfile:
+      description: A single Team including its members.
+      allOf:
+      - $ref: '#/components/schemas/Team'
+      - type: object
+        properties:
+          Members:
+            type: array
+            description: The Team's members. Active users and sub-teams only; archived users are excluded.
+            items:
+              $ref: '#/components/schemas/TeamMember'
+    GetUsers:
+      description: A collection of Users
+      required:
+      - value
+      - '@odata.context'
+      - '@odata.count'
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#Users
+        '@odata.count':
+          type: integer
+          format: int64
+          example: 1
+          description: The total number of Users that satisfy the query criteria.
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetSingleUser'
+        '@odata.nextLink':
+          type: string
+          example: https://api.karbonhq.com/v3/Users?$skip=100
+          description: The link to next set of Users. @odata.nextLink field will only appear if you have more than 100 Users.
+    GetTeams:
+      type: object
+      description: The API response containing a list of Teams in Karbon.
+      properties:
+        '@odata.context':
+          type: string
+          example: https://api.karbonhq.com/v3/$metadata#Teams
+        '@odata.count':
+          type: integer
+          example: 1
+        '@odata.nextLink':
+          type: string
+          example: https://api.karbonhq.com/v3/Teams?$skip=200&$top=200
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/Team'
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+    GetUserById:
+      description: The details for a single User
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#Users/KarbonService.UserProfileDTO/$entity
+        '@odata.type':
+          type: string
+          description: The information about Karbon data type in this response.
+          example: '#KarbonService.UserProfileDTO'
+        Id:
+          type: string
+          description: The unique Id of the User, this should match the key used in the URL
+          example: 2bYxtn94ZSdY
+        Name:
+          type: string
+          description: The name of the User
+          example: Janet Smith
+        EmailAddress:
+          type: string
+          description: The email address of the User
+          example: janet@example.com
+        BillableRate:
+          format: double
+          description: The default hourly rate in at which the user's work is billed at. The currency for `BillableRate` is based on the firm's currency and region found in Karbon under Settings > Account Settings.
+          minimum: 0
+          type: number
+        CapacityMinutesPerWeek:
+          type: integer
+          description: The number of billable minutes allocated to the user per week
+          example: 2400
+        Permissions:
+          type: array
+          items:
+            type: string
+          description: A list of the permissions allocated to the User
+          example:
+          - User
+        Roles:
+          type: array
+          items:
+            type: object
+            properties:
+              Name:
+                type: string
+                example: Accountant
+                description: The name of the role
+              Key:
+                type: string
+                example: 4vMnYgz2nx8w
+                description: The unique identifier of the role
+        Teams:
+          type: array
+          description: A list of the teams the User is member of
+          items:
+            type: object
+            properties:
+              Key:
+                type: string
+                example: 2GnB2t83kzjj
+                description: The unique key of the team
+              Name:
+                type: string
+                example: Accountants
+                description: The name of the team
+              ParentTeamKey:
+                type:
+                - string
+                - 'null'
+                example: null
+                description: The unique key of the parent team, if applicable
+    GetRoles:
+      type: object
+      description: The API response containing a list of Roles in Karbon.
+      properties:
+        '@odata.context':
+          type: string
+          example: https://api.karbonhq.com/v3/$metadata#Roles
+        '@odata.count':
+          type: integer
+          example: 1
+        '@odata.nextLink':
+          type: string
+          example: https://api.karbonhq.com/v3/Roles?$skip=200&$top=200
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+    Team:
+      type: object
+      description: A Karbon team containing a list of member Users and Teams.
+      required:
+      - TeamKey
+      - Name
+      properties:
+        TeamKey:
+          type: string
+          example: 2Nw8tnxwQCVf
+          description: A Karbon-generated unique identifier for the Team.
+        Name:
+          type: string
+          example: Audit
+          description: The name of the Team.
+        Description:
+          type:
+          - string
+          - 'null'
+          example: Audit and assurance team
+          description: An optional description of the Team.
+        ParentTeamKey:
+          type:
+          - string
+          - 'null'
+          example: null
+          description: The key of the parent Team when this Team is a sub-team; otherwise null.
+    Role:
+      type: object
+      description: A Karbon Role (internally an Actor in the Tenant pillar).
+      required:
+      - Key
+      - Name
+      properties:
+        Key:
+          type: string
+          example: abc123
+          description: A Karbon-generated unique identifier for the Role.
+        Name:
+          type: string
+          example: Manager
+          description: The name of the Role.
+    AddTeamMembers:
+      type: object
+      description: The user profile keys to add as members of a Team.
+      required:
+      - UserKeys
+      properties:
+        UserKeys:
+          type: array
+          items:
+            type: string
+          example:
+          - 3VQ8Qrq944NW
+          - 4WR9Srq055PX
+          description: The keys of the users to add. Must be non-empty. Users already on the Team are skipped.
+    GetSingleUser:
+      description: The unique id, name and email address for a single User
+      required:
+      - Id
+      - Name
+      - EmailAddress
+      type: object
+      properties:
+        Id:
+          type: string
+          description: A Karbon-generated key used to identify the User
+          example: 4LR9qmR5NQ6T
+        Name:
+          type: string
+          example: Joe Min
+          description: The name of the User
+        EmailAddress:
+          type: string
+          example: joe@samplecompany.com
+          description: The email address of the User
+    TeamMember:
+      type: object
+      description: A Karbon team member details, either a User or another Team.
+      properties:
+        Key:
+          type: string
+          example: 3VQ8Qrq944NW
+          description: The key of the member — a UserKey when Type is 'User', or a TeamKey when Type is 'Team'.
+        Type:
+          type: string
+          enum:
+          - User
+          - Team
+          example: User
+          description: 'The kind of member: an individual user, or a sub-team.'
+        Name:
+          type: string
+          example: Alex Smith
+          description: The display name of the member.
+    RemoveTeamMember:
+      type: object
+      description: The user profile key to remove from a Team.
+      required:
+      - UserKey
+      properties:
+        UserKey:
+          type: string
+          example: 3VQ8Qrq944NW
+          description: The key of the user to remove.
+  parameters:
+    SkipRecords:
+      in: query
+      name: $skip
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+      example: 50
+      description: Skip the first n items
+    TopRecords:
+      in: query
+      name: $top
+      schema:
+        type: integer
+        minimum: 0
+      example: 10
+      description: Limit the number of items returned
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

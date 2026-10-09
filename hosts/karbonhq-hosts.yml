@@ -1,0 +1,162 @@
+generated: '2026-10-09'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 10
+  own: 8
+  other_domain: 0
+  platform: 2
+  roles:
+  - api
+  - docs
+  - identity
+  - other
+  - portal
+  - source
+  - status
+  - support
+  - website
+hosts:
+- host: api.karbonhq.com
+  found_by:
+  - apis[]
+  - contract-discovery
+  - vendor-detect
+  types: []
+  serves:
+  - api
+  - api-gateway
+  vendor: azure-apim
+  registrable_domain: karbonhq.com
+  role: api
+  relation: own
+- host: app2.karbonhq.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types:
+  - Login
+  serves: []
+  registrable_domain: karbonhq.com
+  role: identity
+  relation: own
+- host: dev.karbonhq.com
+  found_by:
+  - probed
+  - site-links
+  - namespace-probe
+  - well-known
+  types: []
+  serves: []
+  status: 200
+  registrable_domain: karbonhq.com
+  role: other
+  relation: own
+- host: developers.karbonhq.com
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - site-links
+  - docs-index
+  - contract-discovery
+  - well-known
+  types:
+  - DeveloperPortal
+  - Documentation
+  - Authentication
+  - ChangeLog
+  serves:
+  - docs
+  registrable_domain: karbonhq.com
+  role: portal
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - SpectralRules
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: help.karbonhq.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - docs-index
+  - contract-discovery
+  - well-known
+  types:
+  - Support
+  serves:
+  - docs
+  registrable_domain: karbonhq.com
+  role: support
+  relation: own
+- host: karbonhq.com
+  found_by:
+  - pointer
+  - probed
+  - docs-index
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Website
+  - Pricing
+  - GettingStarted
+  - TermsOfService
+  - PrivacyPolicy
+  - Security
+  - Leadership
+  - About
+  serves:
+  - docs
+  - hosting
+  vendor: netlify
+  registrable_domain: karbonhq.com
+  role: website
+  relation: own
+- host: karbonhq.github.io
+  found_by:
+  - pointer
+  types:
+  - APIReference
+  serves: []
+  registrable_domain: github.io
+  role: docs
+  relation: platform
+- host: status.karbonhq.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  - vendor-detect
+  types:
+  - StatusPage
+  serves:
+  - status-page
+  vendor: instatus
+  registrable_domain: karbonhq.com
+  role: status
+  relation: own
+- host: webapp-dev.karbonhq.com
+  found_by:
+  - probed
+  - site-links
+  - docs-index
+  - well-known
+  types: []
+  serves:
+  - docs
+  registrable_domain: karbonhq.com
+  role: other
+  relation: own

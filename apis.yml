@@ -1,23 +1,689 @@
 aid: karbonhq
+
 name: Karbon
-description: 'Karbon is a company surfaced via the API Evangelist harvest backlog (source: spectral-ruleset-github)
-  and added to the network as a stub for full-pipeline profiling.'
+
+description: Karbon is accounting practice management software for accounting firms, built to enhance visibility, efficiency, and connectivity
+  for a firm no matter where its people are located. Through the Karbon Developer Center (developers.karbonhq.com) it publishes a public REST
+  API reference plus guides covering authentication, pagination, rate limits, webhooks, work items, clients, custom fields, budgets and time,
+  invoices and payments, and file uploads.
+
 url: https://raw.githubusercontent.com/api-evangelist/karbonhq/refs/heads/main/apis.yml
+
 x-type: company
+
 x-source: harvest:spectral-ruleset-github
-x-tier: stub
-x-tier-reason: harvest
+
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-10-09 (modular-v1; was harvest)
+
 specificationVersion: '0.20'
+
 created: '2026-10-09'
+
 modified: '2026-10-09'
+
 tags:
 - Company
-apis: []
+- Accounting
+- Practice Management
+- Workflow
+- Collaboration
+- Professional Services
+- SaaS
+
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+
+image: https://karbonhq.com/images/og-default-image.jpg
+
 common:
+- type: AgenticAccess
+  url: agentic-access/karbonhq-agentic-access.yml
+- type: RateLimits
+  url: rate-limits/karbonhq-rate-limits.yml
+- type: Plans
+  url: plans/karbonhq-plans-pricing.yml
+- type: Spectral
+  url: rules/karbonhq-rules.yml
+- type: Spectral
+  url: rules/karbonhq-karbon-api-reference-spectral-rules.yml
+- type: JSONLD
+  url: json-ld/karbonhq-context.jsonld
+- type: Vocabulary
+  url: vocabulary/karbonhq-vocabulary.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Webhooks
+  url: asyncapi/karbonhq-webhooks.yml
+- type: DataModel
+  url: data-model/karbonhq-data-model.yml
+- type: ChangeLog
+  url: changelog/karbonhq-changelog.yml
+- type: Conventions
+  url: conventions/karbonhq-conventions.yml
+- type: Deprecation
+  url: lifecycle/karbonhq-lifecycle.yml
+- type: Lifecycle
+  url: lifecycle/karbonhq-lifecycle.yml
+- type: ErrorCatalog
+  url: errors/karbonhq-problem-types.yml
+- type: Conformance
+  url: conformance/karbonhq-conformance.yml
+- type: Overlay
+  url: overlays/karbonhq-karbon-api-overlay.yaml
+- type: LLMsTxt
+  url: llms/karbonhq-llms.txt
+- type: SecurityTxt
+  url: well-known/karbonhq-security.txt
+- type: WellKnown
+  url: well-known/karbonhq-well-known.yml
+- type: Hosts
+  url: hosts/karbonhq-hosts.yml
+- type: Vendors
+  url: vendors/karbonhq-vendors.yml
+- type: Authentication
+  url: authentication/karbonhq-authentication.yml
+- type: VulnerabilityDisclosure
+  url: security/karbonhq-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/karbonhq-domain-security.yml
 - type: Website
   url: https://karbonhq.com/
+- type: SpectralRules
+  url: https://github.com/karbonhq/karbon-api-reference/blob/57cc9814d7cc6bc697895d0bfe52b0c422684d3c/vacuum-rules.yaml
+- type: DeveloperPortal
+  url: https://developers.karbonhq.com/
+- type: APIReference
+  url: https://karbonhq.github.io/karbon-api-reference/
+- type: Documentation
+  url: https://developers.karbonhq.com/
+- type: Authentication
+  url: https://developers.karbonhq.com/guides/authentication/
+- type: ChangeLog
+  url: https://developers.karbonhq.com/release-notes/2026-09-23/
+- type: Support
+  url: https://help.karbonhq.com/
+- type: StatusPage
+  url: https://status.karbonhq.com/
+- type: GitHubOrganization
+  url: https://github.com/karbonhq
+- type: Pricing
+  url: https://karbonhq.com/pricing/
+- type: GettingStarted
+  url: https://karbonhq.com/get-started
+- type: Login
+  url: https://app2.karbonhq.com/signin
+- type: TermsOfService
+  url: https://karbonhq.com/terms/
+- type: PrivacyPolicy
+  url: https://karbonhq.com/privacy-policy/
+- type: Security
+  url: https://karbonhq.com/security/
+- type: Leadership
+  url: https://karbonhq.com/leadership/
+- type: About
+  url: https://karbonhq.com/about/
+
+apis:
+- aid: karbonhq:karbonhq-billing-api
+  name: Karbon Billing API
+  description: List and view an Invoice and associated line items
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Billing
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-billing-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-business-cards-api
+  name: Karbon Business Cards API
+  description: View or update the Business Card attached to a Contact and/or Organization
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Business Cards
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-business-cards-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-client-groups-api
+  name: Karbon Client Groups API
+  description: >-
+    Create a client group to manage related contacts, create work for them, and see all related jobs in
+    a single view. [Read more](https://help.karbonhq.com/en/articles/5880261-manage-a-client-group)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Client Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-client-groups-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-comments-api
+  name: Karbon Comments API
+  description: >-
+    Use comments on tasks to add notes or bring a colleague into the conversation to collaborate on the
+    task. [Read more](https://help.karbonhq.com/en/articles/2111192-comment-and-collaborate-on-a-task)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Comments
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-comments-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-contacts-api
+  name: Karbon Contacts API
+  description: >-
+    Manage your contacts and get the full overview over clients, whether they are individuals or organizations.
+    [Read more](https://help.karbonhq.com/en/articles/5708609-overview-of-contacts)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-contacts-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-custom-fields-api
+  name: Karbon Custom Fields API
+  description: >-
+    Endpoints to manage Custom Fields on Contacts and Organizations in Karbon, refer to the Karbon help
+    and support content for more information on [creating custom fields](https://help.karbonhq.com/en/articles/10971113-create-a-new-custom-contact-field)
+    and [frequently asked questions](https://help.karbonhq.com/en/articles/10971266-custom-contact-fields-faqs)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Custom Fields
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-custom-fields-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-estimate-summaries-api
+  name: Karbon Estimate Summaries API
+  description: >-
+    Estimate and track time to understand jobs that are on-budget, allocate resources, and uncover performance
+    insights to transform your firm. [Read more](https://help.karbonhq.com/en/articles/4439115-overview-of-time-budgets)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Estimate Summaries
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-estimate-summaries-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-files-api
+  name: Karbon Files API
+  description: >-
+    Handle files and attachments. [Read more](https://help.karbonhq.com/en/articles/5714089-files-and-attachments)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-files-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-integrated-workflows-api
+  name: Karbon Integrated Workflows API
+  description: >-
+    Endpoints that enable Karbon Integration Partners to manage integrated workflow tasks enabled for
+    their integrations. Note that these endpoints cannot be used to access Tasks or Client Tasks. Access
+    is limited to approved developers building apps that serve all Karbon customers.
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Integrated Workflows
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-integrated-workflows-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-notes-api
+  name: Karbon Notes API
+  description: >-
+    Hold a conversation internally within your company. Unlike an email, Notes are viewed only by members
+    of your team. [Read more](https://help.karbonhq.com/en/s/articles/5919746-use-notes)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Notes
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-notes-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-organizations-api
+  name: Karbon Organizations API
+  description: >-
+    Create an organization to represent marriages and couples and client groups to represent families.
+    [Read more](https://help.karbonhq.com/en/articles/5708609-overview-of-contacts#h_8ee87bfcc1)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-organizations-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-tenant-settings-api
+  name: Karbon Tenant Settings API
+  description: Retrieve lists of valid Contact Types, Work Types and Work Statuses
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Tenant Settings
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-tenant-settings-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-timesheets-and-time-entries-api
+  name: Karbon Timesheets and Time Entries API
+  description: >-
+    Retrieve individual (non-aggregated) time entries, each record represents a single time entry for
+    a specific day, user, and work item. [Read more](https://help.karbonhq.com/en/s/articles/6022358-managing-time-budgets-and-expenses-in-karbon).
+
+    **Deprecated** Review Time aggregate Timesheets for colleagues. [Read more](https://help.karbonhq.com/en/s/articles/6022358-managing-time-budgets-and-expenses-in-karbon)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Timesheets and Time Entries
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-timesheets-and-time-entries-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-users-api
+  name: Karbon Users API
+  description: >-
+    Create and view the basics & defaults for colleagues, teams and job roles to customize Karbon to represent
+    the way you and your team work. [Read more](https://help.karbonhq.com/en/articles/3731216-edit-your-user-profile)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-users-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-webhook-payloads-api
+  name: Karbon Webhook Payloads API
+  description: Details of the different payloads sent for Karbon Webhook subscriptions
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Webhook Payloads
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-webhook-payloads-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-webhook-subscriptions-api
+  name: Karbon Webhook Subscriptions API
+  description: >-
+    Integrate your system with Karbon to receive changes made to your data in Karbon.
+
+
+    Note: Webhook payloads take the following form:
+
+
+    ```JSON
+
+    {
+      "ResourcePermaKey": "{EntityKey}",
+      "ResourceType": "{EntityType}",
+      "ActionType": "{ActionType}"
+      "TimeStamp": "{YYYY-MM-DDTHH:mm:ssZ}"
+    }
+
+    ```
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Webhook Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-webhook-subscriptions-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-work-items-api
+  name: Karbon Work Items API
+  description: >-
+    Manage a Work Item to best fit your workflow, including timelines, tasks and work teams. [Read more](https://help.karbonhq.com/en/articles/6057036-managing-work-items-and-teams)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Work Items
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-work-items-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-work-schedules-api
+  name: Karbon Work Schedules API
+  description: >-
+    Set a Work Item to repeat on a defined schedule. [Read more](https://help.karbonhq.com/en/articles/6096234-setup-repeating-work-on-a-schedule)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Work Schedules
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-work-schedules-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+- aid: karbonhq:karbonhq-work-templates-api
+  name: Karbon Work Templates API
+  description: >-
+    Find and review templates that you created to fit your firm's unique workflows. [Read more](https://help.karbonhq.com/en/articles/5325202-create-and-customize-work-templates)
+  humanURL: https://developers.karbonhq.com/
+  baseURL: https://api.karbonhq.com
+  tags:
+  - Work Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/karbonhq-work-templates-api-openapi.yml
+  - type: APIReference
+    url: https://karbonhq.github.io/karbon-api-reference/
+  - type: Documentation
+    url: https://developers.karbonhq.com/
+  - type: JSONSchema
+    url: json-schema/karbonhq-get-work-schedule-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-work-schedule-request-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-contact-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-response-create-client-group-schema.json
+  - type: JSONSchema
+    url: json-schema/karbonhq-business-card-request-schema.json
+x-enrichment:
+  date: '2026-10-09'
+  status: enriched
+  artifacts_added: 41
+  pass: modular-v1
+  engine: identity=anthropic,contract=anthropic,surfaces=anthropic,docs=anthropic,regulatory=anthropic
+x-coverage:
+  state: covered
+  reason: identity-verified
+  detail: 'Enriched 2026-10-09: website and identity verified (verified) from the provider''s own pages; probed URLs below.'
+  evidence:
+  - url: https://karbonhq.com/
+    status: 200
+  - url: https://developers.karbonhq.com/
+    status: 200
+  - url: https://karbonhq.github.io/karbon-api-reference/
+    status: 200
+  - url: https://status.karbonhq.com/
+    status: 200
+  - url: https://karbonhq.com/blog/
+    status: 404

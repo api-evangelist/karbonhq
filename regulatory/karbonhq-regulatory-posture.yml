@@ -1,0 +1,86 @@
+generated: '2026-10-09'
+method: searched
+source:
+- https://karbonhq.com/privacy-policy/
+- https://karbonhq.com/terms/
+- https://karbonhq.com/security/
+name: Karbon Regulatory Posture
+description: >-
+  Regulatory signals from Karbon, Inc.'s own legal and trust pages: the Privacy Policy (https://karbonhq.com/privacy-policy/, HTTP 200),
+  the Terms of Use (https://karbonhq.com/terms/, HTTP 200, redirects to https://karbonhq.com/terms-of-use) and the Enterprise Security page
+  (https://karbonhq.com/security/, HTTP 200). The security page describes an internal incident-management process but makes no
+  customer notification commitment, so incident_notification is not recorded. The privacy policy says Personal Data is shared with
+  third party service providers but publishes no subprocessor list. No data-residency (region) commitment, Global Privacy Control,
+  accessibility statement, transparency report or SBOM language was found on the pages read.
+signals:
+  data_subject_request:
+    url: https://karbonhq.com/privacy-policy/
+    note: >-
+      The policy lists data subject rights (access, rectification, portability, complaint to a supervisory authority, among others)
+      and names support@karbonhq.com as the channel for data requests; deletion requests are honored with commercially reasonable efforts.
+    evidence:
+    - source: https://karbonhq.com/privacy-policy/
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "Right to Data Portability \u00a0- You can ask that we transfer your personal data to another organization or to you"
+    - source: https://karbonhq.com/privacy-policy/
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: "Data Request Form: \u00a0Requests for data should be submitted to\u00a0 support@karbonhq.com"
+    - source: https://karbonhq.com/privacy-policy/
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: You may request deletion of your Personal Data by us, and we will use commercially reasonable efforts to honor your request, but please note that we may be required to keep such information and not delete it (or to keep this information for a certain time, in which case we will comply with your deletion request only after we have fulfilled such requirements).
+  data_retention:
+    url: https://karbonhq.com/privacy-policy/
+    section: Customer Data and Data Requests
+    note: >-
+      Customer data is kept for the life of the subscription; deleted information leaves the active database but may remain in archives.
+      No fixed retention period is stated. The Terms add that termination of all Services includes deletion of Account content.
+    evidence:
+    - source: https://karbonhq.com/privacy-policy/
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: Customer data is retained for as long as they remain a Karbon customer.
+    - source: https://karbonhq.com/privacy-policy/
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: When we delete any information, it will be deleted from the active database, but may remain in our archives.
+    - source: https://karbonhq.com/terms/
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: Termination of all Services also includes deletion of your password and all related information, files and Content associated with or inside your Account (or any part thereof), including Your Content.
+  exit_assistance:
+    url: https://karbonhq.com/privacy-policy/
+    section: Customer Data and Data Requests
+    note: >-
+      Karbon commits to a no-cost export of a customer's data on request, format agreed at request time; direct database access is not offered.
+      The Terms state that termination may delete content and that Karbon has no liability for that deletion, so the export should be requested before terminating.
+    evidence:
+    - source: https://karbonhq.com/privacy-policy/
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: If required, Karbon will provide an export of the customer’s Karbon data at no cost. The required format of the export will be discussed at the time of request. Direct access to the Karbon databases is not available.
+    - source: https://karbonhq.com/terms/
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: Karbon will not have any liability whatsoever to you for any suspension or termination, including for deletion of Your Content.
+  ai_transparency:
+    url: https://karbonhq.com/terms/
+    section: Karbon AI Supplemental Terms
+    note: >-
+      The Terms disclose that Karbon AI is third-party generative AI, first built on Azure OpenAI, and that other providers may be added.
+    evidence:
+    - source: https://karbonhq.com/terms/
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: The first iteration of Karbon AI is based on the Azure OpenAI. However, Karbon anticipates implementing and releasing Generative AI offerings from different third parties as a part of the Karbon AI, selecting the best Generative AI solution for specific uses within the Services.
+  age_assurance:
+    url: https://karbonhq.com/terms/
+    note: >-
+      Age is handled by self-representation (at least 13) in the Terms; no verification mechanism is described.
+    evidence:
+    - source: https://karbonhq.com/terms/
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: You represent that you are (1) at least thirteen (13) years old; (2) of legal age to form a binding contract; and (3) not a person barred from using Karbon Properties under the laws of the United States, your place of residence or any other applicable jurisdiction.

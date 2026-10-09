@@ -1,0 +1,6 @@
+# If you would like to report a security issue please use the details below:
+Contact: mailto:security@karbonhq.com
+Expires: 2026-09-12T23:00:00.000Z
+Preferred-Languages: en
+Policy: https://karbonhq.com/security/vulnerability-disclosure/
+Policy: https://karbonhq.com/privacy-policy/

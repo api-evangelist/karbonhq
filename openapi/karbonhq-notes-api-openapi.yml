@@ -1,0 +1,472 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Notes API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Notes across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Notes
+  description: Hold a conversation internally within your company. Unlike an email, Notes are viewed only by members of your team. Read more
+paths:
+  /v3/Notes/{NoteID}:
+    get:
+      tags:
+      - Notes
+      summary: Gets a Note using NoteID
+      parameters:
+      - required: true
+        in: path
+        name: NoteID
+        schema:
+          type: string
+        example: Tz3lJgXMPdy
+        description: The Karbon-generated Note key
+      description: Use the `GET` method on this endpoint to receive the Note specified using the `NoteID`.
+      operationId: getNoteByNoteKey
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteResponse'
+              example:
+                '@odata.context': https://api.karbonhq.com/v3/$metadata#Notes/$entity
+                Id: Tz3lJgXMPdy
+                Subject: Regarding New Proposal
+                Body: Amy, could you please submit the new Proposal for Acme Corp by this weekend?
+                CreatedDate: '2022-07-11T02:16:06Z'
+                AuthorEmailAddress: jessica@samplecompany.com
+                AssigneeEmailAddress: amy@samplecompany.com
+                DueDate: '2022-07-16T02:16:06Z'
+                TodoDate: '2022-07-16T02:16:06Z'
+                Timelines:
+                - EntityType: WorkItem
+                  EntityKey: 2m6pSFxRzcF2
+                Comments:
+                - CommentKey: 22145nBb4tLP
+                  CommentBody: Hi Jess, Could you please share the template to the last proposal you created?
+                  CreatedDate: '2022-07-11T07:16:32Z'
+                  AuthorEmailAddress: jessica@samplecompany.com
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Resource Not Found:
+                  $ref: '#/components/examples/HTTP_Resource_Not_Found'
+                Key Not Found:
+                  $ref: '#/components/examples/Generic_Key_Not_Found'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Notes:
+    post:
+      tags:
+      - Notes
+      summary: Creates a new Note
+      description: Use the `POST` method on this endpoint to create a new Note and associate it with a Karbon entity (e.g., WorkItem, Contact, Organization, or ClientGroup) in your tenant.
+      operationId: createNote
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteResponse'
+              example:
+                '@odata.context': https://api.karbonhq.com/v3/$metadata#Notes/$entity
+                Id: Tz3lJgXMPdy
+                Subject: Regarding New Proposal
+                Body: Amy, could you please submit the new Proposal for Acme Corp by this weekend?
+                CreatedDate: '2022-07-11T02:16:06Z'
+                AuthorEmailAddress: jessica@samplecompany.com
+                AssigneeEmailAddress: amy@samplecompany.com
+                DueDate: '2022-07-16T02:16:06Z'
+                TodoDate: '2022-07-16T02:16:06Z'
+                Timelines:
+                - EntityType: WorkItem
+                  EntityKey: 2m6pSFxRzcF2
+                Comments: []
+          headers:
+            Location:
+              description: The endpoint URL to the newly created Note.
+              schema:
+                type: string
+                example: https://api.karbonhq.com/v3/Notes('Tz3lJgXMPdy')
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Resource Not Found:
+                  $ref: '#/components/examples/HTTP_Resource_Not_Found'
+                Payload Mising:
+                  $ref: '#/components/examples/Note_Payload_Missing'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Invalid Assignee Email Address:
+                  $ref: '#/components/examples/Missing_Assignee_Email_Address'
+                Invalid Author Email Address:
+                  $ref: '#/components/examples/Invalid_Author_Email_Address'
+                Missing Author Email Address:
+                  $ref: '#/components/examples/Missing_Author_Email_Address'
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteRequest'
+            example:
+              Subject: Regarding New Proposal
+              Body: Amy, could you please submit the new Proposal for Acme Corp by this weekend?
+              AuthorEmailAddress: jessica@samplecompany.com
+              AssigneeEmailAddress: amy@samplecompany.com
+              DueDate: '2022-07-16T02:16:06Z'
+              TodoDate: '2022-07-16T02:16:06Z'
+              Timelines:
+              - EntityType: WorkItem
+                EntityKey: 2m6pSFxRzcF2
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  examples:
+    Missing_Assignee_Email_Address:
+      description: The error returned when assigning an entity to a user email that does not exist in Karbon
+      value:
+        error:
+          code: '5001'
+          message: Assignee email address is not an active Karbon user
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+    Generic_Key_Not_Found:
+      description: The error returned when a Contact with the supplied Contact Key cannot be found
+      value:
+        error:
+          code: '4004'
+          message: No Contact found for provided key
+    Missing_Author_Email_Address:
+      description: The error returned when specifying an author on an entity where the author email is blank
+      value:
+        error:
+          code: '5001'
+          message: Author email address must be provided
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    HTTP_Resource_Not_Found:
+      description: The error returned when the request path and request method does not match any configured API path and method
+      value:
+        error:
+          code: '4002'
+          message: No HTTP resource was found that matches the request URI 'http://api.karbonhq.com/v3/<endpoint>
+    Invalid_Author_Email_Address:
+      description: The error returned when specifying an author on an entity where the author email does not exist as a user in Karbon
+      value:
+        error:
+          code: '5001'
+          message: Author email address is not an active Karbon user
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    Note_Payload_Missing:
+      description: The error returned when attempting create a Note, but the request payload is missing or invalid
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: note'
+  schemas:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    NoteResponse:
+      description: A single Contact
+      required:
+      - AssigneeEmailAddress
+      - AuthorEmailAddress
+      - Subject
+      - Body
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response
+        Id:
+          type: string
+          example: pkX234GlP
+          description: A Karbon-generated value that is used to identify the Note
+        Subject:
+          type: string
+          example: Note from Client
+          description: The subject line of the Note
+        Body:
+          type: string
+          example: <strong>To do:</strong> return customer call
+          description: The body of the Note. This property supports HTML.
+        AuthorEmailAddress:
+          type: string
+          example: author@example.com
+          description: The email address of the Note's author
+        AssigneeEmailAddress:
+          type: string
+          example: assignee@example.com
+          description: The email address of the Note's reader
+        DueDate:
+          type: string
+          format: date-time
+          example: '2022-10-11T00:00:00Z'
+          description: The date by which the actions on the note must be complete
+        TodoDate:
+          type: string
+          format: date-time
+          example: '2022-10-10T00:00:00Z'
+          description: The date for which the actions will be executed
+        Timelines:
+          type: array
+          description: The Timelines to which this note will be associated. If Notes are linked to a Work Item, the Timeline of the Client (associated with the Work Item) will show the Notes.
+          items:
+            type: object
+            properties:
+              EntityType:
+                type: string
+                example: Contact
+                description: The type of entity this note will be linked to
+                enum:
+                - WorkItem
+                - Contact
+                - Organization
+                - ClientGroup
+              EntityKey:
+                type: string
+                example: 4tYpP2F1w
+                description: A Karbon-generated value to indicate the entity
+        Comments:
+          type: array
+          description: The comments for this note
+          items:
+            type: object
+            properties:
+              CommentKey:
+                type: string
+                example: 4lQn23Y6b
+                description: A Karbon-generated value that is used to identify the Comment
+              CommentBody:
+                type: string
+                example: 'A long string with the body of the comment.
+
+                  May include line breaks or other formatting.'
+                description: A Karbon-generated value that is used to identify the Comment
+              CreatedDate:
+                type: string
+                format: date-time
+                example: '2022-11-12T15:34:11Z'
+                description: The date at which the Comment was created
+              AuthorEmailAddress:
+                type: string
+                example: author@example.com
+                description: The email address of the Comment's author
+    NoteRequest:
+      description: A single Note
+      required:
+      - AuthorEmailAddress
+      - Subject
+      - Body
+      type: object
+      properties:
+        Subject:
+          type: string
+          example: Note from Client
+          description: The subject line of the Note
+        Body:
+          type: string
+          example: <strong>To do:</strong> return customer call
+          description: The body of the Note. This property supports HTML.
+        AuthorEmailAddress:
+          type: string
+          example: author@example.com
+          description: The email address of the Note's author
+        AssigneeEmailAddress:
+          type: string
+          example: assignee@example.com
+          description: The email address of the the Karbon user that the Note should be assigned to
+        DueDate:
+          type: string
+          format: date-time
+          example: '2022-10-11T00:00:00Z'
+          description: The date by which the actions on the note must be complete
+        TodoDate:
+          type: string
+          format: date-time
+          example: '2022-10-10T00:00:00Z'
+          description: The date for which the actions will be executed
+        Timelines:
+          type: array
+          description: The Timelines to which this note will be associated. If Notes are linked to a Work Item, the Timeline of the Client (associated with the Work Item) will show the Notes.
+          items:
+            type: object
+            properties:
+              EntityType:
+                type: string
+                description: The type of entity this note will be linked to
+                enum:
+                - WorkItem
+                - Contact
+                - Organization
+                - ClientGroup
+              EntityKey:
+                type: string
+                description: A Karbon-generated value to indicate the entity
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

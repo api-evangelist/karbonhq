@@ -1,0 +1,50 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Karbon API
+  version: 1.0.0
+extends: ../openapi/_original/karbonhq-openapi.yml
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-generated: '2026-10-09'
+      x-llms-txt: https://developers.karbonhq.com/llms.txt
+      x-mcp-server:
+        endpoint: https://mcp.karbonhq.com/mcp
+        transport: streamable-http
+        auth: oauth2
+        authorization_server: https://identity.karbonhq.com/
+        scopes: [mcp:public:read, mcp:public:write]
+        protected_resource_metadata: https://mcp.karbonhq.com/.well-known/oauth-protected-resource/mcp
+      x-upstream-openapi: https://karbonhq.github.io/karbon-api-reference/KarbonAPI.json
+  - target: $.info
+    update:
+      x-authentication-note: >-
+        Every request carries two headers, issued together from one API Application
+        (Settings > Connected Apps > API Applications): Authorization: Bearer {token}
+        and AccessKey: {JWT}. Source: https://developers.karbonhq.com/guides/authentication.md
+  - target: $.info
+    update:
+      x-agent-guides:
+        searching_clients: https://developers.karbonhq.com/guides/searching-clients.md
+        creating_work_items: https://developers.karbonhq.com/guides/creating-work-items.md
+        invoices_and_payments: https://developers.karbonhq.com/guides/invoices-and-payments.md
+        webhooks: https://developers.karbonhq.com/guides/webhooks.md
+        rate_limits: https://developers.karbonhq.com/guides/rate-limits.md
+        pagination: https://developers.karbonhq.com/guides/pagination.md
+        custom_fields: https://developers.karbonhq.com/guides/custom-fields.md
+        uploading_files: https://developers.karbonhq.com/guides/uploading-files.md
+        budgets_and_time: https://developers.karbonhq.com/guides/budgets-and-time.md
+  - target: $.paths['/v3/Invoices/{InvoiceKey}'].get
+    update:
+      x-apievangelist-note: >-
+        $expand=LineItems,Payments,Data works only on single-invoice retrieval, not on the
+        /v3/Invoices list endpoint (invoices-and-payments guide).
+  - target: $.paths['/v3/WorkItems'].post
+    update:
+      x-apievangelist-required-fields: [Title, AssigneeEmailAddress, ClientKey, ClientType, StartDate]
+  - target: $.paths['/v3/WebhookSubscriptions'].post
+    update:
+      x-apievangelist-note: >-
+        When a SigningKey is set, each delivery carries a Signature header: a lowercase
+        hex-encoded HMAC-SHA256 digest of the raw JSON body. Karbon cancels a subscription
+        automatically after 10 delivery failures (webhooks guide).

@@ -1,0 +1,9 @@
+generated: '2026-10-09'
+method: generated
+source: https://developers.karbonhq.com/llms.txt
+note: Karbon publishes no Agent Skills or AGENTS.md. Each of these skills is generated from a Karbon developer guide and grounded in operationIds from openapi/karbonhq-openapi.yml.
+skills:
+  - {name: karbonhq-find-client, path: skills/karbonhq-find-client.md}
+  - {name: karbonhq-create-work-item, path: skills/karbonhq-create-work-item.md}
+  - {name: karbonhq-invoice-payments, path: skills/karbonhq-invoice-payments.md}
+  - {name: karbonhq-webhooks, path: skills/karbonhq-webhooks.md}

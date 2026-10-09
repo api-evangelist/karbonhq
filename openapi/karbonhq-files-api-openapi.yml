@@ -1,0 +1,646 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Files API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Files across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Files
+  description: Handle files and attachments. Read more
+paths:
+  /v3/Files:
+    post:
+      tags:
+      - Files
+      summary: Uploads and links a file
+      description: 'Use the `POST` method on this endpoint to upload and link a file to an entity in your tenant.
+
+
+        Note that this endpoint **only supports uploading files from the local network** but not from the web.'
+      operationId: createFile
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  '@odata.context':
+                    type: string
+                    description: The information about Karbon controllers generating this response.
+                    example: https://api.karbonhq.com/v3/$metadata#Files/$entity
+                  Id:
+                    type: string
+                    description: A Karbon-generated unique identifier for the file
+                    example: 3pBQbds529RW
+                  Name:
+                    type: string
+                    description: The name of the file
+                    example: ProposalName.pdf
+                  MimeType:
+                    type: string
+                    description: The MIME type of valid media file as per RFC 6838. See a list of common MIME types [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types).
+                    example: application/pdf
+                  Size:
+                    type: string
+                    description: The size of the file (in bytes)
+                    example: '334565'
+          headers:
+            Location:
+              description: The endpoint URL to the newly created file.
+              schema:
+                type: string
+                example: https://api.karbonhq.com/v3/Files('2S3RNjkR66Ln')
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Resource Not Found:
+                  $ref: '#/components/examples/HTTP_Resource_Not_Found'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported File Type:
+                  $ref: '#/components/examples/Unsupported_File_Type'
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+      requestBody:
+        description: 'Refer to the table below for more information on each field in the request body.
+
+
+          In addition to the `file` property, at least one of the following properties is required. <ul> <li>`contact_keys`</li> <li>`organization_keys`</li> <li>`client_group_keys`</li> <li>`integration_task_key`</li>  <li>`workitem_keys`</li> </ul>
+
+          '
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - file
+              minProperties: 2
+              properties:
+                contact_keys:
+                  type: string
+                  description: A Karbon-generated unique identifier for the Contact, which this file will be associated with
+                  example: RXq4dB32PXg
+                organization_keys:
+                  type: string
+                  description: A Karbon-generated unique identifier for the Organization, which this file will be associated with
+                  example: qTLmTpG85Ng
+                client_group_keys:
+                  type: string
+                  description: A Karbon-generated unique identifier for the Client Group, which this file will be associated with
+                  example: 3h5Tbh9RgLs7
+                workitem_keys:
+                  type: string
+                  description: A Karbon-generated unique identifier for the Work Item, which this file will be associated with
+                  example: RXq4mD62PXg
+                integration_task_key:
+                  type: string
+                  description: A Karbon-generated unique identifier for the Integration Task, which this file will be associated with
+                  example: RXq4mD62PXg
+                file:
+                  type: string
+                  format: binary
+                  description: File to be uploaded
+    get:
+      tags:
+      - Files
+      summary: Get a File using it's token
+      description: 'Use the `GET` method on this endpoint with the `token` query string parameter to retrieve a file. Note: download tokens are only valid for 15 minutes from the moment of issue.'
+      operationId: downloadFile
+      parameters:
+      - name: token
+        in: query
+        description: A Karbon-generated JWT token that is used to identify the File
+        required: true
+        schema:
+          type: string
+        example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJGaWxlQ29udGV4dFBlcm1hS2V5IjoiUzhic0JqdkNSSjMiLCJpYXQiOjE3MjEzNDY2MTIuMCwiZXhwIjoxNzIxMzQ3NTEyLjB9.TTVVpPAKXmAUX1jlPSLVjh5sMoCTbAyp0fOgbydA2aU
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream: {}
+        '400':
+          description: Attachment token could not be validated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Option:
+                  $ref: '#/components/examples/InvalidAttachmentToken'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Resource Not Found:
+                  $ref: '#/components/examples/HTTP_Resource_Not_Found'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported File Type:
+                  $ref: '#/components/examples/Unsupported_File_Type'
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/FileDetails/{key}:
+    get:
+      tags:
+      - Files
+      summary: Get the details of a single File
+      description: Use the `GET` method on this endpoint to retrieve the current details of a single file, using the `FileContextKey` returned by `GET /v3/FileList/{EntityType}`.
+      operationId: getFileDetailsByKey
+      parameters:
+      - in: path
+        name: key
+        required: true
+        schema:
+          type: string
+        description: The FileContextKey of the file to retrieve.
+        example: S8bsBjvCRJ3
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileListItem'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Resource Not Found:
+                  $ref: '#/components/examples/HTTP_Resource_Not_Found'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/FileDetails/{key}/Download:
+    get:
+      tags:
+      - Files
+      summary: Redirect to download a single File
+      description: Use the `GET` method on this endpoint to be redirected to a freshly-tokened download URL for the file identified by `key` (the `FileContextKey` returned by `GET /v3/FileList/{EntityType}`). Runs the same tenant/existence check as `GET /v3/FileDetails/{key}`, so it can't be used to mint tokens for another tenant's keys.
+      operationId: downloadFileDetailsByKey
+      parameters:
+      - in: path
+        name: key
+        required: true
+        schema:
+          type: string
+        description: The FileContextKey of the file to download.
+        example: S8bsBjvCRJ3
+      responses:
+        '302':
+          description: Found — redirects to a freshly-tokened download URL for the file.
+          headers:
+            Location:
+              description: The download URL to fetch the file's bytes from, valid for 15 minutes.
+              schema:
+                type: string
+                example: https://api.karbonhq.com/v3/Files?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Resource Not Found:
+                  $ref: '#/components/examples/HTTP_Resource_Not_Found'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/FileList/{EntityType}:
+    get:
+      tags:
+      - Files
+      summary: Get a list of Files for a given entity
+      description: 'Use the `GET` method on this endpoint to list files associated with a specific Entity Type and Entity Key.
+
+
+        The list supports `$filter` on `IsArchived`, `IsShared`, `Source` and `MimeType` (`eq` only, combined with `and`). Files are returned newest first when `$orderby` is omitted. `TotalCount` in the response is the number of files matching the filter before paging.
+
+
+        Filtering or sorting on any other property, or using other operators such as `or` or `contains`, returns a `400`.'
+      operationId: listFiles
+      parameters:
+      - name: EntityType
+        in: path
+        description: The entity type related to the entity key.
+        required: true
+        schema:
+          type: string
+          enum:
+          - WorkItem
+          - Contact
+          - Organization
+        example: WorkItem
+      - name: EntityKey
+        in: query
+        description: The unique key to list files for.
+        required: true
+        schema:
+          type: string
+        example: 3bXVhdMHgc9P
+      - in: query
+        name: $filter
+        schema:
+          type: string
+        examples:
+          isArchived:
+            value: IsArchived eq false
+            summary: Only files that have not been archived
+          isShared:
+            value: IsShared eq true
+            summary: Only files the client can see
+          source:
+            value: Source eq 'WorkItem'
+            summary: Only files uploaded against a Work Item
+          mimeType:
+            value: MimeType eq 'application/pdf'
+            summary: Only PDF files
+          combined:
+            value: IsArchived eq false and IsShared eq true and MimeType eq 'application/pdf'
+            summary: Conditions combined with `and`
+        description: When this parameter is combined with the URI, this endpoint will return a subset of the files that satisfy the `$filter` expression. Supports `IsArchived`, `IsShared`, `Source` and `MimeType` with the `eq` operator, combined with `and`.
+      - in: query
+        name: $orderby
+        schema:
+          type: string
+          enum:
+          - DateCreated
+          - DateCreated desc
+          default: DateCreated desc
+        example: DateCreated
+        description: Sort the files by upload date. Newest first when omitted.
+      - in: query
+        name: $skip
+        schema:
+          type: integer
+          minimum: 0
+        example: 50
+        description: Skip the first n files after filtering and sorting.
+      - in: query
+        name: $top
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+        example: 50
+        description: Limit the number of files returned, up to 100.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileList'
+        '400':
+          description: Attachment token could not be validated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Option:
+                  $ref: '#/components/examples/FileEntityNotFound'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Resource Not Found:
+                  $ref: '#/components/examples/HTTP_Resource_Not_Found'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported File Type:
+                  $ref: '#/components/examples/Unsupported_File_Type'
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  examples:
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+    Unsupported_File_Type:
+      description: The error returned when attempting to upload an unsupported File Type
+      value:
+        error:
+          code: '5001'
+          message: Unsupported file type
+    FileEntityNotFound:
+      description: The error returned when a file is not found
+      value:
+        error:
+          code: '4004'
+          message: File entity is not found for permakey a3bXVhdMHgc9P
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    HTTP_Resource_Not_Found:
+      description: The error returned when the request path and request method does not match any configured API path and method
+      value:
+        error:
+          code: '4002'
+          message: No HTTP resource was found that matches the request URI 'http://api.karbonhq.com/v3/<endpoint>
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    InvalidAttachmentToken:
+      description: The details of an error associated with an API request
+      value:
+        error:
+          code: '4001'
+          message: Attachment token could not be validated.
+  schemas:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    FileListItem:
+      description: A single File
+      type: object
+      properties:
+        FileContextKey:
+          type: string
+          example: S8bsBjvCRJ3
+          description: The unique key of the file
+        Source:
+          type: string
+          example: Organization
+          enum:
+          - WorkItem
+          - Contact
+          - Organization
+          description: The type of entity the file was uploaded against
+        FileName:
+          type: string
+          example: image.jpeg
+          description: The name of the file
+        FileSize:
+          type: integer
+          example: 7316
+          description: The size of the file in bytes
+        MimeType:
+          type: string
+          example: image/jpeg
+          description: The mimetype of the uploaded file
+        DownloadUrl:
+          type: string
+          example: /V3/Files?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJGaWxlQ29udGV4dFBlcm1hS2V5IjoiUzhic0JqdkNSSjMiLCJpYXQiOjE3MjE1NTIzNTQuMCwiZXhwIjoxNzIxNTUzMjU0LjB9.AW9WBmAfLu9jKVZ8odZY1uR1Jvsi-7KB3Zvv8Fbka5k
+          description: The API path than can be called to download the file
+        DateCreated:
+          type: string
+          format: date-time
+          example: '2024-07-18T23:44:26Z'
+          description: The timestamp of when the file was created
+        IsArchived:
+          type: boolean
+          example: false
+          description: Whether the file has been archived
+        IsShared:
+          type: boolean
+          example: true
+          description: Whether the client can see the file. Files uploaded by a client, or attached to a Client Task, External Comment, Approval or eSignature, are always shared. Read-only.
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    FileList:
+      description: A collection of files associated with an entity in Karbon
+      type: object
+      properties:
+        EntityKey:
+          type: string
+          example: 3bXVhdMHgc9P
+          description: The unique key of the entity the list of files is associated with
+        EntityType:
+          type: string
+          example: WorkItem
+          enum:
+          - WorkItem
+          - Contact
+          - Organization
+          description: The type of entity the file list is associated with
+        TotalCount:
+          type: integer
+          example: 128
+          description: The number of files matching the `$filter` expression, before `$skip` and `$top` are applied
+        Attachments:
+          type: array
+          description: An array of Files including a name, mimetype, size, creation timestamp and download url
+          items:
+            $ref: '#/components/schemas/FileListItem'
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

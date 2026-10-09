@@ -1,0 +1,21 @@
+name: Karbon API rate limits
+generated: '2026-10-09'
+method: searched
+source: https://developers.karbonhq.com/guides/rate-limits/
+limit_count: 1
+limits:
+- name: Per account per API application
+  limit_text: No more than 120 requests per minute (2 requests/second).
+  max: 120
+  limit: 120
+  window: minute
+  scope: per account per API application
+  note: Labelled "Recommended" in the docs; different applications connecting to the same account have independent limits.
+signaling:
+  status_code: 429
+  headers:
+  - Retry-After
+  retry_after_unit: seconds
+  body_example: '{"statusCode": "429", "message": "Rate limit is exceeded. Try again in 10 seconds."}'
+  x_ratelimit_headers_documented: false
+guidance: Exponential backoff using Retry-After as the minimum wait; Accept-Encoding gzip; $top=100 with $filter; webhooks instead of polling.

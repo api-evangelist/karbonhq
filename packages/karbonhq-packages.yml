@@ -1,0 +1,12 @@
+generated: '2026-10-09'
+method: none
+source: https://registry.npmjs.org/-/v1/search?text=karbonhq
+note: 'no first-party package: every candidate a model listed was unowned (harvest-packages.py --audit)'
+packages: []
+rejected:
+- name: karbon-mcp-server
+  registry: npm
+  reason: 'official: false as written'
+- name: n8n-nodes-karbon
+  registry: npm
+  reason: 'official: false as written'

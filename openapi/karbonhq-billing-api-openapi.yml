@@ -1,0 +1,1401 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Billing API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Billing across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Billing
+  description: List and view an Invoice and associated line items
+paths:
+  /v3/Invoices:
+    get:
+      operationId: getInvoices
+      tags:
+      - Billing
+      summary: Gets a list of Invoices
+      parameters:
+      - $ref: '#/components/parameters/SkipRecords'
+      - $ref: '#/components/parameters/TopRecords'
+      - in: query
+        name: $filter
+        schema:
+          type: string
+        examples:
+          invoiceStatusApproved:
+            value: InvoiceStatus eq 'Approved'
+            summary: Invoices with the status 'Approved'
+          invoiceStatusAwaitingPayment:
+            value: InvoiceStatus eq 'AwaitingPayment'
+            summary: Invoices with the status 'AwaitingPayment'
+          invoiceStatusPaid:
+            value: InvoiceStatus eq 'Paid'
+            summary: Invoices with the status 'Paid'
+          invoiceStatusExported:
+            value: InvoiceStatus eq 'Exported'
+            summary: Invoices with the status 'Exported'
+          invoiceStatusVoided:
+            value: InvoiceStatus eq 'Voided'
+            summary: Invoices with the status 'Voided'
+        description: When this parameter is combined with the URI, this endpoint will return a subset of the Invoices that satisfy the `$filter` expression. The `InvoiceStatus` property supports the `eq` operator.
+      - in: query
+        name: $orderby
+        schema:
+          type: string
+        examples:
+          orderByInvoiceDate:
+            value: InvoiceDate
+            summary: Order results by InvoiceDate, oldest to newest
+          orderByInvoiceDateDesc:
+            value: InvoiceDate desc
+            summary: Order results by InvoiceDate, newest to oldest
+          orderByInvoiceCreatedAt:
+            value: CreatedAt
+            summary: Order results by CreatedAt timestamp, oldest to newest
+          orderByInvoiceCreatedAtDesc:
+            value: CreatedAt desc
+            summary: Order results by CreatedAt timestamp, newest to oldest
+          orderByInvoiceUpdatedAt:
+            value: UpdatedAt
+            summary: Order results by UpdatedAt timestamp, oldest to newest
+          orderByInvoiceUpdatedAtDesc:
+            value: UpdatedAt desc
+            summary: Order results by UpdatedAt timestamp, newest to oldest
+          orderByInvoiceNumber:
+            value: InvoiceNumber
+            summary: Order results by InvoiceNumber, oldest to newest
+          orderByInvoiceNumberDesc:
+            value: InvoiceNumber desc
+            summary: Order results by InvoiceNumber, newest to oldest
+        description: Alter the sort order of the invoice list
+      description: Use the `GET` method on this endpoint to receive a list of Invoices
+      responses:
+        '200':
+          description: Successful Invoices GET operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  '@odata.context':
+                    type: string
+                    example: https://api.karbonhq.com/v3/$metadata#Invoices
+                    description: The information about Karbon controllers generating this response.
+                  '@odata.count':
+                    type: integer
+                    example: 10
+                    description: The total number of results
+                  values:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BillingInvoice'
+              example:
+                '@odata.context': https://api.karbonhq.com/v3/$metadata#Invoices
+                '@odata.count': 1
+                value:
+                - InvoiceKey: M2dVbCt4RHk
+                  InvoiceNumber: KIN-1001
+                  TotalAmountDue: 1607.13
+                  InvoiceTotal: 1607.13
+                  InvoiceSubTotal: 1397.5
+                  InvoiceTaxTotal: 209.63
+                  InvoiceDate: '2023-07-21T00:00:00Z'
+                  PaymentDueDate: '2023-07-28T00:00:00Z'
+                  UpdatedAt: '2023-07-20T23:52:11Z'
+                  CurrencyCode: AUD
+                  PaymentInstructions: null
+                  InvoiceStatus: AwaitingPayment
+                  Client:
+                    ClientKey: 2xxnBLyCP4Ts
+                    ClientType: Organization
+                    Name: Acme Corp
+                    AddressLine: 15 Example Street
+                    City: Sydney
+                    StateProvinceCounty: NSW
+                    ZipCode: '4004'
+                    Country: Australia
+                    EmailAddress: acme@example.com
+                  TaxLineItems:
+                  - TaxName: GST
+                    TaxValue: 209.63
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Invoices/{InvoiceKey}:
+    get:
+      operationId: getInvoiceByKey
+      tags:
+      - Billing
+      summary: Gets a single Invoice
+      parameters:
+      - required: true
+        in: path
+        name: InvoiceKey
+        example: M2dVbCt4RHk
+        schema:
+          type: string
+        description: The Karbon-generated Invoice key
+      - $ref: '#/components/parameters/InvoiceExpandParams'
+      description: Use the `GET` method on this endpoint to receive the details of an Invoice specified using the InvoiceKey. The response includes `InvoiceMagicLink`, a link for the client to pay the invoice through Karbon Payments, and `InvoicePdfUrl`, a link to the rendered invoice PDF. Both are returned once the invoice has been posted or sent.
+      responses:
+        '200':
+          description: Successful Invoice GET operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    '@odata.context':
+                      type: string
+                      example: https://api.karbonhq.com/v3/$metadata#Invoices/$entity
+                      description: The information about Karbon controllers generating this response.
+                - $ref: '#/components/schemas/BillingInvoiceWithPayment'
+              example:
+                '@odata.context': https://api.karbonhq.com/v3/$metadata#Invoices/$entity
+                InvoiceKey: M2dVbCt4RHk
+                InvoiceNumber: KIN-1001
+                TotalAmountDue: 1607.13
+                InvoiceTotal: 1607.13
+                InvoiceSubTotal: 1397.5
+                InvoiceTaxTotal: 209.63
+                InvoiceDate: '2023-07-21T00:00:00Z'
+                PaymentDueDate: '2023-07-28T00:00:00Z'
+                UpdatedAt: '2023-07-20T23:52:11Z'
+                CurrencyCode: AUD
+                PaymentInstructions: Payment due 7 days from invoice date
+                InvoiceStatus: AwaitingPayment
+                InvoiceMagicLink: https://clientportal.karbonhq.com/invoice-link?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                InvoicePdfUrl: /v3/Files?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+                Client:
+                  ClientKey: 2xxnBLyCP4Ts
+                  ClientType: Organization
+                  Name: Acme Corp
+                  AddressLine: 15 Example Street
+                  City: Sydney
+                  StateProvinceCounty: NSW
+                  ZipCode: '4004'
+                  Country: Australia
+                  EmailAddress: acme@example.com
+                TaxLineItems:
+                - TaxName: GST
+                  TaxValue: 209.63
+                LineItems:
+                - LineItemKey: string
+                  BillableItemEntityKey: string
+                  BillableItemType: TimeEntry
+                  Description: string
+                  Quantity: 0
+                  UnitPrice: string
+                  Amount: 0
+                  TaxRate: 0
+                  TaxRateName: string
+                Payments:
+                - PaymentKey: 4n3mrlQPycxn
+                  PaymentReference: KPY-001
+                  PaymentType: ManualPayment
+                  PaymentDate: '2025-01-07'
+                  Amount: 1100.5
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                UDI Not Found:
+                  $ref: '#/components/examples/Invoice_Not_Found'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Payments:
+    get:
+      operationId: getPayments
+      tags:
+      - Billing
+      summary: Gets a list of Payments
+      parameters:
+      - $ref: '#/components/parameters/SkipRecords'
+      - $ref: '#/components/parameters/TopRecords'
+      description: Use the `GET` method on this endpoint to receive a list of Payments
+      responses:
+        '200':
+          description: Successful Payments GET operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  '@odata.context':
+                    type: string
+                    example: https://api.karbonhq.com/v3/$metadata#Payments
+                    description: The information about Karbon controllers generating this response.
+                  '@odata.count':
+                    type: integer
+                    example: 10
+                    description: The total number of results
+                  values:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BillingPayment'
+              example:
+                '@odata.context': https://api.karbonhq.com/v3/$metadata#Payments
+                '@odata.count': 1
+                value:
+                - InvoiceKey: 72dVb4dTRkH
+                  PaymentReference: KPY-1000
+                  PaymentType: ManualPayment
+                  PaymentDate: '2023-07-28'
+                  GrossAmount: 1550.5
+                  PaymentMethod: Check
+                  KarbonPayment:
+                    CardType: ''
+                    CardCountry: null
+                    CardFunding: ''
+                    PayoutStatus: ''
+                    SurchargeAmount: 0
+                    KarbonFeeAmount: 0
+                    KarbonFeeTaxAmount: 0
+                    NetAmount: 0
+                  Client: null
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/ManualPayments:
+    post:
+      operationId: createManualPayment
+      tags:
+      - Billing
+      summary: Create a manual payment against an Invoice
+      description: Use the `POST` method on this endpoint to create a Manual Payment
+      responses:
+        '201':
+          description: Manual Payment recorded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  '@odata.context':
+                    type: string
+                    example: https://api.karbonhq.com/v3/$metadata#Invoices/$entity
+                    description: The information about Karbon controllers generating this response.
+                  InvoiceKey:
+                    type: string
+                    example: 2F3pqz88T2hW
+                    description: The unique Key of the Invoice which the payment was applied to.
+                  PaymentMethod:
+                    type: string
+                    example: Cash
+                    description: The method used to make the payment.
+                  PaymentDate:
+                    type: string
+                    format: date-time
+                    example: '2024-06-24T00:00:00Z'
+                    description: The date the payment made by the customer.
+                  TotalAmount:
+                    type: number
+                    format: double
+                    example: 99.95
+                    description: The amount of the payment
+                  Reference:
+                    description: An optional reference to include with the payment.
+                    oneOf:
+                    - type: string
+                      maxLength: 250
+                      example: Payment made in cash.
+                    - type: 'null'
+                  PaymentProcessingKey:
+                    type: string
+                    example: 2cmDVpGdCp99
+                    description: The unique id of the payment record.
+              example:
+                '@odata.context': https://api-stage.karbonhq.com/v3/$metadata#ManualPayments/$entity
+                InvoiceKey: 2F3pqz88T2hW
+                PaymentMethod: Cash
+                PaymentDate: '2024-06-06T00:00:00Z'
+                TotalAmount: 1100.11
+                Reference: Cash payment
+                PaymentProcessingKey: 2cmDVpGdCp99
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                description: The response shown when trying to overpay an invoice
+                type: object
+                properties:
+                  Error:
+                    type: object
+                    properties:
+                      Code:
+                        type: string
+                        description: A code that denotes different types of error under the 400 response code.
+                        example: '4002'
+                      Message:
+                        type: string
+                        description: The error message
+                        example: An attempt was made to overpay Invoice with [tenantPermaKey=2BzmMRkhbwBT] and [invoicePermaKey=tnl31HQDzRS].
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+      requestBody:
+        description: A manual payment request body
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+              - InvoiceKey
+              - PaymentMethod
+              - PaymentDate
+              - TotalAmount
+              properties:
+                InvoiceKey:
+                  type: string
+                  example: tnl31HQDzRS
+                  description: The unique key of the Invoice to pay
+                PaymentMethod:
+                  type: string
+                  example: Cash
+                  enum:
+                  - Bank Transfer
+                  - Direct Debit
+                  - Credit Card Online
+                  - Credit Card Office
+                  - Check
+                  - Cash
+                  - Other
+                  description: The method used to pay the invoice
+                PaymentDate:
+                  type: string
+                  example: '2024-06-30'
+                  description: The date the Payment is to be Recorded using an ISO 8601 datestamp
+                  format: date
+                TotalAmount:
+                  type: number
+                  example: 520.55
+                  description: The amount of the payment in the nominated currency, must be greater than 0 and equal or less than the outstanding due amount on the invoice.
+                  format: float
+                  minimum: 0.01
+                Reference:
+                  type: string
+                  example: Payment in person
+                  description: An optional reference to include with the payment.
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/ManualPayments/{ManualPaymentKey}:
+    delete:
+      operationId: deleteManualPayment
+      tags:
+      - Billing
+      summary: Delete a manual payment
+      description: Use the `DELETE` method on this endpoint to delete a Manual Payment
+      parameters:
+      - required: true
+        in: path
+        name: ManualPaymentKey
+        example: 2Rz483jmtvzb
+        schema:
+          type: string
+        description: The Manual Payment key
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Manual Payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManualPaymentNotFoundErrorMessage'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/ReverseManualPayment:
+    post:
+      operationId: reverseManualPayment
+      tags:
+      - Billing
+      summary: Reverse a manual payment
+      description: Use the `POST` method on this endpoint to reverse a Manual Payment
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Manual Payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManualPaymentNotFoundErrorMessage'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+      requestBody:
+        description: A reverse manual payment request body
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+              - PaymentKey
+              - ReversalDate
+              properties:
+                PaymentKey:
+                  type: string
+                  example: 2NmwhRJXjHdH
+                  description: The unique key of the Manual Payment to reverse
+                ReversalDate:
+                  type: string
+                  format: date-time
+                  example: '2025-08-01T00:00:00Z'
+                  description: The date the Reversal is to be recorded using an ISO 8601 datestamp
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Payments/{PaymentKey}:
+    get:
+      operationId: getPaymentByPaymentKey
+      tags:
+      - Billing
+      summary: Gets a single Payment
+      parameters:
+      - in: path
+        name: PaymentKey
+        schema:
+          type: string
+        required: true
+        example: 72dVb4dTRkH
+        description: The unique key of the payment
+      description: Use the `GET` method on this endpoint to receive details of a single Payment
+      responses:
+        '200':
+          description: Successful Payment GET operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    '@odata.context':
+                      type: string
+                      example: https://api.karbonhq.com/v3/$metadata#Payments/$entity
+                      description: The information about Karbon controllers generating this response.
+                - $ref: '#/components/schemas/BillingPayment'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Expenses:
+    post:
+      tags:
+      - Billing
+      summary: Creates a new Expense
+      description: 'Use the `POST` method on this endpoint to create an Expense and associate it with a WorkItem, Contact or Organization in your tenant.
+
+
+        Expenses cannot be listed, updated or deleted through the API.'
+      operationId: createExpense
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseResponse'
+              example:
+                '@odata.context': https://api.karbonhq.com/v3/$metadata#Expenses/$entity
+                ExpenseKey: 3nB7kQvXLmT
+                Timeline:
+                  EntityType: WorkItem
+                  EntityKey: 2m6pSFxRzcF2
+                ExpenseDate: '2026-08-14T00:00:00Z'
+                Value: 240.5
+                BillableValue: 240.5
+                Description: Courier fees for year-end documents
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Resource Not Found:
+                  $ref: '#/components/examples/HTTP_Resource_Not_Found'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+      requestBody:
+        description: Refer to the table below for more information on each field in the request body.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseRequest'
+            example:
+              Timeline:
+                EntityType: WorkItem
+                EntityKey: 2m6pSFxRzcF2
+              ExpenseDate: '2026-08-14T00:00:00Z'
+              Value: 240.5
+              BillableValue: 240.5
+              Description: Courier fees for year-end documents
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  examples:
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    HTTP_Resource_Not_Found:
+      description: The error returned when the request path and request method does not match any configured API path and method
+      value:
+        error:
+          code: '4002'
+          message: No HTTP resource was found that matches the request URI 'http://api.karbonhq.com/v3/<endpoint>
+    Invoice_Not_Found:
+      description: The error returned when an Invoice with the provided ID does not exist
+      value:
+        error:
+          code: '4004'
+          message: Invoice with key <InvalidInvoiceId> not found.
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+  schemas:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    BillingTaxLineItems:
+      type: object
+      description: Details of the tax components of the invoice
+      properties:
+        TaxLineItems:
+          description: An array of tax types and values from invoice line items
+          type: array
+          items:
+            description: A tax line item detailing the tax code and amount on Karbon invoice
+            properties:
+              TaxName:
+                type: string
+                description: The name of the tax
+                example: GST
+              TaxValue:
+                type: number
+                description: The value of the tax in the invoice currency
+                example: 209.63
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    BillingBaseInvoice:
+      description: A Karbon invoice
+      type: object
+      required:
+      - InvoiceKey
+      - InvoiceNumber
+      - TotalAmountDue
+      - InvoiceTotal
+      - InvoiceSubTotal
+      - InvoiceTaxTotal
+      - InvoiceDate
+      - PaymentDueDate
+      - UpdatedAt
+      - CurrencyCode
+      - InvoiceStatus
+      properties:
+        InvoiceKey:
+          type: string
+          description: The unique key assigned to an invoice by Karbon
+          example: rE3qYC48lv
+        InvoiceNumber:
+          type: string
+          description: The invoice number of the invoice
+          example: KIN-1001
+        TotalAmountDue:
+          type: number
+          description: Remaining amount due on the invoice, including taxes minus any payments
+          example: 22.34
+        InvoiceTotal:
+          type: number
+          description: Invoice total, including taxes
+          example: 24
+        InvoiceSubTotal:
+          type: number
+          description: The sum of the line items of the invoice, excluding taxes
+          example: 22
+        InvoiceTaxTotal:
+          type: number
+          description: Total of the taxes on the invoice
+          example: 2
+        InvoiceDate:
+          type: string
+          description: The date the invoice was issued as an ISO 8601 timestamp
+          example: '2023-08-11T00:00:00Z'
+        PaymentDueDate:
+          type: string
+          description: The date the invoice is due as an ISO 8601 timestamp
+          example: '2023-08-18T00:00:00Z'
+        UpdatedAt:
+          type: string
+          description: A timestamp showing when the invoice was last updated as an ISO 8601 timestamp
+          example: '2023-08-12T03:24:11Z'
+        CurrencyCode:
+          type: string
+          description: A three letter ISO 4217 currency code denoting the currency used in the invoice, e.g. AUD, USD, CAD, NZD, EUR, GBP
+          example: CAD
+        PaymentInstructions:
+          type:
+          - string
+          - 'null'
+          description: Payment instructions added to the invoice
+          example: Payment due 7 days from invoice date
+        InvoiceStatus:
+          type: string
+          enum:
+          - Approved
+          - AwaitingPayment
+          - Paid
+          - Exported
+          - Voided
+          description: Current status of the invoice
+          example: AwaitingPayment
+    BillingPayment:
+      type: object
+      description: A Karbon Payment record
+      allOf:
+      - type: object
+        description: A Karbon payment
+        required:
+        - PaymentKey
+        - PaymentReference
+        - PaymentType
+        - PaymentDate
+        - GrossAmount
+        - PaymentMethod
+        properties:
+          PaymentKey:
+            type: string
+            description: The unique key assigned to an payment by Karbon
+            example: rE3qYC48lv
+          PaymentReference:
+            type: string
+            description: The Karbon reference number of the payment
+            example: KPY-1001
+          PaymentType:
+            type: string
+            description: The type of payment
+            enum:
+            - ManualPayment
+            - ManualPaymentReversed
+            - Payment
+            example: ManualPayment
+          PaymentDate:
+            type: string
+            format: date
+            description: The datestamp the payment was made, for Manual Payments this will be a datestamp
+            example: '2024-12-21'
+          GrossAmount:
+            type: number
+            format: double
+            description: The valeu of the payment, excluding fees and taxes
+            example: 2200
+          PaymentMethod:
+            type: string
+            description: The method by which the payment was made
+            example: Check
+          ClientKey:
+            type: string
+            description: The unique key of the client that payment was by - could be a Person or Organization
+            example: vTx6YRgMk4
+      - $ref: '#/components/schemas/BillingKarbonPayment'
+      - $ref: '#/components/schemas/BillingClient'
+    BillingInvoiceDataExpenseItem:
+      description: An expense line item on a Karbon invoice
+      type: object
+      allOf:
+      - properties:
+          ExpenseKey:
+            type: string
+            example: 26cd6f1b81d14be59f1e578c5fe160b5
+          Description:
+            type: string
+            description: The description of the expense
+            example: Expense 1
+          Billed:
+            type: number
+            description: An the billed value of a specific expense
+            example: 100
+      - $ref: '#/components/schemas/BillingInvoiceDataTax'
+    BillingInvoiceDataService:
+      description: A service line item on a Karbon invoice
+      type:
+      - object
+      - 'null'
+      allOf:
+      - properties:
+          WorkType:
+            type: string
+            description: The work type associated with the service
+            example: Accounting
+          Billed:
+            type: number
+            description: The billed value of the service
+            example: 150
+      - $ref: '#/components/schemas/BillingInvoiceDataTax'
+    BillingInvoiceWithPayment:
+      type: object
+      description: A Karbon invoice with associated payment records
+      allOf:
+      - $ref: '#/components/schemas/BillingInvoice'
+      - $ref: '#/components/schemas/BillingInvoiceLineItems'
+      - $ref: '#/components/schemas/BillingInvoicePayments'
+      - $ref: '#/components/schemas/BillingInvoiceData'
+      properties:
+        InvoiceMagicLink:
+          type:
+          - string
+          - 'null'
+          description: A link firms can send to clients to pay the invoice through Karbon Payments. Only returned once the invoice has been posted; otherwise `null`.
+          example: https://clientportal.karbonhq.com/invoice-link?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+        InvoicePdfUrl:
+          type:
+          - string
+          - 'null'
+          description: A link to the rendered invoice PDF, which firms can use to preview the invoice, download it, or send it to their clients. The token in the URL is valid for 15 minutes. Only returned once the invoice has been posted or sent; otherwise `null`.
+          example: /v3/Files?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+    BillingInvoiceDataExpense:
+      description: A line item on a Karbon invoice
+      type: object
+      properties:
+        Billed:
+          type: number
+          description: The total billed value of expenses
+          example: 200
+        Expenses:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingInvoiceDataExpenseItem'
+    ExpenseRequest:
+      description: A single Expense
+      required:
+      - Timeline
+      - ExpenseDate
+      - Value
+      - BillableValue
+      - Description
+      type: object
+      properties:
+        Timeline:
+          type: object
+          description: The entity the Expense is recorded against
+          properties:
+            EntityType:
+              type: string
+              description: The type of entity this Expense will be linked to
+              enum:
+              - WorkItem
+              - Contact
+              - Organization
+            EntityKey:
+              type: string
+              example: 2m6pSFxRzcF2
+              description: A Karbon-generated value to indicate the entity
+        ExpenseDate:
+          type: string
+          format: date-time
+          example: '2026-08-14T00:00:00Z'
+          description: The date the Expense was incurred
+        Value:
+          type: number
+          format: double
+          example: 240.5
+          description: The cost of the Expense. Cannot be negative.
+        BillableValue:
+          type: number
+          format: double
+          example: 240.5
+          description: The portion of the Expense that is billable to the client. Cannot be negative. Use 0 for an Expense that will not be billed on.
+        Description:
+          type: string
+          example: Courier fees for year-end documents
+          description: A description of the Expense. Limited to 250 characters.
+    BillingInvoiceDataWorkTimeEntry:
+      description: The details of an invoiced time entry
+      properties:
+        TimeEntryKey:
+          type: string
+          description: The unique identifier of the time entry
+          example: c05db7badcc844b9a6c0d23c40928a87
+        ColleagueKey:
+          type: string
+          description: The unique ID of the user that logged the time
+          example: YzTNXkxxq2W
+        RoleName:
+          type: string
+          description: The role on the time entry
+          example: Bookkeeper
+        TaskTypeName:
+          type: string
+          description: The task ype on the time entry
+          example: Bookkeeping
+        Billed:
+          type: number
+          description: The billed value of the time entry
+          example: 300
+    BillingInvoice:
+      type: object
+      description: A Karbon Invoice record
+      allOf:
+      - $ref: '#/components/schemas/BillingBaseInvoice'
+      - $ref: '#/components/schemas/BillingClient'
+      - $ref: '#/components/schemas/BillingTaxLineItems'
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+    BillingInvoiceDataWork:
+      type:
+      - object
+      - 'null'
+      description: The breakdown of the billing that stems from work
+      allOf:
+      - properties:
+          FeeType:
+            type: string
+            description: The fee type of the billed amount
+            example: Fixed Fee
+          WorkType:
+            type: string
+            description: The tax rated applied to the billed amount
+            example: Accounting
+          InvoiceType:
+            type: string
+            description: Denotes whether the invoice is final or not
+            example: Final
+          Billed:
+            type: number
+            format: double
+            description: The value of the billed amount
+            example: 440.5
+          TimeEntries:
+            oneOf:
+            - type: array
+              items:
+                $ref: '#/components/schemas/BillingInvoiceDataWorkTimeEntry'
+            - type: 'null'
+      - $ref: '#/components/schemas/BillingInvoiceDataTax'
+    BillingInvoiceLineItems:
+      type: object
+      required:
+      - LineItems
+      description: A breakdown of line items from the invoice
+      properties:
+        LineItems:
+          description: An array of invoice line items
+          type: array
+          items:
+            description: A line item on a Karbon invoice
+            type: object
+            properties:
+              LineItemKey:
+                type: string
+                description: A unique GUID for the line item
+              BillableItemEntityKey:
+                type: string
+                description: The unique key of the related entity the line item was created from, could be a Contact, WorkItem or TimeEntry
+              BillableItemType:
+                type: string
+                enum:
+                - TimeEntry
+                - Expense
+                - Entity
+                description: The source type of the line item
+              Description:
+                type: string
+                description: The description of charge the line item covers
+              Quantity:
+                type: number
+                description: The quantity of units for a line item
+              UnitPrice:
+                type: string
+                description: The per unit price of the line item
+              Amount:
+                type: number
+                description: The amount of the line item calculated as UnitPrice * Quantity, excluding taxes
+              TaxRate:
+                type:
+                - number
+                - 'null'
+                description: The percentage tax rate, expressed as an integer - e.g. 15% is rendered as 15.0000
+              TaxRateName:
+                type:
+                - string
+                - 'null'
+                description: The user specified name of tax rate, e.g. GST, VAT, PST
+    BillingInvoiceDataTax:
+      description: A breakdown of tax related to invoice, lineitems and data
+      type: object
+      properties:
+        TaxRate:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The tax rated applied to the billed amount
+          example: 15
+        TaxRateName:
+          type:
+          - string
+          - 'null'
+          description: The name of the tax rate applied to the billed amount
+          example: GST
+        TaxAmount:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The value of tax component in the billed amount
+          example: 44.55
+    BillingInvoiceData:
+      type: object
+      description: A collection of the data associated with an invoice
+      properties:
+        Data:
+          type: array
+          description: The collection of data that is used to create the rendered (HTML/PDF) invoice sent to the billing contact
+          items:
+            $ref: '#/components/schemas/BillingInvoiceDataItem'
+    ManualPaymentNotFoundErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        error:
+          type: object
+          description: The error object
+          properties:
+            code:
+              type: string
+              description: The error code
+              example: '4004'
+            message:
+              type: string
+              description: The error message
+              example: Manual payment not found - 2Rz483jmtvzb
+    ExpenseResponse:
+      description: A single Expense
+      type: object
+      allOf:
+      - type: object
+        properties:
+          ExpenseKey:
+            type: string
+            example: 3nB7kQvXLmT
+            description: The unique identifier of the Expense
+      - $ref: '#/components/schemas/ExpenseRequest'
+    BillingInvoicePayments:
+      type: object
+      required:
+      - Payments
+      description: Details of the payments related to the invoice
+      properties:
+        Payments:
+          description: An array of invoice payments
+          type: array
+          items:
+            description: A payment on a Karbon invoice
+            type: object
+            properties:
+              PaymentKey:
+                type: string
+                description: A unique ID for the payment
+                example: 4n3mrlQPycxn
+              PaymentReference:
+                type: string
+                description: The Karbon reference number for the payment
+                example: KPY-001
+              PaymentType:
+                type: string
+                enum:
+                - ManualPayment
+                - ManualPaymentReversed
+                - Payment
+                description: The type of payment
+              PaymentDate:
+                type: string
+                format: date
+                description: The datestamp the payment was made, for manual payments this is the date only
+                example: '2025-01-07'
+              Amount:
+                type: number
+                description: The value of the payment
+                example: 1100.5
+    BillingInvoiceDataItem:
+      type: object
+      description: A single component of the data used to create the rendered (HTML/PDF) invoice
+      properties:
+        EntityKey:
+          type: string
+          description: The unique key of the source of the billing
+          example: 34jgMyYBTt4
+        EntityType:
+          type: string
+          description: The type of the source of the billing
+          example: Work Item
+        Billed:
+          type: number
+          format: double
+          description: The value of the billed amount
+          example: 440.5
+        Expenses:
+          $ref: '#/components/schemas/BillingInvoiceDataExpense'
+        Service:
+          $ref: '#/components/schemas/BillingInvoiceDataService'
+        Work:
+          $ref: '#/components/schemas/BillingInvoiceDataWork'
+    BillingKarbonPayment:
+      type: object
+      description: The Karbon Payment object
+      properties:
+        KarbonPayment:
+          description: Data specific to Karbon Payments
+          type: object
+          properties:
+            CardType:
+              type: string
+              example: ''
+              description: The type of the paying card
+            CardCountry:
+              type:
+              - string
+              - 'null'
+              example: null
+              description: The country the paying card was issued in
+            CardFunding:
+              type: string
+              example: ''
+              description: ''
+            PayoutStatus:
+              type: string
+              example: ''
+              description: A status indicating whether the payment has been payed out
+            SurchargeAmount:
+              type: number
+              format: double
+              example: 0
+              description: The amount of anr surcharge(s)
+            SurchargeTaxAmount:
+              type: number
+              format: double
+              example: 0
+              description: The tax on any surcharge(s)
+            KarbonFeeAmount:
+              type: number
+              format: double
+              example: 0
+              description: The amount of the Karbon fee
+            KarbonFeeTaxAmount:
+              type: number
+              format: double
+              example: 0
+              description: The tax on the Karbon fee
+            NetAmount:
+              type: number
+              format: double
+              example: 0
+              description: The gross amount less surcharges, fees and taxes
+    BillingClient:
+      required:
+      - Client
+      description: The details of the invoice recipient at the point in time the invoice was drafted or payment creator at the point the payment was received
+      properties:
+        Client:
+          type:
+          - object
+          - 'null'
+          example: null
+          description: The Karbon Client Billing Contact
+          properties:
+            ClientKey:
+              type: string
+              description: The unique key of the billed Client
+              example: R2oFn56pC
+            ClientType:
+              type: string
+              description: The client type, e.g. Contact or Organization
+              example: Contact
+            Name:
+              type: string
+              description: The name of the client at the point the invoice was drafted
+              example: Georgia Davies
+            AddressLine:
+              type: string
+              description: The billing address of the cient at the point the invoice was drafted
+              example: 11 Example Blvd
+            City:
+              type: string
+              description: The billing address city of the cient at the point the invoice was drafted
+              example: Los Angeles
+            StateProvinceCounty:
+              type: string
+              description: The billing address state/province/country of the cient at the point the invoice was drafted
+              example: CA
+            ZipCode:
+              type: string
+              description: The billing address zip/postal code of the cient at the point the invoice was drafted
+              example: '90210'
+            Country:
+              type: string
+              description: The billing address country of the cient at the point the invoice was drafted
+              example: USA
+            EmailAddress:
+              type: string
+              description: The billing email address of the cient at the point the invoice was drafted
+              example: recipient@example.com
+  parameters:
+    InvoiceExpandParams:
+      in: query
+      name: $expand
+      examples:
+        paymentsOnly:
+          value: Payments
+          summary: Include the payments made on an invoice
+        lineItemsAndData:
+          value: LineItems,Data
+          summary: Include the line items and invoice data
+        limteItemsAndPayments:
+          value: LineItems,Payments
+          summary: Include the line items and payments made on an invoice
+      schema:
+        type: string
+        enum:
+        - LineItems
+        - Payments
+        - Data
+        - LineItems,Data
+        - LineItems,Payments
+        - LineItems,Payments,Data
+        - Payments,Data
+      description: Include additional invoice properties, such as lineitems, payments or invoice data
+    SkipRecords:
+      in: query
+      name: $skip
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+      example: 50
+      description: Skip the first n items
+    TopRecords:
+      in: query
+      name: $top
+      schema:
+        type: integer
+        minimum: 0
+      example: 10
+      description: Limit the number of items returned
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

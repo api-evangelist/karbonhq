@@ -1,0 +1,44 @@
+generated: '2026-10-09'
+method: derived
+generator: derive-webhooks.py
+source:
+- openapi/karbonhq-openapi.yml
+description: 'Event surface derived from the provider''s own OpenAPI: webhooks. No AsyncAPI document is published by the provider; this catalog
+  lists the events the contract names.'
+management_operations:
+- getWebhookSubscriptionsByWebhookType
+- delWebhookSubscriptionsByWebhookType
+- patchWebhookSubscription
+- createWebhookSubscription
+- delAllWebhookSubscriptions
+events:
+- event: contact
+  description: Contact created or updated
+  declared_in: webhooks
+- event: customfield
+  description: Custom field value added or updated
+  declared_in: webhooks
+- event: estimate-summary
+  description: Estimate Summary updated
+  declared_in: webhooks
+- event: integration-task
+  description: Integration Task created
+  declared_in: webhooks
+- event: invoice
+  description: Invoice status updated
+  declared_in: webhooks
+- event: note
+  description: Note created or updated
+  declared_in: webhooks
+- event: note-comment
+  description: Note Comment created or updated
+  declared_in: webhooks
+- event: user
+  description: User has accepted Karbon invite
+  declared_in: webhooks
+- event: work
+  description: Work created or updated
+  declared_in: webhooks
+- event: batch
+  description: Batch of resource changes
+  declared_in: webhooks

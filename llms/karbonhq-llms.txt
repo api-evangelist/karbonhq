@@ -1,0 +1,354 @@
+
+# Karbon API Documentation
+
+This website contains links for developers and their AI coding agents who are tasked with building in-house integrations that interact with the Karbon API.
+
+## What is Karbon?
+
+Karbon is a SaaS practice management platform for accounting firms, available across multiple geographic regions. Its core entities (e.g. Tenant, Work, Contacts, Time) are connected by a 12-character immutable business key called a PermaKey: e.g. a work item references a client via PermaKey.
+
+## Public REST API
+
+Karbon exposes a versioned public REST API (currently v3), documented at https://karbonhq.github.io/karbon-api-reference. Access is restricted to Business and Enterprise plan customers; firms are limited to one API application per account. Authentication uses two credentials: an Application ID (bearer token) and an Access Key (JWT), both provisioned self-service from Karbon Settings > API Applications. The API uses OData heavily on GET endpoints, allowing callers to filter and paginate results.
+
+## Key Links and resources
+
+### OpenAPI spec file
+https://karbonhq.github.io/karbon-api-reference/KarbonAPI.json
+
+KarbonAPI.json is the canonical, authoritative list of endpoints, schemas, and required fields — do not guess endpoint paths or derive them from /v3/$metadata
+
+### MCP server
+https://mcp.karbonhq.com
+
+### Getting started guides:
+
+#### Making Your First API Request
+
+https://developers.karbonhq.com/guides/authentication.md
+Learn how to authenticate with the Karbon API using the required Authorization and AccessKey headers, make your first request to verify your credentials, and understand the account-level access model that governs all API operations.
+
+#### Searching for and Retrieving Client Details
+
+https://developers.karbonhq.com/guides/searching-clients.md
+Search and filter across Karbon's three client entity types: Contacts, Organizations, and ClientGroups—using OData-style queries, retrieve full contact details including emails and phone numbers via $expand=BusinessCards, and update client records or look them up by your own identifiers.
+
+#### Creating a New Work Item
+
+https://developers.karbonhq.com/guides/creating-work-items.md
+Create work items from scratch or from pre-configured templates by providing a title, assignee, client, and start date, with support for setting work types, statuses, and fee structures, plus filtering and updating existing work items via the API.
+
+#### Retrieving Invoices and Recording Payments
+
+https://developers.karbonhq.com/guides/invoices-and-payments.md
+List, sort, and retrieve invoices using the Karbon API, then record manual payments against them by specifying a payment method, date, and amount—with support for reversals, deletions, and webhook subscriptions for real-time invoice change notifications.
+
+#### Handling Rate Limits
+
+https://developers.karbonhq.com/guides/rate-limits.md
+Understand Karbon's API rate limit of 120 requests per minute, handle 429 Too Many Requests responses using exponential backoff with the Retry-After header, and reduce overall request volume through gzip compression, server-side filtering, and webhooks.
+
+#### Pagination
+
+https://developers.karbonhq.com/guides/pagination.md
+Retrieve full result sets from Karbon's list endpoints by requesting pages of up to 100 items and following the @odata.nextLink cursor in each response, combining pagination with $filter and $orderby for consistent, efficient data retrieval.
+
+#### Webhooks
+
+https://developers.karbonhq.com/guides/webhooks.md
+Subscribe to Karbon webhook events to receive real-time push notifications when contacts, work items, invoices, and other entities change—eliminating the need to poll—then fetch the full updated record using the ResourcePermaKey in the payload.
+
+#### Working with Custom Fields
+
+https://developers.karbonhq.com/guides/custom-fields.md
+Define and manage custom fields on Contacts and Organizations to store structured data across types including text, numbers, dates, booleans, list selections, and Karbon user references, then read and update values per entity via the CustomFieldValues endpoint.
+
+#### Uploading Files
+
+https://developers.karbonhq.com/guides/uploading-files.md
+Upload a file to Karbon and link it to a contact, organization, client group, or work item.
+
+#### Budgets and Time
+
+https://developers.karbonhq.com/guides/budgets-and-time.md
+Retrieve and update budgeted estimates for a Work Item, and look up logged time entries — covers what Karbon calls Estimate Summaries and Individual Time Entries.
+
+  
+### Release Notes 
+
+#### April 26, 2022
+
+https://developers.karbonhq.com/release-notes/2022-04-26.md
+We have made updates to Karbon's public API that impact 3 endpoints: ClientRequests, ClientTaskComments and ClientTasks
+
+
+#### May 10, 2022
+
+https://developers.karbonhq.com/release-notes/2022-05-10.md
+We have made updates to Karbon's public API that impact an existing endpoint: WebhookSubscriptions. We have also introduced Webhooks for WorkItem and Notes.
+
+
+#### May 31, 2022
+
+https://developers.karbonhq.com/release-notes/2022-05-31.md
+We have made updates to Karbon's public API that impact 3 endpoints: WebhookSubscriptions, Notes, and Comments; and the Comment webhook.
+
+
+#### June 20, 2022
+
+https://developers.karbonhq.com/release-notes/2022-06-20.md
+We have made updates to Karbon's public API that impact 3 endpoint: Contacts, WorkItems and User.
+
+
+#### July 12, 2022
+
+https://developers.karbonhq.com/release-notes/2022-07-12.md
+We have made updates to Karbon's public API that impact 2 endpoints, which are WorkItem and Timesheet.
+
+
+#### August 2, 2022
+
+https://developers.karbonhq.com/release-notes/2022-08-02.md
+We have made updates to Karbon's public API that impact the Organization endpoint. 
+
+
+#### August 22, 2022
+
+https://developers.karbonhq.com/release-notes/2022-08-22.md
+We have added a new endpoint to Karbon's public API that allow you to retrieve or update a single BusinessCard.
+
+
+#### July 3, 2023
+
+https://developers.karbonhq.com/release-notes/2023-07-03.md
+Invoice APIs are available for Karbon Billing Beta participants.
+
+
+#### July 24, 2023
+
+https://developers.karbonhq.com/release-notes/2023-07-24.md
+User details API and User invite accepted webhook are available in the Karbon API.
+
+
+#### November 27, 2023
+
+https://developers.karbonhq.com/release-notes/2023-11-27.md
+Set and Retrieve Fee Type and Fee Value on a Work Item.
+
+
+#### February 8, 2024
+
+https://developers.karbonhq.com/release-notes/2024-02-08.md
+Set, update and retrieve a deadline date on a WorkItem.
+
+
+#### March 18, 2024
+
+https://developers.karbonhq.com/release-notes/2024-03-18.md
+The March 18, 2024 Karbon API release includes a new API endpoint to retrieve account specific information about Work Types, Contact Types and Work Statuses.
+
+
+#### June 10, 2024
+
+https://developers.karbonhq.com/release-notes/2024-06-10.md
+The June 10, 2024 Karbon API release includes a updates for customers using Karbon Billing, including a new API endpoint to make Manual Payments on an Invoice and a new Webhook subscription type for Invoice status changes.
+
+
+#### July 22, 2024
+
+https://developers.karbonhq.com/release-notes/2024-07-22.md
+The July 22, 2024 Karbon API release includes updates to the Timesheets API to show billed status, and new endpoints to List and Download Files.
+
+
+#### August 12, 2024
+
+https://developers.karbonhq.com/release-notes/2024-08-12.md
+The August 12, 2024 Karbon API release includes updates to filter by Contact Type, HMAC payload signing for Webhook Subscriptions and UK specific additions to Accounting Details
+
+
+#### September 3, 2024
+
+https://developers.karbonhq.com/release-notes/2024-09-03.md
+The September 3, 2024 Karbon API release adds the ability to retrieve the complete record of the client team for Client Groups, Contacts and Organizations
+
+
+#### September 23, 2024
+
+https://developers.karbonhq.com/release-notes/2024-09-23.md
+The September 23, 2024 Karbon API release adds the ability set or update the complete Client Team record for Client Groups, Contacts and Organizations. It also triggers a Contact webhook notification when the Client Team is updated.
+
+
+#### November 20, 2024
+
+https://developers.karbonhq.com/release-notes/2024-11-20.md
+The November 20, 2024 Karbon API release adds the ability to retrieve and update User Role Assignments on Work and a new Webhook subscription type for Estimate Summaries
+
+
+#### December 2, 2024
+
+https://developers.karbonhq.com/release-notes/2024-12-02.md
+The December 2, 2024 Karbon API release adds compressed responses and introduces API rate limiting
+
+
+#### February 12, 2025
+
+https://developers.karbonhq.com/release-notes/2025-02-12.md
+The February 12, 2025 Karbon API release includes several updates to our billing APIs
+
+
+#### May 1, 2025
+
+https://developers.karbonhq.com/release-notes/2025-05-01.md
+The May 1, 2025 Karbon API release adds new API endpoints for Custom Fields
+
+
+#### July 18, 2025
+
+https://developers.karbonhq.com/release-notes/2025-07-18.md
+July 18, 2025 Karbon API release adds additional Accounting Details fields
+
+
+#### August 1, 2025
+
+https://developers.karbonhq.com/release-notes/2025-08-01.md
+August 1, 2025 Karbon API release adds the ability to reverse a manual payment
+
+
+#### September 29, 2025
+
+https://developers.karbonhq.com/release-notes/2025-09-29.md
+September 29, 2025 Karbon API release adds the ability to request the tax and revenue breakdown from the invoice Data tab
+
+
+#### October 9, 2025
+
+https://developers.karbonhq.com/release-notes/2025-10-09.md
+October 9, 2025 Karbon API release adds sorting improvements for WorkTemplates and Invoices endpoints.
+
+
+#### November 24, 2025
+
+https://developers.karbonhq.com/release-notes/2025-11-24.md
+November 24, 2025 Karbon API release increases the TargetUrl length for Webhook Subscriptions.
+
+
+#### February 3, 2026
+
+https://developers.karbonhq.com/release-notes/2026-02-03.md
+February 03, 2026 Karbon API release introduces the CustomField webhook type and a new filter parameter for the WorkItems endpoint.
+
+
+#### February 17, 2026
+
+https://developers.karbonhq.com/release-notes/2026-02-17.md
+February 17, 2026 Karbon API release introduces the ability to return Karbon for Clients access details for Contacts
+
+
+#### March 6, 2026
+
+https://developers.karbonhq.com/release-notes/2026-03-06.md
+March 6, 2026 Karbon API release adds ClientAccessActivated property to TenantSettings.
+
+
+#### March 11, 2026
+
+https://developers.karbonhq.com/release-notes/2026-03-11.md
+March 11, 2026 Karbon API release adds an early version of a developer quick-reference guide covering authentication, pagination, filtering, and common API workflows.
+
+
+#### March 31, 2026
+
+https://developers.karbonhq.com/release-notes/2026-03-31.md
+March 31, 2026 Karbon API release adds ParentEntity fields to NoteComment webhook notification payloads.
+
+
+#### April 22, 2026
+
+https://developers.karbonhq.com/release-notes/2026-04-22.md
+April 22, 2026 Karbon API release adds the ability to filter Organizations by their external system ID.
+
+
+#### May 13, 2026
+
+https://developers.karbonhq.com/release-notes/2026-05-13.md
+May 13, 2026 Karbon API release adds InvoiceStatus filtering on the Invoices endpoint and makes the BusinessCards array optional when updating Contacts and Organizations.
+
+
+#### May 26, 2026
+
+https://developers.karbonhq.com/release-notes/2026-05-26.md
+May 26, 2026 Karbon API release adds WorkTemplateKey filtering on the Work Items endpoint, introduces a PATCH endpoint for ending a Work Schedule, and changes how null RegistrationNumber values are handled on Contacts and Organizations.
+
+
+#### June 11, 2026
+
+https://developers.karbonhq.com/release-notes/2026-06-11.md
+June 11, 2026 Karbon API release adds five new fields to the PATCH Work Items endpoint and starts returning 409 Conflict on optimistic-concurrency races instead of a generic 500.
+
+
+#### June 24, 2026
+
+https://developers.karbonhq.com/release-notes/2026-06-24.md
+June 24, 2026 Karbon API release adds read-only Teams endpoints, an ExternalKey filter on Contacts, the UserDefinedIdentifier field on the Organizations list, and makes the Work Schedule assignee writable.
+
+
+#### July 8, 2026
+
+https://developers.karbonhq.com/release-notes/2026-07-08.md
+July 8, 2026 Karbon API release adds endpoints to add and remove Team members.
+
+
+#### July 15, 2026
+
+https://developers.karbonhq.com/release-notes/2026-07-15.md
+July 15, 2026 Karbon API release adds a Roles endpoint and a FileDetails endpoint for retrieving and downloading a file by key.
+
+
+#### July 22, 2026
+
+https://developers.karbonhq.com/release-notes/2026-07-22.md
+July 22, 2026 Karbon API release makes RestrictionLevel writable on Contacts and Organizations and returns invoice magic links.
+
+
+#### August 4, 2026
+
+https://developers.karbonhq.com/release-notes/2026-08-04.md
+August 4, 2026 Karbon API release returns your tenant's service types from TenantSettings.
+
+
+#### August 11, 2026
+
+https://developers.karbonhq.com/release-notes/2026-08-11.md
+August 11, 2026 Karbon API release returns a download link for the invoice PDF and the estimated cost on estimate summaries.
+
+
+#### August 19, 2026
+
+https://developers.karbonhq.com/release-notes/2026-08-19.md
+August 19, 2026 Karbon API release adds an endpoint for creating expenses.
+
+
+#### August 24, 2026
+
+https://developers.karbonhq.com/release-notes/2026-08-24.md
+August 24, 2026 Karbon API release adds endpoints for retrieving and updating a single estimate summary.
+
+
+#### August 31, 2026
+
+https://developers.karbonhq.com/release-notes/2026-08-31.md
+August 31, 2026 Karbon API release adds a deadline date to Work Schedules and lets you retrieve assigned service types for Contacts and Organizations.
+
+
+#### September 8, 2026
+
+https://developers.karbonhq.com/release-notes/2026-09-08.md
+September 8, 2026 Karbon API release adds batch webhook subscriptions (preview), letting you subscribe to multiple resource types under one subscription and receive events in batches.
+
+
+#### September 23, 2026
+
+https://developers.karbonhq.com/release-notes/2026-09-23.md
+September 23, 2026 Karbon API release adds paging, sorting, filtering and an IsShared flag to the file list endpoint, makes UserRoleAssignments patchable on Work Items, and rejects $top=0 with a 400.
+
+

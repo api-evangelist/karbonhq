@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/karbonhq/main/json-schema/karbonhq-response-create-client-group-schema.json",
+  "title": "ResponseCreateClientGroup",
+  "description": "A single Client Group",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/karbonhq-openapi.yml#/components/schemas/ResponseCreateClientGroup",
+  "required": [
+    "ClientGroupKey",
+    "FullName",
+    "RestrictionLevel",
+    "UserDefinedIdentifier"
+  ],
+  "type": "object",
+  "properties": {
+    "@odata.context": {
+      "type": "string",
+      "description": "The information about Karbon controllers generating this response."
+    },
+    "@odata.type": {
+      "type": "string",
+      "description": "The information about Karbon Objects generating this response."
+    },
+    "ClientGroupKey": {
+      "type": "string",
+      "description": "A Karbon-generated value that is used to identify the Client Group"
+    },
+    "FullName": {
+      "type": "string",
+      "description": "The full name of the Client Group"
+    },
+    "ClientOwner": {
+      "type": "string",
+      "description": "The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the clients in this Client Group. You can only use the UserKey or the email address of an existing team member."
+    },
+    "ClientManager": {
+      "type": "string",
+      "description": "The team member in your firm who manages the work for the clients in this Client Group. You can only use the UserKey or the email address of an existing team member."
+    },
+    "ContactType": {
+      "type": "string",
+      "description": "The Contact Type for this Client Group. You can only use existing Contact Type."
+    },
+    "UserDefinedIdentifier": {
+      "type": "string",
+      "description": "A unique key that you can use to identify this Client Group."
+    },
+    "RestrictionLevel": {
+      "type": "string",
+      "description": "The privacy level for this Client Group.\n\n<ul><li>Public Client Groups can be managed by anyone in the firm</li> <li>Private Client Groups can only be managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team). Basic details (name of the Contacts and the Work Items) related to such Client Groups are visible to anyone in the firm.</li> <li>Hidden Client Groups are only be visible to and managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team).</li>\n",
+      "default": "Public",
+      "enum": [
+        "Public",
+        "Private",
+        "Hidden"
+      ]
+    },
+    "PrimaryContact": {
+      "type": "string",
+      "description": "The main contact for a client with multiple contact details."
+    },
+    "LastModifiedDateTime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time at which this Client Group was last modified."
+    },
+    "Members": {
+      "description": "The members of the Client Group",
+      "type": "array",
+      "items": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "ContactKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A Karbon-generated value that is used to identify the Contact"
+          },
+          "OrganizationKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A Karbon-generated value that is used to identify the Organization"
+          }
+        }
+      }
+    },
+    "EntityDescription": {
+      "type": "object",
+      "properties": {
+        "Text": {
+          "type": "string",
+          "description": "Free-form text that can be used to add more information about the Client Group"
+        }
+      }
+    }
+  }
+}

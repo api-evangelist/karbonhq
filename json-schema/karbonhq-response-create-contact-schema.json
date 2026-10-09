@@ -1,0 +1,846 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/karbonhq/main/json-schema/karbonhq-response-create-contact-schema.json",
+  "title": "ResponseCreateContact",
+  "description": "A single Contact",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/karbonhq-openapi.yml#/components/schemas/ResponseCreateContact",
+  "required": [
+    "@odata.context",
+    "@odata.type",
+    "ContactKey",
+    "FirstName",
+    "LastName",
+    "RestrictionLevel",
+    "UserDefinedIdentifier"
+  ],
+  "type": "object",
+  "properties": {
+    "@odata.context": {
+      "type": "string",
+      "description": "The information about Karbon controllers generating this response."
+    },
+    "@odata.type": {
+      "type": "string",
+      "description": "The information about Karbon Objects generating this response."
+    },
+    "ContactKey": {
+      "type": "string",
+      "description": "A Karbon-generated value that is used to identify the Contact"
+    },
+    "FirstName": {
+      "type": "string",
+      "description": "The first name of the Contact"
+    },
+    "MiddleName": {
+      "type": "string",
+      "description": "The middle name of the Contact"
+    },
+    "LastName": {
+      "type": "string",
+      "description": "The last name of the Contact"
+    },
+    "PreferredName": {
+      "type": "string",
+      "description": "The preferred name of the Contact"
+    },
+    "Salutation": {
+      "type": "string",
+      "description": "The title to address the Contact"
+    },
+    "Suffix": {
+      "type": "string",
+      "description": "The suffix of the Contact"
+    },
+    "ClientOwner": {
+      "type": "string",
+      "description": "The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the Contact. You can only use the UserKey or the email address of an existing team member."
+    },
+    "ClientManager": {
+      "type": "string",
+      "description": "The team member in your firm who manages the work for Contact. You can only use the UserKey or the email address of an existing team member."
+    },
+    "ContactType": {
+      "type": "string",
+      "description": "The Contact Type for this Contact. You can only use existing Contact Types, these are available from the TenantSettings endpoint."
+    },
+    "UserDefinedIdentifier": {
+      "type": "string",
+      "description": "A unique key that you can use to identify this Contact."
+    },
+    "RestrictionLevel": {
+      "type": "string",
+      "description": "The privacy level for this Client Group.\n\n<ul><li>Public Client Groups can be managed by anyone in the firm</li> <li>Private Client Groups can only be managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team). Basic details (name of the Contacts and the Work Items) related to such Client Groups are visible to anyone in the firm.</li> <li>Hidden Client Groups are only be visible to and managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team).</li>\n",
+      "default": "Public",
+      "enum": [
+        "Public",
+        "Private",
+        "Hidden"
+      ]
+    },
+    "AvatarUrl": {
+      "type": "string",
+      "description": "The URL to the Contact's avatar"
+    },
+    "LastModifiedDateTime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time at which this Contact was last modified."
+    },
+    "EntityDescription": {
+      "type": "object",
+      "properties": {
+        "Text": {
+          "type": "string",
+          "description": "Free-form text that can be used to add more information about the Client Group"
+        }
+      }
+    },
+    "AccountingDetail": {
+      "$ref": "#/$defs/DetailsOfAccounting"
+    },
+    "BusinessCards": {
+      "$ref": "#/$defs/BusinessCardsRequestAsArray"
+    },
+    "ClientTeam": {
+      "$ref": "#/$defs/ClientTeam"
+    },
+    "ClientAccess": {
+      "$ref": "#/$defs/ClientAccess"
+    }
+  },
+  "$defs": {
+    "BusinessCardRequest": {
+      "description": "A business card associated with a contact or organization",
+      "type": "object",
+      "properties": {
+        "BusinessCardKey": {
+          "type": "string",
+          "description": "A Karbon-generated unique identifier for the Business Card",
+          "required": true
+        },
+        "EntityType": {
+          "type": "string",
+          "description": "The type of entity this Business Card belongs to.",
+          "enum": [
+            "Contact",
+            "Organization",
+            "ClientGroup"
+          ]
+        },
+        "EntityKey": {
+          "type": "string",
+          "description": "A Karbon-generated key to indicate the entity (Contact, Organization, or ClientGroup) this Business Card belongs to."
+        },
+        "IsPrimaryCard": {
+          "type": "boolean",
+          "description": "Set to true, if this business card is also the primary business card for this entity."
+        },
+        "OrganizationKey": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Used on the Business Card for a Contact to specify the Organization that the Contact is related to. Will always be null for an Organization business card."
+        },
+        "WebSites": {
+          "description": "The websites associated with this Business card.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "EmailAddresses": {
+          "description": "The email addresses associated with this Business card.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "RoleOrTitle": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The business role or title of the contact this Business Cards belongs to"
+        },
+        "FacebookLink": {
+          "type": "string",
+          "description": "The URL to the entity's Facebook profile"
+        },
+        "LinkedInLink": {
+          "type": "string",
+          "description": "The URL to the entity's LinkedIn profile"
+        },
+        "TwitterLink": {
+          "type": "string",
+          "description": "The URL to the entity's Twitter profile"
+        },
+        "SkypeLink": {
+          "type": "string",
+          "description": "The URL to the entity's Skype profile"
+        },
+        "Addresses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "AddressLines": {
+                "type": "string",
+                "description": "Street Address",
+                "maxLength": 200
+              },
+              "City": {
+                "type": "string",
+                "description": "City",
+                "maxLength": 100
+              },
+              "StateProvinceCounty": {
+                "type": "string",
+                "description": "State / Province / County",
+                "maxLength": 100
+              },
+              "ZipCode": {
+                "type": "string",
+                "description": "ZipCode / PostCode",
+                "maxLength": 20
+              },
+              "CountryCode": {
+                "type": "string",
+                "format": "ISO 3166-1 alpha-2",
+                "description": "Two letter Country Code"
+              },
+              "Label": {
+                "type": "string",
+                "description": "The tag to indicate the type of Address",
+                "enum": [
+                  "Physical",
+                  "Mailing",
+                  "Legal",
+                  "Home"
+                ]
+              }
+            }
+          }
+        },
+        "PhoneNumbers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Number": {
+                "type": "string",
+                "description": "The phone number of the entity",
+                "maxLength": 20
+              },
+              "CountryCode": {
+                "type": "string",
+                "description": "The phone number country code"
+              },
+              "Label": {
+                "type": "string",
+                "description": "The tag to indicate the type of phone number",
+                "enum": [
+                  "Work",
+                  "Mobile",
+                  "Office",
+                  "Fax",
+                  "Home",
+                  "Other"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "BusinessCardsRequestAsArray": {
+      "description": "A collection of business cards",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/BusinessCardRequest"
+      }
+    },
+    "ClientAccess": {
+      "description": "A list of Organizations and People that the contact has been granted access to view in Karbon for Clients",
+      "readOnly": true,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ClientKey": {
+            "type": "string",
+            "description": "The unique key of the Client"
+          },
+          "ClientType": {
+            "type": "string",
+            "description": "Whether the Client is an Organization or a Person",
+            "enum": [
+              "Contact",
+              "Organization"
+            ]
+          },
+          "AccessLevel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The level of access this contact has when viewing the specified client in Karbon for Clients",
+            "enum": [
+              "Limited",
+              "FullAccess",
+              null
+            ]
+          }
+        }
+      }
+    },
+    "ClientTeam": {
+      "description": "The Client Team associated with a contact or organization",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "MemberKey": {
+            "type": "string",
+            "description": "The unique key of the user or team assigned to the client team role"
+          },
+          "MemberType": {
+            "type": "string",
+            "description": "The type of member assigned to the client team, can be either User or Team",
+            "enum": [
+              "User",
+              "Team"
+            ]
+          },
+          "RoleType": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The specific role the user or team is assigned to, can be null if a member of the client team without a specific role",
+            "enum": [
+              "ClientOwner",
+              "ClientManager",
+              "UserDefinedRole1",
+              "UserDefinedRole2",
+              null
+            ]
+          }
+        }
+      }
+    },
+    "DetailsOfAccounting": {
+      "type": "object",
+      "description": "The details specific to the Accounting firm related to this entity",
+      "properties": {
+        "ContactPermaKey": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A Karbon-generated key that is used to identify the Contact (if a person)."
+        },
+        "OrganizationPermaKey": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A Karbon-generated key that is used to identify the Contact (if a business or an organization)."
+        },
+        "BirthDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "The day at which the contact (if a person) was born."
+        },
+        "DeathDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "The day at which the contact (if a person) died."
+        },
+        "Salutation": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The title of the contact (if a person)",
+          "enum": [
+            "Mr",
+            "Mrs",
+            "Ms",
+            "Miss",
+            "Dr",
+            "Prof",
+            "Rev",
+            null
+          ]
+        },
+        "Sex": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The gender of the contact (if a person)",
+          "enum": [
+            "M",
+            "F",
+            null
+          ]
+        },
+        "FinancialYearEndDay": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32",
+          "description": "The day of month in which the fiscal year ends for the contact"
+        },
+        "FinancialYearEndMonth": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32",
+          "description": "The month in which the fiscal year ends for the contact. Note that this is a 0 index value, so January is 0 and December is 11"
+        },
+        "IncorporationDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": "The date at which the contact (if a business or an organization) was incorporated."
+        },
+        "IncorporationState": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The state in which the contact (if a business or an organization) was incorporated."
+        },
+        "LegalName": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The legal name of the contact"
+        },
+        "LineOfBusiness": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The industry this contact is associated with."
+        },
+        "EntityType": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The entity type of the contact (if a business or an organization)",
+          "enum": [
+            "Corporation",
+            "Club or Society",
+            "Estate or Trust",
+            "Exempt Organization",
+            "Partnership",
+            "Private Foundation",
+            "S Corporation",
+            "Person",
+            "Sole Proprietor",
+            "Limited Liability",
+            "Charitable Incorporated Organisation",
+            "Company Limited by Guarantee",
+            "Community Interest Company",
+            "Limited Liability Partnership",
+            "Local Authority",
+            "Non Departmental Public Body",
+            "Pension Scheme",
+            "Royal Charter",
+            "Unincorporated Association",
+            "Other/None",
+            null
+          ]
+        },
+        "TaxCountryCode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The code of the country where the contact pays their tax.",
+          "enum": [
+            "US",
+            "AU",
+            "UK",
+            "NZ",
+            "CA",
+            "ZA",
+            "HK",
+            "FR",
+            "SG",
+            "IE",
+            "SE",
+            "FI",
+            "DK",
+            "NO",
+            "IN",
+            "CH",
+            null
+          ]
+        },
+        "TradingName": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The trading name of the contact (if a business or an organization)"
+        },
+        "AnnualRevenue": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "decimal",
+          "description": "The total annual revenue generated by the contact"
+        },
+        "BaseCurrency": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The 3-letter code, denoting the currency of annual revenue"
+        },
+        "GstBasis": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The method of accounting for GST/BAS",
+          "enum": [
+            "Cash",
+            "Accruals",
+            "None",
+            "Close",
+            null
+          ]
+        },
+        "GstPeriod": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The GST period"
+        },
+        "IncomeTaxInstallmentPeriod": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The income tax installment period",
+          "enum": [
+            "Monthly",
+            "Quarterly",
+            "Yearly",
+            null
+          ]
+        },
+        "IsVATRegistered": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Set to true if the business or organization is registered for VAT"
+        },
+        "OrganizationValuation": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "decimal",
+          "description": "The present value of the company"
+        },
+        "PaysTax": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Set to true, if the contact has to pay tax"
+        },
+        "PrepareGST": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "<>"
+        },
+        "ProvisionalTaxBasic": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "<>"
+        },
+        "ProvisionalTaxRatio": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "<>"
+        },
+        "RevenueModel": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The revenue model of the business or organization",
+          "enum": [
+            "Advertising",
+            "Commission",
+            "E-Commerce",
+            "Fee for Service",
+            "Licensing",
+            "Markup",
+            "Production",
+            "Subscription",
+            null
+          ]
+        },
+        "SalesTaxBasis": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The tax method",
+          "enum": [
+            "Cash",
+            "Accruals",
+            "None",
+            "Close",
+            null
+          ]
+        },
+        "SalesTaxPeriod": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The tax period"
+        },
+        "Sells": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The item that is primarily supplied by the company",
+          "enum": [
+            "Services",
+            "Products",
+            "Products and Services",
+            "Other",
+            null
+          ]
+        },
+        "DateSignedEngagement": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time",
+          "description": ""
+        },
+        "Bank": {
+          "type": "array",
+          "description": "A user definable list of banks the client uses",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Payroll": {
+          "type": "array",
+          "description": "A user definable list of payroll services the client uses",
+          "items": {
+            "type": "string"
+          }
+        },
+        "BillPay": {
+          "type": "array",
+          "description": "A user definable list of bill payment services the client uses",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Benefits": {
+          "type": "array",
+          "description": "A user definable list of benefits services the client uses",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Revenue": {
+          "type": "array",
+          "description": "A user definable list of revenue management services the client uses",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Expenses": {
+          "type": "array",
+          "description": "A user definable list of expense management services the client uses",
+          "items": {
+            "type": "string"
+          }
+        },
+        "FileManagement": {
+          "type": "array",
+          "description": "A user definable list of file management services the client uses",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Accounting": {
+          "type": "array",
+          "description": "A user definable list of accounting tools and services the client uses",
+          "items": {
+            "type": "string"
+          }
+        },
+        "RegistrationNumbers": {
+          "type": "array",
+          "description": "The registration numbers associated with the contact.",
+          "items": {
+            "required": [
+              "RegistrationNumber",
+              "Type"
+            ],
+            "type": "object",
+            "properties": {
+              "RegistrationNumber": {
+                "type": "string",
+                "description": "The registration number",
+                "maxLength": 50
+              },
+              "Type": {
+                "type": "string",
+                "description": "The type of registration",
+                "enum": [
+                  "Australian Business Number (ABN)",
+                  "Australian Company Number (ACN)",
+                  "Tax File Number (TFN)",
+                  "Social Security Number (SSN)",
+                  "Tax ID",
+                  "VAT Number",
+                  "Company Registration Number",
+                  "PAYE Reference Number",
+                  "PAYE Accounts Office Reference",
+                  "CT Reference",
+                  "Unique Taxpayer Reference (UTR)",
+                  "NZ Business Number",
+                  "GST Number",
+                  "IRD Number",
+                  "Business Number",
+                  "Social Insurance Number (SIN)",
+                  "Registration Number",
+                  "Income Tax Number",
+                  "PAYE Number",
+                  "DOL UIF Number",
+                  "SDL Number",
+                  "DOL Workman Compensation",
+                  "Company Number",
+                  "Business Registration Number",
+                  "Charity Number",
+                  "MPF provider",
+                  "RCS",
+                  "SIRET",
+                  "UEN",
+                  "RCT Reference",
+                  "Companies Office Number",
+                  "KUND ID",
+                  "Organisation Number",
+                  "Finnish Business ID",
+                  "CVR Number",
+                  "GST Identification Number (GSTIN)",
+                  "Permanent Account Number (PAN)"
+                ]
+              }
+            }
+          }
+        },
+        "LegalFirm": {
+          "description": "The legal firm(s) that represent the client, these can be strings or references to Karbon organizations",
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "Name": {
+              "type": "string",
+              "description": "The name of the legal firm that represents the client"
+            },
+            "OrganizationKey": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The Organization key of the Karbon organization client record"
+            }
+          }
+        },
+        "TaxProvider": {
+          "description": "The provider of tax services to the client, these can be strings or references to Karbon organizations",
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "Name": {
+              "type": "string",
+              "description": "The name of the tax provider"
+            },
+            "OrganizationKey": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The optional Organization key of the Tax Provider client record in Karbon"
+            }
+          }
+        },
+        "Notes": {
+          "type": "array",
+          "items": {
+            "required": [
+              "Body",
+              "Type"
+            ],
+            "type": "object",
+            "properties": {
+              "Body": {
+                "type": "string",
+                "description": "The free-form text in the note"
+              },
+              "Type": {
+                "type": "string",
+                "description": "The section (within the accounting details) where the note resides",
+                "enum": [
+                  "Basic",
+                  "Tax",
+                  "System",
+                  "Owner",
+                  "Officer"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

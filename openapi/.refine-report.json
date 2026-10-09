@@ -1,0 +1,59 @@
+{
+  "provider": "karbonhq",
+  "sources": [
+    "_original/KarbonAPI.json",
+    "karbonhq-openapi.yml"
+  ],
+  "outputs": [
+    "karbonhq-billing-api-openapi.yml",
+    "karbonhq-business-cards-api-openapi.yml",
+    "karbonhq-client-groups-api-openapi.yml",
+    "karbonhq-comments-api-openapi.yml",
+    "karbonhq-contacts-api-openapi.yml",
+    "karbonhq-custom-fields-api-openapi.yml",
+    "karbonhq-estimate-summaries-api-openapi.yml",
+    "karbonhq-files-api-openapi.yml",
+    "karbonhq-integrated-workflows-api-openapi.yml",
+    "karbonhq-notes-api-openapi.yml",
+    "karbonhq-organizations-api-openapi.yml",
+    "karbonhq-tenant-settings-api-openapi.yml",
+    "karbonhq-timesheets-and-time-entries-api-openapi.yml",
+    "karbonhq-users-api-openapi.yml",
+    "karbonhq-webhook-payloads-api-openapi.yml",
+    "karbonhq-webhook-subscriptions-api-openapi.yml",
+    "karbonhq-work-items-api-openapi.yml",
+    "karbonhq-work-schedules-api-openapi.yml",
+    "karbonhq-work-templates-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/karbonhq-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "KarbonAPI.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "karbonhq-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "tag 'Billing' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Business Cards' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Client Groups' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Comments' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Contacts' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Custom Fields' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Estimate Summaries' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Files' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Integrated Workflows' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Notes' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Organizations' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Tenant Settings' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Timesheets and Time Entries' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Users' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Webhook Payloads' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Webhook Subscriptions' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Work Items' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Work Schedules' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "tag 'Work Templates' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
+    "apis.yml register: written (+19 apis, 19 total)"
+  ],
+  "skipped": []
+}

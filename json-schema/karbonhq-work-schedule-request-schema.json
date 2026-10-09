@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/karbonhq/main/json-schema/karbonhq-work-schedule-request-schema.json",
+  "title": "WorkScheduleRequest",
+  "description": "A single Work Schedule",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/karbonhq-openapi.yml#/components/schemas/WorkScheduleRequest",
+  "required": [
+    "CreatedFromWorkItemKey",
+    "RecurrenceFrequency",
+    "CustomFrequencyMultiple",
+    "ScheduleStartDate",
+    "ScheduleDueDateMethod",
+    "PreventStartEndOnWeekend",
+    "InitializeTasksBeforeStartDateUnits",
+    "InitializeTasksBeforeStartDateMultiple",
+    "WorkItemTitleDefinition"
+  ],
+  "type": "object",
+  "properties": {
+    "AssigneeUserKey": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The key of an existing Karbon user to assign the Work Schedule's generated Work Items to. On PUT, a null or omitted value leaves the current assignee unchanged. Once set, assignee cannot be cleared. Changing the assignee reassigns every incomplete Work Item in the series; completed Work Items are unchanged."
+    },
+    "CreatedFromWorkItemKey": {
+      "type": "string",
+      "description": "The key of the Work Item, which the Work Schedule will be assigned to. This value will be `null`."
+    },
+    "RecurrenceFrequency": {
+      "type": "string",
+      "description": "The unit of time at which this Work Schedule should repeat. Once set, the value of this property can not be changed.",
+      "enum": [
+        "Day",
+        "Week",
+        "SemiMonth",
+        "Fortnight",
+        "Month",
+        "Quarter",
+        "Year",
+        "Custom"
+      ]
+    },
+    "CustomFrequencyUnits": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The unit of time at which this Work Schedule should repeat. Once set, the value of this property can not be changed.\n\nThis property is only applicable if `RecurrenceFrequency` is set to `Custom`.\n",
+      "enum": [
+        "Days",
+        "Weeks",
+        "Months",
+        "Years",
+        null
+      ]
+    },
+    "CustomFrequencyMultiple": {
+      "type": "integer",
+      "format": "int32",
+      "minimum": 1,
+      "description": "The multiple of time unit at which this Work Schedule should repeat.  This property is not applicable if `RecurrenceFrequency` is set to `SemiMonth`, `Fortnight`, or `Quarter`.\n"
+    },
+    "ScheduleStartDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date at which this Work Schedule should start running"
+    },
+    "ScheduleEndDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date at which this Work Schedule should stop running\n\nTo set the Work Schedule to run forever, set the value of this property to `null`."
+    },
+    "ScheduleDueDateMethod": {
+      "type": "string",
+      "description": "The method that should be used to count the Due Date for the Work Item",
+      "enum": [
+        "DaysFromStartDate",
+        "DayOfMonth",
+        "LastDayOfMonth",
+        "DayOfNextMonth",
+        "DayOfSubsequentMonth",
+        "NoDueDate"
+      ]
+    },
+    "ScheduleDueDateDays": {
+      "type": "integer",
+      "format": "int32",
+      "description": "The value of the count for the Due Date\n\nThis property is not applicable if `ScheduleDueDateMethod` is set to `LastDayOfMonth` or `NoDueDate`.\n\nExample of usage: <table> <thead>\n<th>ScheduleDueDateMethod</th>\n<th>ScheduleDueDateDays</th>\n<th>Read Due Date as</th>\n</thead> <tbody>\n<tr>\n<td>DaysFromStartDate</td>\n<td>7</td>\n<td>7 days after start date</td>\n</tr>\n<tr>\n<td>DayOfMonth</td>\n<td>7</td>\n<td>7th day of the current month</td>\n</tr>\n<tr>\n<td>LastDayOfMonth</td>\n<td>N/A</td>\n<td>Last day of the current month</td>\n</tr>\n<tr>\n<td>DayOfNextMonth</td>\n<td>7</td>\n<td>7th day of the next month</td>\n</tr>\n<tr>\n<td>NoDueDate</td>\n<td>N/A</td>\n<td>Work has no due date</td>\n</tr>\n</tbody> </table>\n"
+    },
+    "ScheduleDueDateMonthMultiple": {
+      "type": "integer",
+      "format": "int32",
+      "description": "The value to denote the number of the months, if the due date is after 2 months.\n\nThis property is only applicable if `ScheduleDueDateMethod` is set to `DayOfSubsequentMonth`.\n\nExample of usage: <table> <thead>\n<th>ScheduleDueDateMethod</th>\n<th>ScheduleDueDateDays</th>\n<th>ScheduleDueDateMonthMultiple</th>\n<th>Read Due Date as</th>\n</thead> <tbody>\n<tr>\n<td>DaysFromStartDate</td>\n<td>7</td>\n<td>3</td>\n<td>7th day of the 3rd month after start date</td>\n</tr>\n</tbody> </table>\n"
+    },
+    "ScheduleDeadlineDateMethod": {
+      "type": "string",
+      "description": "The method that should be used to count the Deadline Date for the Work Item.\n\nCompanies House-driven and filing-date-driven deadline methods are not available through the API; setting `ScheduleDeadlineDateMethod` to `CompaniesHouseAccountsDueDate`, `CompaniesHouseConfirmationStatementDueDate` or `OnFilingDate` returns a `400`.\n\nOn `PUT`, omitting this property leaves the existing deadline date configuration unchanged. To remove a deadline date, set this to `NoDeadlineDate` explicitly.\n",
+      "enum": [
+        "DaysFromStartDate",
+        "DayOfMonth",
+        "LastDayOfMonth",
+        "DayOfNextMonth",
+        "DayOfSubsequentMonth",
+        "NoDeadlineDate"
+      ]
+    },
+    "ScheduleDeadlineDateDays": {
+      "type": "integer",
+      "format": "int32",
+      "description": "The value of the count for the Deadline Date\n\nThis property is not applicable if `ScheduleDeadlineDateMethod` is set to `LastDayOfMonth` or `NoDeadlineDate`.\n\nExample of usage: <table> <thead>\n<th>ScheduleDeadlineDateMethod</th>\n<th>ScheduleDeadlineDateDays</th>\n<th>Read Deadline Date as</th>\n</thead> <tbody>\n<tr>\n<td>DaysFromStartDate</td>\n<td>7</td>\n<td>7 days after start date</td>\n</tr>\n<tr>\n<td>DayOfMonth</td>\n<td>7</td>\n<td>7th day of the current month</td>\n</tr>\n<tr>\n<td>LastDayOfMonth</td>\n<td>N/A</td>\n<td>Last day of the current month</td>\n</tr>\n<tr>\n<td>DayOfNextMonth</td>\n<td>7</td>\n<td>7th day of the next month</td>\n</tr>\n<tr>\n<td>NoDeadlineDate</td>\n<td>N/A</td>\n<td>Work has no deadline date</td>\n</tr>\n</tbody> </table>\n"
+    },
+    "ScheduleDeadlineDateMonthMultiple": {
+      "type": "integer",
+      "format": "int32",
+      "description": "The value to denote the number of the months, if the deadline date is after 2 months.\n\nThis property is only applicable if `ScheduleDeadlineDateMethod` is set to `DayOfSubsequentMonth`.\n\nExample of usage: <table> <thead>\n<th>ScheduleDeadlineDateMethod</th>\n<th>ScheduleDeadlineDateDays</th>\n<th>ScheduleDeadlineDateMonthMultiple</th>\n<th>Read Deadline Date as</th>\n</thead> <tbody>\n<tr>\n<td>DaysFromStartDate</td>\n<td>7</td>\n<td>3</td>\n<td>7th day of the 3rd month after start date</td>\n</tr>\n</tbody> </table>\n"
+    },
+    "PreventStartEndOnWeekend": {
+      "type": "boolean",
+      "description": "If the value of this property is set to `true`, the Work Item will not start on Weekends."
+    },
+    "InitializeBeforeStartDateUnits": {
+      "type": "string",
+      "description": "You can automatically create a Work Item before its Start date. Use this property to set the unit of delay between Start date and Work Item creation date.\n",
+      "enum": [
+        "Days",
+        "Weeks",
+        "Months",
+        "Years"
+      ]
+    },
+    "InitializeBeforeStartDateMultiple": {
+      "type": "integer",
+      "format": "int32",
+      "description": "You can automatically create a Work Item before its Start date. Use this property to set the multiple of delay unit between Start date and Work Item creation date."
+    },
+    "InitializeTasksBeforeStartDateUnits": {
+      "type": "string",
+      "description": "You can automatically create budget and tasks for a Work Item before its Start date. Use this property to set the unit of delay between Start date and task creation date.",
+      "enum": [
+        "Days",
+        "Weeks",
+        "Months",
+        "Years"
+      ]
+    },
+    "InitializeTasksBeforeStartDateMultiple": {
+      "type": "integer",
+      "format": "int32",
+      "description": "You can automatically create budget and tasks for a Work Item before its Start date. Use this property to set the multiple of delay unit between Start date and task creation date."
+    },
+    "WorkItemTitleDefinition": {
+      "type": "string",
+      "description": "Use this property to define the format of the Work Item title. Karbon offers a series of object that you can use to construct Work Item Title. For more information, see Technical Guide to Work Item Title Definition.\n"
+    }
+  }
+}

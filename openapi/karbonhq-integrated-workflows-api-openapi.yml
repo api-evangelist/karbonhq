@@ -1,0 +1,393 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Integrated Workflows API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Integrated Workflows across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Integrated Workflows
+  description: Endpoints that enable Karbon Integration Partners to manage integrated workflow tasks enabled for their integrations. Note that these endpoints cannot be used to access Tasks or Client Tasks. Access is limited to approved developers building apps that serve all Karbon customers.
+paths:
+  /v3/IntegrationTaskDefinitions:
+    get:
+      operationId: ListIntegrationTaskDefintions
+      tags:
+      - Integrated Workflows
+      summary: Get a list of integration task definitions
+      description: Use the `GET` method on this endpoint to receive a list of the integration task types that have been defined for your integration
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegrationTaskDefinitions'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/IntegrationTasks:
+    get:
+      operationId: ListIntegrationTasks
+      tags:
+      - Integrated Workflows
+      summary: Get a list of integration tasks
+      description: Use the `GET` method on this endpoint to receive a list of the integration tasks created in the Karbon account which has connected your integration
+      parameters:
+      - $ref: '#/components/parameters/IntegrationTaskListFilter'
+      - $ref: '#/components/parameters/IntegrationTaskListOrderBy'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegrationTasks'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/IntegrationTasks/{IntegrationTaskKey}:
+    get:
+      operationId: GetIntegrationTask
+      tags:
+      - Integrated Workflows
+      summary: Get an integration task details
+      description: Use the `GET` method on this endpoint to retrieve the details of a single integration task
+      parameters:
+      - $ref: '#/components/parameters/IntegrationTaskKey'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegrationTask'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+    put:
+      operationId: UpdateIntegrationTask
+      tags:
+      - Integrated Workflows
+      summary: Update an integration task
+      description: Use the `PUT` method on this endpoint to update the details of a single integration task
+      parameters:
+      - $ref: '#/components/parameters/IntegrationTaskKey'
+      responses:
+        '204':
+          description: No Content
+          content: {}
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+        '409':
+          description: Conflict — the resource was modified by another request. Refetch the latest version and retry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Stale Object State:
+                  $ref: '#/components/examples/Conflict_StaleObjectState'
+      requestBody:
+        description: An integration task request body
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegrationTaskWriteable'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  parameters:
+    IntegrationTaskKey:
+      in: path
+      name: IntegrationTaskKey
+      schema:
+        type: string
+      required: true
+      example: zmMgWgPRqCy
+      description: The unique key for a specific integration task
+    IntegrationTaskListFilter:
+      in: query
+      name: $filter
+      schema:
+        type: string
+      examples:
+        filterByCreatedAt:
+          value: CreatedAt ge 2025-05-30T00:00:00Z
+          summary: Return Integration tasks with a CreatedAt timestamp of 2025-05-30 00:00:00 UTC or more recent
+        filterByTaskDefinitionKey:
+          value: TaskDefinitionKey eq 'b50e1712-2603-4707-b0d9-915050711267'
+          summary: Return Integration that use a specific Task Definition
+        filterByWorkItemKey:
+          value: WorkItemKey eq '3lHtWNMVcTVQ'
+          summary: Return Integration tasks that relate to a specific Work Item
+        filterByWorkItemClientKey:
+          value: WorkIteClientKey eq '4f4gnvcDT2yQ'
+          summary: Return Integration tasks that relate to a specific client
+      description: The a filter applied to the list of integration tasks before they are returned
+    IntegrationTaskListOrderBy:
+      in: query
+      name: $orderby
+      schema:
+        type: string
+      examples:
+        orderByCreatedAtDesc:
+          value: CreatedAt desc
+          summary: Order results by CreatedAt timestamp, newest to oldest (default)
+        orderByCreatedAtAsc:
+          value: CreatedAt
+          summary: Order results by CreatedAt timestamp, oldest to newest
+      description: Order responses by invoice date
+  schemas:
+    IntegrationTask:
+      description: A single Integration Task
+      allOf:
+      - $ref: '#/components/schemas/IntegrationTaskReadOnly'
+      - $ref: '#/components/schemas/IntegrationTaskWriteable'
+    IntegrationTaskWriteable:
+      type: object
+      description: The writable properties of an Integration Task
+      properties:
+        TaskName:
+          type: string
+          maxLength: 200
+          example: Example Integration Task
+          description: The name of the specific Integration Task Definition
+        TaskPrimaryLinkUrl:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+            example: https://app.example.com/create
+          - type: 'null'
+          description: The optional default primary link URL of the specific Integration Task Definition
+        TaskPrimaryLinkLabel:
+          oneOf:
+          - type: string
+            example: Create
+            maxLength: 20
+          - type: 'null'
+          description: The optional default label for the primary link URL of the specific Integration Task Definition
+        TaskSecondaryLinkUrl:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+            example: https://app.example.com/update
+          - type: 'null'
+          description: The optional default label for the secondary link URL of the specific Integration Task Definition
+        TaskSecondaryLinkLabel:
+          oneOf:
+          - type: string
+            example: Update
+            maxLength: 20
+          - type: 'null'
+          description: The optional default label for the secondary link URL of the specific Integration Task Definition
+        TaskStatus:
+          type: string
+          maxLength: 50
+          example: Viewed by Client
+        PrimaryStatus:
+          type: string
+          example: Waiting
+          enum:
+          - Planned
+          - ReadyToStart
+          - InProgress
+          - Waiting
+          - Completed
+        TaskDueDate:
+          type: string
+          example: '2025-04-23T00:00:00Z'
+        TaskData:
+          type: array
+          description: Key/value metadata for the task. The combined serialized content must not exceed 4000 characters.
+          example:
+          - Key: Progress
+            Value: 1/9 items complete
+          items:
+            $ref: '#/components/schemas/IntegrationTaskData'
+    IntegrationTaskReadOnly:
+      type: object
+      description: The read-only properties of an Integration Task
+      properties:
+        CreatedAt:
+          type: string
+          example: '2025-04-16T03:22:19Z'
+        TaskDefinitionKey:
+          type: string
+          example: b50e1712-2603-4707-b0d9-915050711267
+          description: The unique ID of the integration task definition
+        TaskKey:
+          type: string
+          example: yqjhtSrxQ6S
+          description: The unique key of the specific Integration Task Definition for the associated Karbon account
+        Locale:
+          description: The list of locales and languages the integration task definition is suitable for use with, useful when different definitions are required for different languages or locales
+          type: string
+          example: en-US
+        WorkItemKey:
+          type: string
+          example: 3lHtWNMVcTVQ
+        WorkItemClientKey:
+          type: string
+          example: 4f4gnvcDT2yQ
+        WorkType:
+          type: string
+          example: Tax
+    IntegrationTasks:
+      type: object
+      description: A list of Integration Tasks
+      properties:
+        '@odata.context':
+          type: string
+          format: uri
+          example: https://api-dev.karbonhq.com/v3/$metadata#IntegrationTasks
+        '@odata.count':
+          type: number
+          format: int32
+          example: 3
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/IntegrationTask'
+    IntegrationTaskDefinition:
+      description: A list of Integration Task Definitions
+      type: object
+      properties:
+        TaskDefinitionKey:
+          type: string
+          example: cc8628b6-b6cd-42f3-957a-c2cdb9d371a4
+          description: The unique ID of the specific Integration Task Definition
+        TaskName:
+          type: string
+          example: Example Integration Task
+          description: The name of the specific Integration Task Definition
+        TaskPrimaryLinkUrl:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+            example: https://app.example.com/create
+          - type: 'null'
+          description: The optional default primary link URL of the specific Integration Task Definition
+        TaskPrimaryLinkLabel:
+          oneOf:
+          - type: string
+            example: Create
+            maxLength: 20
+          - type: 'null'
+          description: The optional default label for the primary link URL of the specific Integration Task Definition
+        TaskSecondaryLinkUrl:
+          oneOf:
+          - type: string
+            format: uri
+            maxLength: 200
+            example: https://app.example.com/create
+          - type: 'null'
+          description: The optional default primary link URL of the specific Integration Task Definition
+        TaskSecondaryLinkLabel:
+          oneOf:
+          - type: string
+            example: Update
+            maxLength: 20
+          - type: 'null'
+          description: The optional default label for the primary link URL of the specific Integration Task Definition
+        Locales:
+          description: The list of locales and languages the integration task definition is suitable for use with, useful when different definitions are required for different languages or locales
+          type: array
+          items:
+            type: string
+            example: en-US
+        AllowedTaskUrlHosts:
+          description: The list of allowed hostnames that the primary and secondary link URLs must match
+          type: array
+          items:
+            type: string
+            example: https://www.example.com
+    IntegrationTaskData:
+      type: object
+      description: Optional integration task data key/value pairs
+      properties:
+        Key:
+          type: string
+          example: Last updated
+        Value:
+          type: string
+          example: 17 hours ago by client
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+    IntegrationTaskDefinitions:
+      description: A list of Integration Task Definitions
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          format: uri
+          example: https://api.karbonhq.com/v3/$metadata#IntegrationTaskDefinitions
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/IntegrationTaskDefinition'
+  examples:
+    Conflict_StaleObjectState:
+      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
+      value:
+        error:
+          code: '4020'
+          message: The resource was modified by another request. Refetch the latest version and retry.
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

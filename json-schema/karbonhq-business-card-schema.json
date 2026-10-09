@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/karbonhq/main/json-schema/karbonhq-business-card-schema.json",
+  "title": "BusinessCard",
+  "description": "A business card associated with a contact or organization",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/karbonhq-openapi.yml#/components/schemas/BusinessCard",
+  "type": "object",
+  "properties": {
+    "BusinessCardKey": {
+      "type": "string",
+      "description": "A Karbon-generated unique identifier for the Business Card"
+    },
+    "EntityType": {
+      "type": "string",
+      "description": "The type of entity this Business Card belongs to.",
+      "enum": [
+        "Contact",
+        "Organization",
+        "ClientGroup"
+      ]
+    },
+    "EntityKey": {
+      "type": "string",
+      "description": "A Karbon-generated key to indicate the entity (Contact, Organization, or ClientGroup) this Business Card belongs to."
+    },
+    "IsPrimaryCard": {
+      "type": "boolean",
+      "description": "Set to true, if this business card is also the primary business card for this entity."
+    },
+    "WebSites": {
+      "description": "The websites associated with this Business card.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "EmailAddresses": {
+      "description": "The email addresses associated with this Business card.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "OrganizationKey": {
+      "type": "string",
+      "description": "A Karbon-generated key to indicate the organization this Business Card belongs to"
+    },
+    "RoleOrTitle": {
+      "type": "string",
+      "description": "The business role or title of the contact this Business Cards belongs to"
+    },
+    "FacebookLink": {
+      "type": "string",
+      "description": "The URL to the entity's Facebook profile"
+    },
+    "LinkedInLink": {
+      "type": "string",
+      "description": "The URL to the entity's LinkedIn profile"
+    },
+    "TwitterLink": {
+      "type": "string",
+      "description": "The URL to the entity's Twitter profile"
+    },
+    "SkypeLink": {
+      "type": "string",
+      "description": "The URL to the entity's Skype profile"
+    },
+    "Addresses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "AddressKey": {
+            "type": "string",
+            "description": "A randomly generated GUID to indicate the address details"
+          },
+          "AddressLines": {
+            "type": "string",
+            "description": "Street Address",
+            "maxLength": 200
+          },
+          "City": {
+            "type": "string",
+            "description": "City",
+            "maxLength": 100
+          },
+          "StateProvinceCounty": {
+            "type": "string",
+            "description": "State / Province / County",
+            "maxLength": 100
+          },
+          "ZipCode": {
+            "type": "string",
+            "description": "ZipCode / PostCode",
+            "maxLength": 20
+          },
+          "CountryCode": {
+            "type": "string",
+            "format": "ISO 3166-1 alpha-2",
+            "description": "Two letter Country Code"
+          },
+          "Label": {
+            "type": "string",
+            "description": "The tag to indicate the type of Address",
+            "enum": [
+              "Physical",
+              "Mailing",
+              "Legal",
+              "Home"
+            ]
+          }
+        }
+      }
+    },
+    "PhoneNumbers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "PhoneNumberKey": {
+            "type": "string",
+            "description": "A randomly generated GUID to indicate the phone details"
+          },
+          "Number": {
+            "type": "string",
+            "description": "The phone number of the entity",
+            "maxLength": 20
+          },
+          "CountryCode": {
+            "type": "string",
+            "description": "The phone number country code"
+          },
+          "Label": {
+            "type": "string",
+            "description": "The tag to indicate the type of phone number",
+            "enum": [
+              "Work",
+              "Mobile",
+              "Office",
+              "Fax",
+              "Home",
+              "Other"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

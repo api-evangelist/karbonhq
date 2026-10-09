@@ -1,0 +1,74 @@
+generated: '2026-10-09'
+method: searched
+source: https://developers.karbonhq.com/llms.txt
+scheme: date-stamped release notes (one page per release date)
+current_version: v3
+index: https://developers.karbonhq.com/llms.txt
+release_count_indexed: 46
+first_release: '2022-04-26'
+latest_release: '2026-09-23'
+entries:
+- version: '2026-09-23'
+  date: '2026-09-23'
+  breaking: false
+  summary: September 23, 2026 Karbon API release adds paging, sorting, filtering and an IsShared flag to the file list endpoint, makes UserRoleAssignments patchable on Work Items, and rejects $top=0 with
+    a 400.
+  highlights:
+  - Paging, Sorting and Filtering on the File List
+  - '`IsShared` on the File List'
+  - Patch `UserRoleAssignments` on a Work Item
+  - '`$top=0` Returns a 400'
+  url: https://developers.karbonhq.com/release-notes/2026-09-23/
+  note: Release also rejects $top=0 with a 400; the provider does not label any change in this window as breaking.
+- version: '2026-09-08'
+  date: '2026-09-08'
+  breaking: false
+  summary: September 8, 2026 Karbon API release adds batch webhook subscriptions (preview), letting you subscribe to multiple resource types under one subscription and receive events in batches.
+  highlights:
+  - Multi-Type and Batched Webhook Subscriptions
+  url: https://developers.karbonhq.com/release-notes/2026-09-08/
+- version: '2026-08-31'
+  date: '2026-08-31'
+  breaking: false
+  summary: August 31, 2026 Karbon API release adds a deadline date to Work Schedules and lets you retrieve assigned service types for Contacts and Organizations.
+  highlights:
+  - Deadline Date on Work Schedules
+  - Assigned Service Types on Contacts and Organizations
+  url: https://developers.karbonhq.com/release-notes/2026-08-31/
+- version: '2026-08-24'
+  date: '2026-08-24'
+  breaking: false
+  summary: August 24, 2026 Karbon API release adds endpoints for retrieving and updating a single estimate summary.
+  highlights:
+  - Get and Update a Single Estimate Summary
+  url: https://developers.karbonhq.com/release-notes/2026-08-24/
+- version: '2026-08-19'
+  date: '2026-08-19'
+  breaking: false
+  summary: August 19, 2026 Karbon API release adds an endpoint for creating expenses.
+  highlights:
+  - Create an Expense
+  url: https://developers.karbonhq.com/release-notes/2026-08-19/
+- version: '2026-08-11'
+  date: '2026-08-11'
+  breaking: false
+  summary: August 11, 2026 Karbon API release returns a download link for the invoice PDF and the estimated cost on estimate summaries.
+  highlights:
+  - Return Invoice PDF URL
+  - Estimated Amount on Estimate Summaries
+  url: https://developers.karbonhq.com/release-notes/2026-08-11/
+- version: '2026-08-04'
+  date: '2026-08-04'
+  breaking: false
+  summary: August 4, 2026 Karbon API release returns your tenant's service types from TenantSettings.
+  highlights:
+  - Service Types in TenantSettings
+  url: https://developers.karbonhq.com/release-notes/2026-08-04/
+- version: '2026-07-22'
+  date: '2026-07-22'
+  breaking: false
+  summary: July 22, 2026 Karbon API release makes RestrictionLevel writable on Contacts and Organizations and returns invoice magic links.
+  highlights:
+  - Return Invoice Magic Links
+  - Set RestrictionLevel on Contacts and Organizations
+  url: https://developers.karbonhq.com/release-notes/2026-07-22/

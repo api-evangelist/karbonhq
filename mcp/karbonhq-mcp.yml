@@ -1,0 +1,53 @@
+generated: '2026-10-09'
+method: probed
+source:
+  - https://developers.karbonhq.com/llms.txt
+  - https://karbonhq.com/llms.txt
+  - https://mcp.karbonhq.com/.well-known/oauth-protected-resource/mcp
+  - https://mcp.karbonhq.com/mcp
+status: published
+server:
+  name: karbonhq
+  transport: http
+  url: https://mcp.karbonhq.com/mcp
+  announced_url: https://mcp.karbonhq.com
+  description: >-
+    Karbon's official hosted MCP server. It lets AI agents connect to a user's Karbon
+    account. Karbon's own llms.txt files announce it at https://mcp.karbonhq.com
+    ("Karbon's MCP server, for AI agents to connect to a user's Karbon account, is at
+    https://mcp.karbonhq.com"). The host root returns 404, and the MCP endpoint is /mcp,
+    as named by the protected-resource metadata.
+auth:
+  type: oauth2
+  resource_metadata: https://mcp.karbonhq.com/.well-known/oauth-protected-resource/mcp
+  resource: https://mcp.karbonhq.com/mcp
+  authorization_servers:
+    - https://identity.karbonhq.com/
+  scopes_supported:
+    - mcp:public:read
+    - mcp:public:write
+  bearer_methods_supported:
+    - header
+  authorization_server_metadata: https://identity.karbonhq.com/.well-known/oauth-authorization-server
+tools: []
+tools_status: gated-and-unpublished
+tools_note: >-
+  An anonymous tools/list POST to https://mcp.karbonhq.com/mcp returned HTTP 401 with
+  WWW-Authenticate: Bearer error="invalid_token" and a resource_metadata pointer. Karbon
+  publishes no tool list in its llms.txt, developer guides or help pages (searched
+  2026-10-09), so no tool names are recorded here. The community npm package
+  karbon-mcp-server is NOT affiliated with Karbon, and its tools are not recorded here.
+probes:
+  - {url: https://mcp.karbonhq.com, method: GET, status: 404}
+  - {url: https://mcp.karbonhq.com, method: POST, status: 404}
+  - {url: https://mcp.karbonhq.com/mcp, method: GET, status: 405}
+  - {url: https://mcp.karbonhq.com/mcp, method: POST tools/list, status: 401, note: 'Bearer error="invalid_token"'}
+  - {url: https://mcp.karbonhq.com/.well-known/oauth-protected-resource/mcp, method: GET, status: 200}
+  - {url: https://mcp.karbonhq.com/.well-known/oauth-protected-resource, method: GET, status: 404}
+  - {url: https://mcp.karbonhq.com/.well-known/oauth-authorization-server, method: GET, status: 404}
+  - {url: https://identity.karbonhq.com/.well-known/oauth-authorization-server, method: GET, status: 200}
+deployment:
+  mode: remote
+  endpoint: https://mcp.karbonhq.com/mcp
+  auth: oauth
+  verified: probed

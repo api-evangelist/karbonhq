@@ -1,0 +1,985 @@
+openapi: 3.2.0
+info:
+  title: Karbonhq Timesheets and Time Entries API
+  version: v3
+  contact:
+    name: API Support
+    url: https://developers.karbonhq.com/issues/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://karbonhq.com/terms-of-use/
+  description: 'Operations tagged Timesheets and Time Entries across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.karbonhq.com
+  description: The production API server
+security:
+- ApiKeyAuth: []
+  BearerAuth: []
+tags:
+- name: Timesheets and Time Entries
+  description: 'Retrieve individual (non-aggregated) time entries, each record represents a single time entry for a specific day, user, and work item. Read more.
+
+    **Deprecated** Review Time aggregate Timesheets for colleagues. Read more'
+paths:
+  /v3/Timesheets:
+    get:
+      deprecated: true
+      tags:
+      - Timesheets and Time Entries
+      summary: Gets a list of Timesheets
+      parameters:
+      - in: query
+        name: $filter
+        schema:
+          type: string
+        examples:
+          StartDate:
+            value: StartDate gt 2024-01-01T00:00:00Z
+            summary: Return Timesheets where the Timesheet Start Date after January 1, 2024
+          EndDate:
+            value: EndDate lt 2024-03-01T00:00:00Z
+            summary: Return Timesheets where the Timesheet End Date before March 1, 2024
+          UserKey:
+            value: UserKey in ('2mYzTtly89Lq', '2Qy48WVCRBcP')
+            summary: Return Timesheets where the UserKey is '2mYzTtly89Lq' or '2Qy48WVCRBcP'
+          WorkItemKeys:
+            value: 'WorkItemKeys/any(x: x eq ''5mGnTfly34Rf'')'
+            summary: 'Return Timesheets where the Work Item key is ''5mGnTfly34Rf'' '
+          Status:
+            value: Status eq 'Draft'
+            summary: Return Timesheets where the Timesheet status is 'Draft'
+        description: 'When this parameter is combined with the URI, this endpoint will return a subset of the Timesheets that satisfy the `$filter` expression.
+
+          '
+      - in: query
+        name: $orderby
+        schema:
+          example: StartDate desc
+          type: string
+          enum:
+          - StartDate
+          - StartDate desc
+          - EndDate
+          - EndDate desc
+          default: TimesheetKey
+        example: StartDate
+        description: 'When this parameter is combined with the URI, this endpoint will return a list of Timesheets, sorted by the available properties.
+
+          '
+      - $ref: '#/components/parameters/SkipRecords'
+      - $ref: '#/components/parameters/TopRecords'
+      - in: query
+        name: $expand
+        schema:
+          type: string
+          enum:
+          - TimeEntries
+        example: TimeEntries
+        description: 'When this parameter is combined with the URI, this endpoint will also return the Time Entries associated with the Timesheets.
+
+          '
+      description: 'Use the `GET` method on this endpoint to receive a paginated list of Timesheets from your tenant. Using the query parameters available to this endpoint, you can also filter the list of Timesheets by their StartDate, EndDate, UserKey, WorkItemKeys, and Status.
+
+
+        **Notes**
+
+
+        * Timesheets and Time Entries are aggregated to the time period matching your timesheet frequency (by default this is weekly, but it can be from 1-31 days long, depending on your Karbon settings). It is not possible to get a daily breakdown from this endpoint. If you need finer grained data, see here.
+
+        * This endpoint returns a maximum of 100 Timesheets at once.
+
+        * If the query results in more than 100 Timesheets, a link to the next set of the results will be given in the `@odata.nextLink` field of the response.
+
+        * The `$filter` query parameter supports 8 logical operators, 3 functions and 6 properties to help you form an expression. They are listed below with examples of usage.
+
+
+        ### $filter operators for DateTime properties
+
+
+        Logical OperatorsPurposeStartDateEndDate
+
+
+        eqFull-text search/v3/Timesheets?$filter=StartDate eq 2022-07-04T00:00:00Z/v3/Timesheets?$filter=EndDate eq 2022-07-17T00:00:00Z
+
+
+        gtGreater than/v3/Timesheets?$filter=StartDate gt 2021-04-27T00:00:00Z/v3/Timesheets?$filter=EndDate gt 2021-06-21T00:00:00Z
+
+
+        geGreater than and equals/v3/Timesheets?$filter=StartDate ge 2021-04-27T00:00:00Z/v3/Timesheets?$filter=EndDate ge 2021-06-21T00:00:00Z
+
+
+        ltLesser than/v3/Timesheets?$filter=StartDate lt 2021-04-27T00:00:00Z/v3/Timesheets?$filter=EndDate lt 2021-06-21T00:00:00Z
+
+
+        leLesser than and equals/v3/Timesheets?$filter=StartDate le 2021-04-27T00:00:00Z/v3/Timesheets?$filter=EndDate le 2021-06-21T00:00:00Z
+
+
+        andCombines properties/v3/Timesheets?$filter=StartDate gt 2021-04-27T00:00:00Z and StartDate lt 2021-06-27T00:00:00Z/v3/Timesheets?$filter=EndDate gt 2021-04-27T00:00:00Z and EndDate lt 2021-06-21T00:00:00Z
+
+
+        ### Functions for DateTime properties
+
+
+        FunctionsStartDateEndDate
+
+
+        day/v3/Timesheets?$filter=day(StartDate) eq 4/v3/Timesheets?$filter=day(EndDate) eq 17
+
+
+        month/v3/Timesheets?$filter=month(StartDate) eq 4/v3/Timesheets?$filter=month(EndDate) eq 8
+
+
+        year/v3/Timesheets?$filter=year(StartDate) eq 2021/v3/Timesheets?$filter=year(EndDate) eq 2022
+
+
+        ### $filter operators for the rest of the properties
+
+
+        Logical OperatorsPurposeUserKeyWorkItemKeys
+
+        Status
+
+
+        eq
+
+        Full-text search
+
+        /v3/Timesheets?$filter=UserKey eq ''2mYzTtly89Lq''
+
+        /v3/Timesheets?$filter=WorkItemKeys/any(x: x eq ''5mGnTfly34Rf'')
+
+        /v3/Timesheets?$filter=Status eq ''Draft''
+
+
+        in
+
+        Combines multiple ORs
+
+        /v3/Timesheets?$filter=UserKey in (''2mYzTtly89Lq'', ''2Qy48WVCRBcP'' )
+
+        /v3/Timesheets?$filter=WorkItemKeys/any(x: x in (''2m6pSFxRzcF2'', ''2y7H6dhQL7mD''))
+
+        /v3/Timesheets?$filter=Status in (''Draft'', ''Approved'')'
+      operationId: getAllTimesheets
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTimeSheets'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Property:
+                  $ref: '#/components/examples/Unsupported_Property_Filter'
+                Unsupported Orderby Property:
+                  $ref: '#/components/examples/Orderby_Unsupported_Property'
+                Unsupported Logical Operator:
+                  $ref: '#/components/examples/Unsupported_Logical_Operator'
+                $top limit exceeded:
+                  $ref: '#/components/examples/Limit_Exceeded_Top'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/Timesheets/{Timesheetkey}:
+    get:
+      deprecated: true
+      tags:
+      - Timesheets and Time Entries
+      summary: Gets a Timesheets using Timesheetkey
+      parameters:
+      - required: true
+        in: path
+        name: Timesheetkey
+        schema:
+          type: string
+        example: QbQFGnqPDDs
+        description: The Karbon-generated Timesheet key
+      - in: query
+        name: $expand
+        schema:
+          type: string
+          enum:
+          - TimeEntries
+        example: TimeEntries
+        description: 'When this parameter is combined with the URI, this endpoint will also return the Time Entries associated with the Timesheets.
+
+          '
+      description: 'Use the `GET` method on this endpoint to receive the details of a Timesheet specified using the `Timesheetkey`.
+
+
+        Using the query parameter available to this endpoint, you can also include the Time Entries associated with the Timesheet in the response.
+
+
+        **Notes**: Timesheets and Time Entries are aggregated to the time period matching your timesheet frequency (by default this is weekly, but it can be from 1-31 days long, depending on your Karbon settings). It is not possible to get a daily breakdown from this endpoint. If you need finer grained data, see here.'
+      operationId: getTimesheetByID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    '@odata.context':
+                      type: string
+                      description: The information about Karbon controllers generating this response.
+                      example: https://api.karbonhq.com/v3/$metadata#Timesheets(TimeEntries())/$entity
+                - $ref: '#/components/schemas/GetSingleTimeSheet'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Key Not Found:
+                  $ref: '#/components/examples/Timesheet_Key_Not_Found_404'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/IndividualTimeEntries:
+    get:
+      tags:
+      - Timesheets and Time Entries
+      summary: Gets a list of individual time entries
+      parameters:
+      - in: query
+        name: $filter
+        schema:
+          type: string
+        examples:
+          Date:
+            value: Date gt 2024-01-01T00:00:00Z
+            summary: Return entries where Date is after January 1, 2024
+          DateRange:
+            value: Date ge 2024-01-01T00:00:00Z and Date le 2024-03-31T00:00:00Z
+            summary: Return entries within a date range
+          TimesheetKey:
+            value: TimesheetKey eq '3TxlnQ4Pd8zJ'
+            summary: Return all entries for a specific timesheet
+          UserKey:
+            value: UserKey eq '2xfLMq5PFqb7'
+            summary: Return entries for a specific user
+          WorkItemKey:
+            value: WorkItemKey eq '3cC1vkWmhGb1'
+            summary: Return entries for a specific work item
+        description: 'When this parameter is combined with the URI, this endpoint will return a subset of the individual time entries that satisfy the `$filter` expression.
+
+          '
+      - in: query
+        name: $orderby
+        schema:
+          type: string
+          enum:
+          - Date
+          - Date desc
+          default: Date
+        example: Date desc
+        description: 'Sort the results by Date.
+
+          '
+      - $ref: '#/components/parameters/SkipRecordsUnbounded'
+      - $ref: '#/components/parameters/TopRecordsLimitedTo1000'
+      - in: query
+        name: $count
+        schema:
+          type: boolean
+        example: true
+        description: 'Default is `false` (`false` is recommended). When set to `true`, the response will include the total count of matching entries in `@odata.count`.
+
+          '
+      description: 'Use the `GET` method on this endpoint to receive a paginated list of individual (non-aggregated) time entries from your tenant. Using the query parameters available to this endpoint, you can also filter the list of individual time entries by their Date, TimesheetKey, EntityKey, WorkItemKey, ClientKey, UserKey, RoleName, and TaskTypeName.
+
+
+        Unlike the Timesheets endpoint, each record represents a single time entry for a specific day, user, and work item / contact — not aggregated in any way.
+
+
+        **Notes**
+
+
+        * This endpoint returns a maximum of 1000 entries at once.
+
+        * The `$filter` query parameter supports 6 logical operators, 3 functions and 8 properties to help you form an expression. They are listed below with examples of usage.
+
+
+        ### $filter operators for DateTime properties
+
+
+        Logical OperatorsPurposeDate
+
+
+        eqFull-text search/v3/IndividualTimeEntries?$filter=Date eq 2024-07-04T00:00:00Z
+
+
+        gtGreater than/v3/IndividualTimeEntries?$filter=Date gt 2024-01-01T00:00:00Z
+
+
+        geGreater than and equals/v3/IndividualTimeEntries?$filter=Date ge 2024-01-01T00:00:00Z
+
+
+        ltLesser than/v3/IndividualTimeEntries?$filter=Date lt 2024-03-31T00:00:00Z
+
+
+        leLesser than and equals/v3/IndividualTimeEntries?$filter=Date le 2024-03-31T00:00:00Z
+
+
+        andCombines properties/v3/IndividualTimeEntries?$filter=Date ge 2024-01-01T00:00:00Z and Date lt 2024-04-01T00:00:00Z
+
+
+        ### Functions for DateTime properties
+
+
+        FunctionsDate
+
+
+        day/v3/IndividualTimeEntries?$filter=day(Date) eq 4
+
+
+        month/v3/IndividualTimeEntries?$filter=month(Date) eq 7
+
+
+        year/v3/IndividualTimeEntries?$filter=year(Date) eq 2024
+
+
+        ### $filter operators for the rest of the properties
+
+
+        All of the following properties support `eq` (and `and` to combine conditions).
+
+
+        PropertyExample
+
+
+        TimesheetKey/v3/IndividualTimeEntries?$filter=TimesheetKey eq ''3TxlnQ4Pd8zJ''
+
+
+        EntityKey/v3/IndividualTimeEntries?$filter=EntityKey eq ''3cC1vkWmhGb1''
+
+
+        WorkItemKey/v3/IndividualTimeEntries?$filter=WorkItemKey eq ''3cC1vkWmhGb1''
+
+
+        ClientKey/v3/IndividualTimeEntries?$filter=ClientKey eq ''ZGNmtYyLm4z''
+
+
+        UserKey/v3/IndividualTimeEntries?$filter=UserKey eq ''2xfLMq5PFqb7''
+
+
+        RoleName/v3/IndividualTimeEntries?$filter=RoleName eq ''Director''
+
+
+        TaskTypeName/v3/IndividualTimeEntries?$filter=TaskTypeName eq ''Tax Return'''
+      operationId: getAllIndividualTimeEntries
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetIndividualTimeEntries'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Unsupported Property:
+                  $ref: '#/components/examples/Unsupported_Property_Filter'
+                Unsupported Logical Operator:
+                  $ref: '#/components/examples/Unsupported_Logical_Operator'
+                $top limit exceeded:
+                  $ref: '#/components/examples/Limit_Exceeded_Top'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+  /v3/IndividualTimeEntries/{IndividualTimeEntryKey}:
+    get:
+      tags:
+      - Timesheets and Time Entries
+      summary: Gets an individual time entry by key
+      parameters:
+      - required: true
+        in: path
+        name: IndividualTimeEntryKey
+        schema:
+          type: string
+          maxLength: 32
+        example: a1b2c3d4e5f67890abcdef1234567890
+        description: The Karbon-generated GUID key for the individual time entry (32-character hex string, no hyphens)
+      description: Use the `GET` method on this endpoint to receive the details of a single individual time entry specified using the `IndividualTimeEntryKey`.
+      operationId: GetIndividualTimeEntryByKey
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                allOf:
+                - type: object
+                  properties:
+                    '@odata.context':
+                      type: string
+                      description: The information about Karbon controllers generating this response.
+                      example: https://api.karbonhq.com/v3/$metadata#IndividualTimeEntries/$entity
+                - $ref: '#/components/schemas/GetIndividualTimeEntry'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Invalid Key:
+                  $ref: '#/components/examples/IndividualTimeEntry_Invalid_Key_400'
+                Unsupported Option:
+                  $ref: '#/components/examples/Unsupported_option'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              examples:
+                Unauthorized Access:
+                  $ref: '#/components/examples/UnauthorizedAccess'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Key Not Found:
+                  $ref: '#/components/examples/IndividualTimeEntry_Key_Not_Found_404'
+        '429':
+          description: Rate Limit Exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorMessage'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessages'
+              examples:
+                Undefined Error:
+                  $ref: '#/components/examples/elongated_5001'
+    servers:
+    - url: https://api.karbonhq.com
+      description: The production API server
+components:
+  examples:
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+    Unsupported_Property_Filter:
+      description: The error returned when an unsupported filter is used in a request
+      value:
+        error:
+          code: '4002'
+          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
+    IndividualTimeEntry_Invalid_Key_400:
+      description: The error returned when the provided IndividualTimeEntryKey is not a valid GUID
+      value:
+        error:
+          code: '4002'
+          message: Provided key must be a valid GUID.
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    Orderby_Unsupported_Property:
+      description: The error returned when an unsupported sort order is used in a request
+      value:
+        error:
+          code: '4002'
+          message: The property '<Property Name>' cannot be used in the $orderby query option.
+    IndividualTimeEntry_Key_Not_Found_404:
+      description: The error returned when an individual time entry cannot be found for the provided key
+      value:
+        error:
+          code: '4004'
+          message: No time entry found for provided key
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Limit_Exceeded_Top:
+      description: The error returned when the limit is used in a request exceeds the maximum set for the API
+      value:
+        error:
+          code: '4002'
+          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
+    Unsupported_Logical_Operator:
+      description: The error returned when an unsupported operator is used in a request
+      value:
+        error:
+          code: '4002'
+          message: Logical operator '<Operator Name>' is not allowed. To allow it, set the 'AllowedLogicalOperators' property on EnableQueryAttribute or QueryValidationSettings.
+    Timesheet_Key_Not_Found_404:
+      description: The error returned when a Timesheet cannot be found for the provided Timesheet Key
+      value:
+        error:
+          code: '4004'
+          message: No timesheet found for provided key
+  schemas:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    GetIndividualTimeEntries:
+      description: A collection of individual time entries
+      required:
+      - value
+      - '@odata.context'
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#IndividualTimeEntries
+        '@odata.count':
+          type: integer
+          format: int64
+          example: 42
+          description: The total number of individual time entries that satisfy the query criteria. Only present when `$count=true` is specified.
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetIndividualTimeEntry'
+        '@odata.nextLink':
+          type: string
+          example: https://api.karbonhq.com/v3/IndividualTimeEntries?$count=true&$skip=1000
+          description: The link to the next set of individual time entries. @odata.nextLink field will only appear if you have more than 1000 individual time entries.
+    GetIndividualTimeEntry:
+      description: A single individual (non-aggregated) time entry
+      type: object
+      required:
+      - IndividualTimeEntryKey
+      - TimesheetKey
+      - EntityKey
+      - UserKey
+      - Date
+      - Minutes
+      properties:
+        IndividualTimeEntryKey:
+          type: string
+          maxLength: 32
+          example: a1b2c3d4e5f67890abcdef1234567890
+          description: A Karbon-generated GUID key used to uniquely identify the individual time entry (32-character hex string, no hyphens)
+        TimesheetKey:
+          type: string
+          example: 3TxlnQ4Pd8zJ
+          description: A Karbon-generated key used to identify the Timesheet this entry belongs to
+        EntityKey:
+          type: string
+          example: 3cC1vkWmhGb1
+          description: A Karbon-generated key used to identify the entity this time entry is related to
+        WorkItemKey:
+          type: string
+          example: 3cC1vkWmhGb1
+          description: A Karbon-generated key used to identify the Work Item this time entry is related to
+        ClientKey:
+          type: string
+          example: ZGNmtYyLm4z
+          description: A Karbon-generated key used to identify the Client this time entry is related to
+        ClientType:
+          type: string
+          example: Organization
+          enum:
+          - Contact
+          - Organization
+          - ClientGroup
+          description: The type of Client
+        UserKey:
+          type: string
+          example: 2xfLMq5PFqb7
+          description: A Karbon-generated key used to identify the user who logged this time entry
+        RoleName:
+          type: string
+          example: Director
+          description: The role of the user for whom the time entry was created
+        TaskTypeName:
+          type: string
+          example: Tax Return
+          description: The type of task performed by the user
+        TaskTypeIsBillable:
+          type: boolean
+          example: true
+          description: Indicates whether the task type is configured as billable. A value of false means the time entry will not be billed regardless of the entity's billing type or the entry's BilledStatus.
+        Date:
+          type: string
+          format: date-time
+          example: '2024-07-04T00:00:00Z'
+          description: The date on which the time was logged
+        Minutes:
+          type: integer
+          example: 90
+          description: The total time (in minutes) spent on the task
+        Description:
+          type: string
+          example: Reviewed draft tax return
+          description: Free-form text providing more information about the time entry
+        HourlyRate:
+          type: number
+          format: decimal
+          example: 250
+          description: The hourly rate of the user who worked on the task
+        TotalCost:
+          type: number
+          format: decimal
+          example: 375
+          description: The total cost of this time entry (Minutes / 60 × HourlyRate)
+        BilledStatus:
+          type: string
+          example: Unbilled
+          enum:
+          - Unbilled
+          - Draft
+          - InterimBilled
+          - Billed
+          description: An indicator that represents whether the time entry has been or is in the process of being billed
+        CreatedDate:
+          type: string
+          format: date-time
+          example: '2024-07-04T08:00:00Z'
+          description: The date and time when this time entry was created
+        ModifiedDate:
+          type: string
+          format: date-time
+          example: '2024-07-05T09:30:00Z'
+          description: The date and time when this time entry was last modified
+        FeeType:
+          type: string
+          example: Time and Materials
+          description: The fee type associated with this time entry
+    GetSingleTimeSheet:
+      description: A single TimeSheet with TimeEntries
+      type: object
+      required:
+      - TimesheetKey
+      - StartDate
+      - EndDate
+      - UserKey
+      - Status
+      properties:
+        TimesheetKey:
+          type: string
+          example: 3MslJsCcnnkm
+          description: A Karbon-generated unique identifier for the Timesheet
+        StartDate:
+          type: string
+          format: date-time
+          example: '2022-07-04T00:00:00Z'
+          description: The start date for the TimeSheet
+        EndDate:
+          type: string
+          format: date-time
+          example: '2022-07-10T00:00:00Z'
+          description: The end date for the TimeSheet
+        UserKey:
+          type: string
+          example: 2mYzTtly89Lq
+          description: A Karbon-generated key used to identify the user, this Timesheet belongs to
+        Status:
+          type: string
+          example: Draft
+          enum:
+          - Approved
+          - Declined
+          - Draft
+          - Submitted
+          description: The approval status of the Timesheet
+        WorkItemKeys:
+          type: array
+          description: An array of WorkItem keys
+          items:
+            type: string
+          example:
+          - 2m6pSFxRzcF2
+        TimeEntries:
+          type: array
+          description: An array of Time entries
+          items:
+            type: object
+            properties:
+              TimeEntryKey:
+                type: string
+                description: A Karbon-generated key used to identify the Time Entry
+                example: WYscpLQXR4J-2m6pSFxRzcF2-2mYzTtly89Lq-3j5ZpPT4RDbT-4kbT4BYLMLhv-QbQFGnqPDDs
+              EntityKey:
+                type: string
+                description: A Karbon-generated key used to identify the entity this Time Entry is related to
+                example: 2m6pSFxRzcF2
+              WorkItemKey:
+                type: string
+                description: A Karbon-generated key used to identify the Work Item this Time Entry is related to
+                example: 2m6pSFxRzcF2
+              ClientKey:
+                type: string
+                description: A Karbon-generated key used to identify the Client this Time Entry is related to
+                example: 2mYzTtly89Lq
+              ClientType:
+                type: string
+                description: The type of Client
+                example: Organization
+              RoleName:
+                type: string
+                description: The role of the user for whom the Time Entry was created
+                example: Accountant
+              TaskTypeName:
+                type: string
+                description: The type of task performed by the user
+                example: Auditing
+              Minutes:
+                type: integer
+                description: The total time (in minutes) spent on the task
+                example: 360
+              HourlyRate:
+                type: number
+                format: decimal
+                description: The hourly rate of the user who worked on the task
+                example: 80
+              Descriptions:
+                type: array
+                description: Free-form text that has more information about the Time Entry
+                items:
+                  type:
+                  - string
+                  - 'null'
+                  example: Continued working on the end-year accounting
+                example:
+                - Continued working on the end-year accounting
+              BilledStatus:
+                type: string
+                description: An indicator that represents whether the time entry has been or is in the process of being billed
+                example: Draft
+                enum:
+                - Unbilled
+                - Draft
+                - InterimBilled
+                - Billed
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+    GetTimeSheets:
+      description: A collection of TimeSheets
+      required:
+      - value
+      - '@odata.context'
+      - '@odata.count'
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#Timesheets
+        '@odata.count':
+          type: integer
+          format: int64
+          example: 4
+          description: The total number of Timesheets that satisfy the query criteria.
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetSingleTimeSheet'
+        '@odata.nextLink':
+          type: string
+          example: https://api.karbonhq.com/v3/Timesheets?$skip=100
+          description: The link to next set of Timesheets. @odata.nextLink field will only appear if you have more than 100 Timesheets.
+  parameters:
+    SkipRecords:
+      in: query
+      name: $skip
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+      example: 50
+      description: Skip the first n items
+    SkipRecordsUnbounded:
+      in: query
+      name: $skip
+      schema:
+        type: integer
+        minimum: 0
+      example: 1000
+      description: Skip the first n items. There is no upper limit on this value.
+    TopRecords:
+      in: query
+      name: $top
+      schema:
+        type: integer
+        minimum: 0
+      example: 10
+      description: Limit the number of items returned
+    TopRecordsLimitedTo1000:
+      in: query
+      name: $top
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 1000
+      example: 1000
+      description: Limit the number of items returned. Maximum value is 1000.
+  securitySchemes:
+    BearerAuth:
+      description: The Application ID for your API application, supplied by secure message when your Application is first registered
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+      type: apiKey
+      in: header
+      name: AccessKey
+externalDocs:
+  description: Karbon Developers - API release notes
+  url: https://developers.karbonhq.com/release-notes/
+x-refined-from:
+- KarbonAPI.json
+- karbonhq-openapi.yml

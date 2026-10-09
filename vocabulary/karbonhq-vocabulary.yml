@@ -1,0 +1,421 @@
+generated: '2026-10-09'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/karbonhq-openapi.yml
+vocabulary:
+  name: Karbon Domain Vocabulary
+  description: 'Terms declared by Karbon''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-09'
+  terms:
+  - term: Billing
+    definition: List and view an Invoice and associated line items
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Business Cards
+    definition: View or update the Business Card attached to a Contact and/or Organization
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Client Groups
+    definition: Create a client group to manage related contacts, create work for them, and see all related jobs in a single view. [Read more](https://help.karbonhq.com/en/articles/5880261-manage-a-client-group)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Comments
+    definition: Use comments on tasks to add notes or bring a colleague into the conversation to collaborate on the task. [Read more](https://help.karbonhq.com/en/articles/2111192-comment-and-collaborate-on-a-task)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Contacts
+    definition: Manage your contacts and get the full overview over clients, whether they are individuals or organizations. [Read more](https://help.karbonhq.com/en/articles/5708609-overview-of-contacts)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Custom Fields
+    definition: Endpoints to manage Custom Fields on Contacts and Organizations in Karbon, refer to the Karbon help and support content for more
+      information on [creating custom fields](https://help.karbonhq.com/en/articles/10971113-create-a-new-custom-contact-field) and [frequently
+      asked questions](https://help.karbonhq.com/en/articles/10971266-custom-contact-fields-faqs)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Estimate Summaries
+    definition: Estimate and track time to understand jobs that are on-budget, allocate resources, and uncover performance insights to transform
+      your firm. [Read more](https://help.karbonhq.com/en/articles/4439115-overview-of-time-budgets)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Files
+    definition: Handle files and attachments. [Read more](https://help.karbonhq.com/en/articles/5714089-files-and-attachments)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Integrated Workflows
+    definition: Endpoints that enable Karbon Integration Partners to manage integrated workflow tasks enabled for their integrations. Note that
+      these endpoints cannot be used to access Tasks or Client Tasks. Access is limited to approved developers building apps that serve all Karbon
+      customers.
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Organizations
+    definition: Create an organization to represent marriages and couples and client groups to represent families. [Read more](https://help.karbonhq.com/en/articles/5708609-overview-of-contacts#h_8ee87bfcc1)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Notes
+    definition: Hold a conversation internally within your company. Unlike an email, Notes are viewed only by members of your team. [Read more](https://help.karbonhq.com/en/s/articles/5919746-use-notes)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Tags
+    definition: 'Assign or remove tags from an entity - Note: Tags APIs are currently in beta and are not enabled for all API users'
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Tenant Settings
+    definition: Retrieve lists of valid Contact Types, Work Types and Work Statuses
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Timesheets and Time Entries
+    definition: Retrieve individual (non-aggregated) time entries, each record represents a single time entry for a specific day, user, and work
+      item. [Read more](https://help.karbonhq.com/en/s/articles/6022358-managing-time-budgets-and-expenses-in-karbon). **Deprecated** Review Time
+      aggregate Timesheets for colleagues. [Read more](https://help.karbonhq.com/en/s/articles/6022358-managing-time-budgets-and-expenses
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Users
+    definition: Create and view the basics & defaults for colleagues, teams and job roles to customize Karbon to represent the way you and your
+      team work. [Read more](https://help.karbonhq.com/en/articles/3731216-edit-your-user-profile)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Webhook Payloads
+    definition: Details of the different payloads sent for Karbon Webhook subscriptions
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Webhook Subscriptions
+    definition: 'Integrate your system with Karbon to receive changes made to your data in Karbon. Note: Webhook payloads take the following form:
+      ```JSON { "ResourcePermaKey": "{EntityKey}", "ResourceType": "{EntityType}", "ActionType": "{ActionType}" "TimeStamp": "{YYYY-MM-DDTHH:mm:ssZ}"
+      } ```'
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Work Items
+    definition: Manage a Work Item to best fit your workflow, including timelines, tasks and work teams. [Read more](https://help.karbonhq.com/en/articles/6057036-managing-work-items-and-teams)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Work Schedules
+    definition: Set a Work Item to repeat on a defined schedule. [Read more](https://help.karbonhq.com/en/articles/6096234-setup-repeating-work-on-a-schedule)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: Work Templates
+    definition: Find and review templates that you created to fit your firm's unique workflows. [Read more](https://help.karbonhq.com/en/articles/5325202-create-and-customize-work-templates)
+    tags:
+    - Resource Group
+    source: openapi/karbonhq-openapi.yml
+  - term: BillingBaseInvoice
+    definition: A Karbon invoice
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingBaseInvoice
+  - term: BillingInvoice
+    definition: A Karbon Invoice record
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoice
+  - term: BillingInvoiceWithPayment
+    definition: A Karbon invoice with associated payment records
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoiceWithPayment
+  - term: BillingInvoiceData
+    definition: A collection of the data associated with an invoice
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoiceData
+  - term: BillingInvoiceDataItem
+    definition: A single component of the data used to create the rendered (HTML/PDF) invoice
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoiceDataItem
+  - term: BillingInvoiceDataTax
+    definition: A breakdown of tax related to invoice, lineitems and data
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoiceDataTax
+  - term: BillingInvoiceDataExpense
+    definition: A line item on a Karbon invoice
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoiceDataExpense
+  - term: BillingInvoiceDataExpenseItem
+    definition: An expense line item on a Karbon invoice
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoiceDataExpenseItem
+  - term: BillingInvoiceDataService
+    definition: A service line item on a Karbon invoice
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoiceDataService
+  - term: BillingInvoiceDataWork
+    definition: The breakdown of the billing that stems from work
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoiceDataWork
+  - term: BillingInvoiceDataWorkTimeEntry
+    definition: The details of an invoiced time entry
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoiceDataWorkTimeEntry
+  - term: BillingPayment
+    definition: A Karbon Payment record
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingPayment
+  - term: BillingInvoiceLineItems
+    definition: A breakdown of line items from the invoice
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoiceLineItems
+  - term: BillingInvoicePayments
+    definition: Details of the payments related to the invoice
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingInvoicePayments
+  - term: BillingClient
+    definition: The details of the invoice recipient at the point in time the invoice was drafted or payment creator at the point the payment
+      was received
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingClient
+  - term: BillingTaxLineItems
+    definition: Details of the tax components of the invoice
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingTaxLineItems
+  - term: BusinessCardRequest
+    definition: A business card associated with a contact or organization
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BusinessCardRequest
+  - term: BusinessCard
+    definition: A business card associated with a contact or organization
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BusinessCard
+  - term: BusinessCardsRequestAsArray
+    definition: A collection of business cards
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BusinessCardsRequestAsArray
+  - term: ClientTeam
+    definition: The Client Team associated with a contact or organization
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/ClientTeam
+  - term: ClientAccess
+    definition: A list of Organizations and People that the contact has been granted access to view in Karbon for Clients
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/ClientAccess
+  - term: CustomFieldDefinitions
+    definition: A list of the available custom fields in Karbon
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/CustomFieldDefinitions
+  - term: CustomFieldDefinition
+    definition: The structure that defines a Custom Field in Karbon
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/CustomFieldDefinition
+  - term: CustomFieldValue
+    definition: A collection of Custom Fields
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/CustomFieldValue
+  - term: CustomFieldValues
+    definition: The set custom fields for a contact or organization and the associated values and options
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/CustomFieldValues
+  - term: DetailsOfAccounting
+    definition: The details specific to the Accounting firm related to this entity
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/DetailsOfAccounting
+  - term: GetComment
+    definition: A comment on a Work Item, Note or Contact
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/GetComment
+  - term: GetClientGroup
+    definition: A list of Client Groups
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/GetClientGroup
+  - term: GetContacts
+    definition: A list of Contacts
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/GetContacts
+  - term: GetTenantSettings
+    definition: A collection of customer specific Contact and Work settings
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/GetTenantSettings
+  - term: GetOrganizations
+    definition: A list of Organizations
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/GetOrganizations
+  - term: BillingKarbonPayment
+    definition: The Karbon Payment object
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/BillingKarbonPayment
+  - term: WorkItem
+    definition: The base data for a Work Item
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/WorkItem
+  - term: WorkItemWithFeeSettings
+    definition: A Work Item with Fee Settings
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/WorkItemWithFeeSettings
+  - term: WorkItemWithFeeSettingsAndUserRoleAssignments
+    definition: A Work Item with Fee Settings and User Role assignments
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/WorkItemWithFeeSettingsAndUserRoleAssignments
+  - term: WorkItemUpdate
+    definition: The core parameters when updating a Work Item
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/WorkItemUpdate
+  - term: WorkFeeSettings
+    definition: The Fee Settings for a Work Item
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/WorkFeeSettings
+  - term: WorkItemUserRoleAssignments
+    definition: The User assignments for specific Roles on a Work Item
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/WorkItemUserRoleAssignments
+  - term: GetWorkItems
+    definition: A collection of work items
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/GetWorkItems
+  - term: UpdateWorkItem
+    definition: The properties that can be updated on a Work Item with the PATCH method
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/UpdateWorkItem
+  - term: RequestCreateWorkItem
+    definition: A single work item
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/RequestCreateWorkItem
+  - term: ResponseCreateClientGroup
+    definition: A single Client Group
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/ResponseCreateClientGroup
+  - term: CreateClientGroup
+    definition: A single Client Group
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/CreateClientGroup
+  - term: ResponseCreateContact
+    definition: A single Contact
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/ResponseCreateContact
+  - term: ContactsCardOrganization
+    definition: A contact related to an Organization
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/ContactsCardOrganization
+  - term: CreateContact
+    definition: A single Contact
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/CreateContact
+  - term: ExpenseRequest
+    definition: A single Expense
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/ExpenseRequest
+  - term: ExpenseResponse
+    definition: A single Expense
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/ExpenseResponse
+  - term: NoteRequest
+    definition: A single Note
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/NoteRequest
+  - term: NoteResponse
+    definition: A single Contact
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/NoteResponse
+  - term: CreateOrganizationResponse
+    definition: A single Organization
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/CreateOrganizationResponse
+  - term: CreateOrganization
+    definition: A single Organization
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/CreateOrganization
+  - term: UpdateOrganization
+    definition: A single Organization
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/UpdateOrganization
+  - term: WithBusinessCardsCreateOrganizationResponse
+    definition: The response returned when a business card is created and $expand=BusinessCards is specified in the URL
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/WithBusinessCardsCreateOrganizationResponse
+  - term: FileList
+    definition: A collection of files associated with an entity in Karbon
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/FileList
+  - term: FileListItem
+    definition: A single File
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/FileListItem
+  - term: GetSingleTimeSheet
+    definition: A single TimeSheet with TimeEntries
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/GetSingleTimeSheet
+  - term: GetTimeSheets
+    definition: A collection of TimeSheets
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/GetTimeSheets
+  - term: GetIndividualTimeEntry
+    definition: A single individual (non-aggregated) time entry
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/GetIndividualTimeEntry
+  - term: GetIndividualTimeEntries
+    definition: A collection of individual time entries
+    tags:
+    - Object
+    source: openapi/karbonhq-openapi.yml#/components/schemas/GetIndividualTimeEntries

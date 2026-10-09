@@ -1,0 +1,39 @@
+generated: '2026-10-09'
+method: searched
+source: https://developers.karbonhq.com/guides/authentication/
+docs: https://developers.karbonhq.com/guides/authentication/
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+  both_required: true
+  note: Every request must carry BOTH the Authorization bearer token (the Application ID) and the AccessKey header. The docs state the Authorization token is "a 36 character long GUID" and the AccessKey "is a JWT"; the OpenAPI marks BearerAuth bearerFormat JWT, which disagrees with the docs.
+schemes:
+- name: BearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  header: Authorization
+  format_per_docs: "Bearer {token} — a 36 character long GUID"
+  description: The Application ID for your API application, supplied by secure message when your Application is first registered
+  sources:
+  - openapi/karbonhq-openapi.yml
+  - https://developers.karbonhq.com/guides/authentication/
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: AccessKey
+  format_per_docs: JWT (starts with eyJ...)
+  description: The AccessKey for your API application, found inside the Settings > Connected Apps section in Karbon
+  sources:
+  - openapi/karbonhq-openapi.yml
+  - https://developers.karbonhq.com/guides/authentication/
+provisioning: "Karbon UI → Settings → Connected Apps → API Applications → your application"
+access_restrictions: "Access is restricted to Business and Enterprise plan customers; firms are limited to one API application per account. (developers.karbonhq.com/llms.txt)"
+rotation: "Rotating your Access Key immediately invalidates the previous key."
+errors:
+- status: 401
+  meaning: Missing or invalid `Authorization` header or `AccessKey`
+base_url: https://api.karbonhq.com
