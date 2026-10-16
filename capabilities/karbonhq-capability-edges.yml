@@ -1,0 +1,71 @@
+slug: karbonhq
+provider: Karbon
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 5
+edges:
+- tag: Billing
+  spec_file: karbonhq-billing-api-openapi.yml
+  capability_id: BC-200.30
+  capability_id_l1: BC-200
+  capability_name: Accounts Receivable Management
+  confidence: 0.8
+  evidence: GET /v3/Invoices  getInvoices; POST /v3/ManualPayments  createManualPayment  Create a manual
+    payment against an Invoice; schemas BillingInvoiceWithPayment, BillingInvoicePayments
+  reason: Operations issue and read customer invoices, record and reverse payments against those invoices,
+    and create billable expenses for a professional-services firm. That is customer invoicing and cash
+    application — Accounts Receivable Management. Not subscription billing (no plans, metering or recurring
+    charges), so the SaaS billing capability does not fit.
+- tag: Contacts
+  spec_file: karbonhq-contacts-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.8
+  evidence: POST /v3/Contacts  Creates a new Contact; GET /v3/Contacts/GetContactByUserDefinedIdentifier(...);
+    schemas CreateContact, GetContacts, ClientAccess, ClientTeam, DetailsOfAccounting
+  reason: Full lifecycle CRUD over client contact records with external-identifier resolution, client
+    access and client-team attributes is customer/client master data maintenance — the golden-record surface
+    of this practice-management product.
+- tag: Webhook Subscriptions
+  spec_file: karbonhq-webhook-subscriptions-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.8
+  evidence: POST /v3/WebhookSubscriptions 'Creates a new Webhook Subscription'; PATCH ... "Updates the
+    multi-type Webhook Subscription's subscribed types"
+  reason: Full lifecycle (create, read, patch subscribed types, delete) of outbound webhook subscriptions
+    exposed to integrators, which is exactly the webhook & event subscription management capability of
+    a developer platform.
+- tag: Organizations
+  spec_file: karbonhq-organizations-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.72
+  evidence: POST /v3/Organizations createOrganization 'Creates a new Organization'; schemas ContactsCardOrganization,
+    ClientTeam, DetailsOfAccounting
+  reason: In Karbon's practice-management API, Organizations are client/contact master records (contact
+    cards, client team, accounting details) created, read and updated via CRUD — i.e. customer master
+    data maintenance rather than any legal-entity governance function.
+- tag: Client Groups
+  spec_file: karbonhq-client-groups-api-openapi.yml
+  capability_id: BC-420.10
+  capability_id_l1: BC-420
+  capability_name: Customer Data Management
+  confidence: 0.7
+  evidence: POST /v3/ClientGroups  Creates a new Client Group; GET /v3/ClientGroups/GetClientGroupByUserDefinedIdentifier(...);
+    schemas GetClientGroup, ClientTeam, BusinessCard
+  reason: CRUD plus lookup-by-user-defined-identifier over groupings of clients, with client team and
+    business-card detail, is maintenance of the customer master record and its hierarchy. Reads as Customer
+    Data Management rather than segmentation (no segment/persona or treatment-strategy constructs).

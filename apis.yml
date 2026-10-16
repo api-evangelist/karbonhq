@@ -40,6 +40,9 @@ maintainers:
 image: https://karbonhq.com/images/og-default-image.jpg
 
 common:
+- type: CapabilityMap
+  url: capabilities/karbonhq-capability-edges.yml
+  name: Karbon Business Capability Map
 - type: AgenticAccess
   url: agentic-access/karbonhq-agentic-access.yml
 - type: RateLimits
