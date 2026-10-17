@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Work Items API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Work Items API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Work Items across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -273,9 +273,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RequestCreateWorkItem'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/WorkItems/{WorkItemKey}:
     get:
       tags:
@@ -542,268 +539,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UpdateWorkItem'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
-  examples:
-    Unsupported_option:
-      description: The error returned when the query option in a request is not allowed for by the API
-      value:
-        error:
-          code: '4002'
-          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
-    Unsupported_Property_Filter:
-      description: The error returned when an unsupported filter is used in a request
-      value:
-        error:
-          code: '4002'
-          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
-    Bad_Model_WorkItem_Empty_Property:
-      description: 'A response shown when a required field is not provided when creating or updating a Work Item '
-      value:
-        error:
-          code: '4003'
-          message: Invalid Model.
-          details:
-            code: InvalidProperty
-            target: workItem.<property_name>
-            message: The <property_name> field is required.
-    Bad_Model_WorkItem_Incorrect_WorkType:
-      description: 'A response shown when a Work Type is provided when creating or updating a Work Item '
-      value:
-        error:
-          code: '4003'
-          message: Invalid Model.
-          details:
-            code: InvalidProperty
-            target: workItem.WorkType
-            message: Work Type is not valid
-    Missing_Update_Data:
-      description: The error returned when the payload for an update is missing or invalid
-      value:
-        error:
-          code: '4005'
-          message: 'Required payload data is missing: update'
-    Missing_Create_Data:
-      description: The error returned when the request payload is missing a required value
-      value:
-        error:
-          code: '4005'
-          message: 'Required payload data is missing: <Entity>'
-    UnauthorizedAccess:
-      description: A generic response shown when the API cannot confirm the authentication creditials provided
-      value:
-        error:
-          statusCode: '401'
-          message: JWT not present.
-    Bad_Model_WorkItem_Incorrect_ClientType:
-      description: 'A response shown when an invalid Client Type is provided when creating or updating a Work Item '
-      value:
-        error:
-          code: '4003'
-          message: Invalid Model.
-          details:
-            code: InvalidProperty
-            target: workItem.ClientType
-            message: ClientType must be Contact, Organization, or ClientGroup
-    Bad_Model_WorkItem_Incorrect_ClientKey:
-      description: 'A response shown when an invalid Contact key is provided when creating or updating a Work Item '
-      value:
-        error:
-          code: '4003'
-          message: Invalid Model.
-          details:
-            code: InvalidProperty
-            target: workItem.ClientKey
-            message: ClientKey is not a valid Contact Key
-    Orderby_Unsupported_Property:
-      description: The error returned when an unsupported sort order is used in a request
-      value:
-        error:
-          code: '4002'
-          message: The property '<Property Name>' cannot be used in the $orderby query option.
-    elongated_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
-    Bad_Model_WorkItem_Client_Not_a_member_of_ClientGroup:
-      description: A response shown when an invalid Client Group is provided when creating or updating a Work Item
-      value:
-        error:
-          code: '4003'
-          message: Invalid Model.
-          details:
-            code: InvalidProperty
-            target: workItem.<key>
-            message: Cannot assign Related Client Group as Client is not a member of this Group
-    Bad_Model_WorkItem_Incorrect_EmailAddress:
-      description: 'A response shown when an invalid email is provided when creating or updating a Work Item '
-      value:
-        error:
-          code: '4003'
-          message: Invalid Model.
-          details:
-            code: InvalidProperty
-            target: workItem.AssigneeEmailAddress
-            message: Assignee Email Address is not a valid Email Address
-    Invalid_Property:
-      description: The error returned when attempting to use PATCH to update a property that can only be updated as part of a PUT
-      value:
-        error:
-          code: '4002'
-          message: Invalid property to update. Only <Property name> can be patched.
-    Limit_Exceeded_Top:
-      description: The error returned when the limit is used in a request exceeds the maximum set for the API
-      value:
-        error:
-          code: '4002'
-          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
-    Conflict_StaleObjectState:
-      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
-      value:
-        error:
-          code: '4020'
-          message: The resource was modified by another request. Refetch the latest version and retry.
-    Bad_Model_WorkItem_Incorrect_WorkTemplate_Key:
-      description: A response shown when an invalid Work Template is provided when creating a Work Item
-      value:
-        error:
-          code: '4003'
-          message: Invalid Model.
-          details:
-            code: InvalidProperty
-            target: workItem.WorkTemplateKey
-            message: WorkTemplateKey is not a valid Work Template
-    WorkItem_Key_Not_Found_404:
-      description: The error returned when a Work Item cannot be found for the provided Work Item Key
-      value:
-        error:
-          code: '4004'
-          message: No Work Item found for provided key
   schemas:
-    ResourceNotFound:
-      description: A generic response shown when the API cannot find a requested entity
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '404'
-        message:
-          type: string
-          description: The error message
-          example: Resource not found
-    RateLimitErrorMessage:
-      description: The error message returned when the API rate limit is hit
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '429'
-        message:
-          type: string
-          description: The error message
-          example: Rate limit is exceeded. Try again in 10 seconds.
-    WorkItemUserRoleAssignments:
-      description: The User assignments for specific Roles on a Work Item
-      properties:
-        UserRoleAssignments:
-          type: array
-          description: The array that describes the roles of the users associated with this Work Item.
-          items:
-            type: object
-            required:
-            - RoleKey
-            - UserProfileKey
-            properties:
-              RoleKey:
-                type: string
-                description: A Karbon-generated value used to identify the role of the user
-                example: 2mYzTtly89Lq
-              UserProfileKey:
-                type: string
-                description: A Karbon-generated value used to identify the user
-                example: 2Qy48WVCRBcP
-    RequestCreateWorkItem:
-      description: A single work item
-      allOf:
-      - $ref: '#/components/schemas/WorkItemUpdate'
-      - $ref: '#/components/schemas/WorkFeeSettings'
-      - $ref: '#/components/schemas/WorkItemUserRoleAssignments'
-    WorkItemWithFeeSettings:
-      description: A Work Item with Fee Settings
-      allOf:
-      - $ref: '#/components/schemas/WorkItem'
-      - $ref: '#/components/schemas/WorkFeeSettings'
-    WorkFeeSettings:
-      description: The Fee Settings for a Work Item
-      properties:
-        FeeSettings:
-          description: The Fee Settings describe how the work will be billed, for FixedFee work the Fee Settings can include the value to be billed
-          type: object
-          properties:
-            FeeType:
-              type: string
-              description: The way the fee is calculated for the Work Item
-              enum:
-              - FixedFee
-              - TimeAndMaterials
-              - NonBillable
-              example: FixedFee
-            FeeValue:
-              type:
-              - number
-              - 'null'
-              description: The value of the fee in the currency of the Karbon account, this value must be null if FeeType is not FixedFee
-              example: 5150.2
-    EnhancedErrorMessages:
-      description: The details of an error associated with an API request
-      required:
-      - error
-      type: object
-      properties:
-        error:
-          required:
-          - code
-          - message
-          - details
-          type: object
-          properties:
-            code:
-              type: string
-              description: A Karbon-generated code to identify the error
-            message:
-              type: string
-              description: The error message
-            details:
-              type: array
-              description: The details of error message
-              items:
-                type: object
-                properties:
-                  code:
-                    type: string
-                    description: Error Summary
-                  target:
-                    type: string
-                    description: Property that has encountered issue
-                  message:
-                    type: string
-                    description: The detailed error message
-    WorkItemWithFeeSettingsAndUserRoleAssignments:
-      description: A Work Item with Fee Settings and User Role assignments
-      allOf:
-      - $ref: '#/components/schemas/WorkItem'
-      - $ref: '#/components/schemas/WorkFeeSettings'
-      - $ref: '#/components/schemas/WorkItemUserRoleAssignments'
     UpdateWorkItem:
       description: The properties that can be updated on a Work Item with the PATCH method
       type: object
@@ -886,58 +623,6 @@ components:
                   type: string
                   description: A Karbon-generated value used to identify the user
                   example: 2Qy48WVCRBcP
-    GetWorkItems:
-      description: A collection of work items
-      required:
-      - value
-      - '@odata.context'
-      - '@odata.count'
-      type: object
-      properties:
-        '@odata.context':
-          type: string
-          description: The information about Karbon controllers generating this response.
-          example: https://api.karbonhq.com/v3/$metadata#WorkItems/KarbonService.WorkItemSummaryDTO
-        '@odata.count':
-          type: integer
-          format: int64
-          example: 323
-          description: The total number of Work Items that satisfy the query criteria.
-        value:
-          type: array
-          items:
-            allOf:
-            - type: object
-              properties:
-                '@odata.type':
-                  type: string
-                  example: '#KarbonService.WorkItemSummaryDTO'
-                  description: The information about Karbon Objects generating this response.
-            - $ref: '#/components/schemas/WorkItem'
-        '@odata.nextLink':
-          type: string
-          example: https://api.karbonhq.com/v3/WorkItems?$skip=100
-          description: The link to next set of Work Items. @odata.nextLink field will only appear if you have more than 100 Work Items.
-    ErrorMessages:
-      description: The details of an error associated with an API request
-      required:
-      - error
-      type: object
-      properties:
-        error:
-          required:
-          - code
-          - message
-          type: object
-          properties:
-            code:
-              type: string
-              example: '4004'
-              description: A Karbon-generated code to identify the error
-            message:
-              type: string
-              example: The record could not be found
-              description: The error message
     WorkItemUpdate:
       type: object
       description: The core parameters when updating a Work Item
@@ -1053,6 +738,178 @@ components:
               type: string
               description: The email address of the recipient.
               example: acme@corp.com
+    WorkItemWithFeeSettingsAndUserRoleAssignments:
+      description: A Work Item with Fee Settings and User Role assignments
+      allOf:
+      - $ref: '#/components/schemas/WorkItem'
+      - $ref: '#/components/schemas/WorkFeeSettings'
+      - $ref: '#/components/schemas/WorkItemUserRoleAssignments'
+    EnhancedErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          - details
+          type: object
+          properties:
+            code:
+              type: string
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              description: The error message
+            details:
+              type: array
+              description: The details of error message
+              items:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    description: Error Summary
+                  target:
+                    type: string
+                    description: Property that has encountered issue
+                  message:
+                    type: string
+                    description: The detailed error message
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    WorkFeeSettings:
+      description: The Fee Settings for a Work Item
+      properties:
+        FeeSettings:
+          description: The Fee Settings describe how the work will be billed, for FixedFee work the Fee Settings can include the value to be billed
+          type: object
+          properties:
+            FeeType:
+              type: string
+              description: The way the fee is calculated for the Work Item
+              enum:
+              - FixedFee
+              - TimeAndMaterials
+              - NonBillable
+              example: FixedFee
+            FeeValue:
+              type:
+              - number
+              - 'null'
+              description: The value of the fee in the currency of the Karbon account, this value must be null if FeeType is not FixedFee
+              example: 5150.2
+    WorkItemUserRoleAssignments:
+      description: The User assignments for specific Roles on a Work Item
+      properties:
+        UserRoleAssignments:
+          type: array
+          description: The array that describes the roles of the users associated with this Work Item.
+          items:
+            type: object
+            required:
+            - RoleKey
+            - UserProfileKey
+            properties:
+              RoleKey:
+                type: string
+                description: A Karbon-generated value used to identify the role of the user
+                example: 2mYzTtly89Lq
+              UserProfileKey:
+                type: string
+                description: A Karbon-generated value used to identify the user
+                example: 2Qy48WVCRBcP
+    WorkItemWithFeeSettings:
+      description: A Work Item with Fee Settings
+      allOf:
+      - $ref: '#/components/schemas/WorkItem'
+      - $ref: '#/components/schemas/WorkFeeSettings'
+    GetWorkItems:
+      description: A collection of work items
+      required:
+      - value
+      - '@odata.context'
+      - '@odata.count'
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#WorkItems/KarbonService.WorkItemSummaryDTO
+        '@odata.count':
+          type: integer
+          format: int64
+          example: 323
+          description: The total number of Work Items that satisfy the query criteria.
+        value:
+          type: array
+          items:
+            allOf:
+            - type: object
+              properties:
+                '@odata.type':
+                  type: string
+                  example: '#KarbonService.WorkItemSummaryDTO'
+                  description: The information about Karbon Objects generating this response.
+            - $ref: '#/components/schemas/WorkItem'
+        '@odata.nextLink':
+          type: string
+          example: https://api.karbonhq.com/v3/WorkItems?$skip=100
+          description: The link to next set of Work Items. @odata.nextLink field will only appear if you have more than 100 Work Items.
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    RequestCreateWorkItem:
+      description: A single work item
+      allOf:
+      - $ref: '#/components/schemas/WorkItemUpdate'
+      - $ref: '#/components/schemas/WorkFeeSettings'
+      - $ref: '#/components/schemas/WorkItemUserRoleAssignments'
     WorkItem:
       description: The base data for a Work Item
       required:
@@ -1183,6 +1040,143 @@ components:
           format: decimal
           description: Deprecated! - previously used as the estimated budget for the Work Item
           example: 1200.05
+  examples:
+    Bad_Model_WorkItem_Incorrect_WorkTemplate_Key:
+      description: A response shown when an invalid Work Template is provided when creating a Work Item
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.WorkTemplateKey
+            message: WorkTemplateKey is not a valid Work Template
+    Conflict_StaleObjectState:
+      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
+      value:
+        error:
+          code: '4020'
+          message: The resource was modified by another request. Refetch the latest version and retry.
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    WorkItem_Key_Not_Found_404:
+      description: The error returned when a Work Item cannot be found for the provided Work Item Key
+      value:
+        error:
+          code: '4004'
+          message: No Work Item found for provided key
+    Bad_Model_WorkItem_Incorrect_ClientType:
+      description: 'A response shown when an invalid Client Type is provided when creating or updating a Work Item '
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.ClientType
+            message: ClientType must be Contact, Organization, or ClientGroup
+    Bad_Model_WorkItem_Incorrect_EmailAddress:
+      description: 'A response shown when an invalid email is provided when creating or updating a Work Item '
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.AssigneeEmailAddress
+            message: Assignee Email Address is not a valid Email Address
+    Unsupported_Property_Filter:
+      description: The error returned when an unsupported filter is used in a request
+      value:
+        error:
+          code: '4002'
+          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
+    Missing_Create_Data:
+      description: The error returned when the request payload is missing a required value
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: <Entity>'
+    Invalid_Property:
+      description: The error returned when attempting to use PATCH to update a property that can only be updated as part of a PUT
+      value:
+        error:
+          code: '4002'
+          message: Invalid property to update. Only <Property name> can be patched.
+    Orderby_Unsupported_Property:
+      description: The error returned when an unsupported sort order is used in a request
+      value:
+        error:
+          code: '4002'
+          message: The property '<Property Name>' cannot be used in the $orderby query option.
+    Limit_Exceeded_Top:
+      description: The error returned when the limit is used in a request exceeds the maximum set for the API
+      value:
+        error:
+          code: '4002'
+          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
+    Bad_Model_WorkItem_Incorrect_ClientKey:
+      description: 'A response shown when an invalid Contact key is provided when creating or updating a Work Item '
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.ClientKey
+            message: ClientKey is not a valid Contact Key
+    Bad_Model_WorkItem_Empty_Property:
+      description: 'A response shown when a required field is not provided when creating or updating a Work Item '
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.<property_name>
+            message: The <property_name> field is required.
+    Bad_Model_WorkItem_Incorrect_WorkType:
+      description: 'A response shown when a Work Type is provided when creating or updating a Work Item '
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.WorkType
+            message: Work Type is not valid
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Bad_Model_WorkItem_Client_Not_a_member_of_ClientGroup:
+      description: A response shown when an invalid Client Group is provided when creating or updating a Work Item
+      value:
+        error:
+          code: '4003'
+          message: Invalid Model.
+          details:
+            code: InvalidProperty
+            target: workItem.<key>
+            message: Cannot assign Related Client Group as Client is not a member of this Group
+    Missing_Update_Data:
+      description: The error returned when the payload for an update is missing or invalid
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: update'
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
   parameters:
     SkipRecords:
       in: query
@@ -1215,6 +1209,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

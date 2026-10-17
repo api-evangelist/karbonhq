@@ -1,8 +1,7 @@
 {
   "provider": "karbonhq",
   "sources": [
-    "_original/KarbonAPI.json",
-    "karbonhq-openapi.yml"
+    "_original/KarbonAPI.json"
   ],
   "outputs": [
     "karbonhq-billing-api-openapi.yml",
@@ -25,35 +24,35 @@
     "karbonhq-work-schedules-api-openapi.yml",
     "karbonhq-work-templates-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/karbonhq-openapi.yml"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "1 archived document(s) dropped as subsets of other archived documents",
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "KarbonAPI.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "karbonhq-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "tag 'Billing' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Business Cards' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Client Groups' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Comments' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Contacts' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Custom Fields' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Estimate Summaries' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Files' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Integrated Workflows' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Notes' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Organizations' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Tenant Settings' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Timesheets and Time Entries' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Users' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Webhook Payloads' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Webhook Subscriptions' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Work Items' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Work Schedules' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "tag 'Work Templates' spans 2 source specs (KarbonAPI.json, karbonhq-openapi.yml): per-path servers applied",
-    "apis.yml register: written (+19 apis, 19 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "_original/karbonhq-openapi.yml: archived document superseded by a larger archived document",
+    "karbonhq-billing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-business-cards-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-client-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-comments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-contacts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-custom-fields-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-estimate-summaries-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-files-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-integrated-workflows-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-notes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-organizations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-tenant-settings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-timesheets-and-time-entries-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-webhook-payloads-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-webhook-subscriptions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-work-items-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-work-schedules-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "karbonhq-work-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

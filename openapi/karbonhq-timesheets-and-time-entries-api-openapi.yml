@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Timesheets and Time Entries API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Timesheets and Time Entries API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Timesheets and Time Entries across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -210,9 +210,6 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/Timesheets/{Timesheetkey}:
     get:
       deprecated: true
@@ -301,9 +298,6 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/IndividualTimeEntries:
     get:
       tags:
@@ -483,9 +477,6 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/IndividualTimeEntries/{IndividualTimeEntryKey}:
     get:
       tags:
@@ -560,17 +551,61 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
+  parameters:
+    TopRecordsLimitedTo1000:
+      in: query
+      name: $top
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 1000
+      example: 1000
+      description: Limit the number of items returned. Maximum value is 1000.
+    SkipRecords:
+      in: query
+      name: $skip
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+      example: 50
+      description: Skip the first n items
+    SkipRecordsUnbounded:
+      in: query
+      name: $skip
+      schema:
+        type: integer
+        minimum: 0
+      example: 1000
+      description: Skip the first n items. There is no upper limit on this value.
+    TopRecords:
+      in: query
+      name: $top
+      schema:
+        type: integer
+        minimum: 0
+      example: 10
+      description: Limit the number of items returned
   examples:
-    Unsupported_option:
-      description: The error returned when the query option in a request is not allowed for by the API
+    IndividualTimeEntry_Key_Not_Found_404:
+      description: The error returned when an individual time entry cannot be found for the provided key
       value:
         error:
-          code: '4002'
-          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
+          code: '4004'
+          message: No time entry found for provided key
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    Timesheet_Key_Not_Found_404:
+      description: The error returned when a Timesheet cannot be found for the provided Timesheet Key
+      value:
+        error:
+          code: '4004'
+          message: No timesheet found for provided key
     Unsupported_Property_Filter:
       description: The error returned when an unsupported filter is used in a request
       value:
@@ -583,30 +618,12 @@ components:
         error:
           code: '4002'
           message: Provided key must be a valid GUID.
-    UnauthorizedAccess:
-      description: A generic response shown when the API cannot confirm the authentication creditials provided
-      value:
-        error:
-          statusCode: '401'
-          message: JWT not present.
     Orderby_Unsupported_Property:
       description: The error returned when an unsupported sort order is used in a request
       value:
         error:
           code: '4002'
           message: The property '<Property Name>' cannot be used in the $orderby query option.
-    IndividualTimeEntry_Key_Not_Found_404:
-      description: The error returned when an individual time entry cannot be found for the provided key
-      value:
-        error:
-          code: '4004'
-          message: No time entry found for provided key
-    elongated_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
     Limit_Exceeded_Top:
       description: The error returned when the limit is used in a request exceeds the maximum set for the API
       value:
@@ -619,27 +636,125 @@ components:
         error:
           code: '4002'
           message: Logical operator '<Operator Name>' is not allowed. To allow it, set the 'AllowedLogicalOperators' property on EnableQueryAttribute or QueryValidationSettings.
-    Timesheet_Key_Not_Found_404:
-      description: The error returned when a Timesheet cannot be found for the provided Timesheet Key
+    elongated_5001:
+      description: A response shown when the API encounters an exception
       value:
         error:
-          code: '4004'
-          message: No timesheet found for provided key
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
   schemas:
-    ResourceNotFound:
-      description: A generic response shown when the API cannot find a requested entity
+    GetSingleTimeSheet:
+      description: A single TimeSheet with TimeEntries
       type: object
+      required:
+      - TimesheetKey
+      - StartDate
+      - EndDate
+      - UserKey
+      - Status
       properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '404'
-        message:
+        TimesheetKey:
           type: string
-          description: The error message
-          example: Resource not found
+          example: 3MslJsCcnnkm
+          description: A Karbon-generated unique identifier for the Timesheet
+        StartDate:
+          type: string
+          format: date-time
+          example: '2022-07-04T00:00:00Z'
+          description: The start date for the TimeSheet
+        EndDate:
+          type: string
+          format: date-time
+          example: '2022-07-10T00:00:00Z'
+          description: The end date for the TimeSheet
+        UserKey:
+          type: string
+          example: 2mYzTtly89Lq
+          description: A Karbon-generated key used to identify the user, this Timesheet belongs to
+        Status:
+          type: string
+          example: Draft
+          enum:
+          - Approved
+          - Declined
+          - Draft
+          - Submitted
+          description: The approval status of the Timesheet
+        WorkItemKeys:
+          type: array
+          description: An array of WorkItem keys
+          items:
+            type: string
+          example:
+          - 2m6pSFxRzcF2
+        TimeEntries:
+          type: array
+          description: An array of Time entries
+          items:
+            type: object
+            properties:
+              TimeEntryKey:
+                type: string
+                description: A Karbon-generated key used to identify the Time Entry
+                example: WYscpLQXR4J-2m6pSFxRzcF2-2mYzTtly89Lq-3j5ZpPT4RDbT-4kbT4BYLMLhv-QbQFGnqPDDs
+              EntityKey:
+                type: string
+                description: A Karbon-generated key used to identify the entity this Time Entry is related to
+                example: 2m6pSFxRzcF2
+              WorkItemKey:
+                type: string
+                description: A Karbon-generated key used to identify the Work Item this Time Entry is related to
+                example: 2m6pSFxRzcF2
+              ClientKey:
+                type: string
+                description: A Karbon-generated key used to identify the Client this Time Entry is related to
+                example: 2mYzTtly89Lq
+              ClientType:
+                type: string
+                description: The type of Client
+                example: Organization
+              RoleName:
+                type: string
+                description: The role of the user for whom the Time Entry was created
+                example: Accountant
+              TaskTypeName:
+                type: string
+                description: The type of task performed by the user
+                example: Auditing
+              Minutes:
+                type: integer
+                description: The total time (in minutes) spent on the task
+                example: 360
+              HourlyRate:
+                type: number
+                format: decimal
+                description: The hourly rate of the user who worked on the task
+                example: 80
+              Descriptions:
+                type: array
+                description: Free-form text that has more information about the Time Entry
+                items:
+                  type:
+                  - string
+                  - 'null'
+                  example: Continued working on the end-year accounting
+                example:
+                - Continued working on the end-year accounting
+              BilledStatus:
+                type: string
+                description: An indicator that represents whether the time entry has been or is in the process of being billed
+                example: Draft
+                enum:
+                - Unbilled
+                - Draft
+                - InterimBilled
+                - Billed
     RateLimitErrorMessage:
       description: The error message returned when the API rate limit is hit
       type: object
@@ -780,112 +895,6 @@ components:
           type: string
           example: Time and Materials
           description: The fee type associated with this time entry
-    GetSingleTimeSheet:
-      description: A single TimeSheet with TimeEntries
-      type: object
-      required:
-      - TimesheetKey
-      - StartDate
-      - EndDate
-      - UserKey
-      - Status
-      properties:
-        TimesheetKey:
-          type: string
-          example: 3MslJsCcnnkm
-          description: A Karbon-generated unique identifier for the Timesheet
-        StartDate:
-          type: string
-          format: date-time
-          example: '2022-07-04T00:00:00Z'
-          description: The start date for the TimeSheet
-        EndDate:
-          type: string
-          format: date-time
-          example: '2022-07-10T00:00:00Z'
-          description: The end date for the TimeSheet
-        UserKey:
-          type: string
-          example: 2mYzTtly89Lq
-          description: A Karbon-generated key used to identify the user, this Timesheet belongs to
-        Status:
-          type: string
-          example: Draft
-          enum:
-          - Approved
-          - Declined
-          - Draft
-          - Submitted
-          description: The approval status of the Timesheet
-        WorkItemKeys:
-          type: array
-          description: An array of WorkItem keys
-          items:
-            type: string
-          example:
-          - 2m6pSFxRzcF2
-        TimeEntries:
-          type: array
-          description: An array of Time entries
-          items:
-            type: object
-            properties:
-              TimeEntryKey:
-                type: string
-                description: A Karbon-generated key used to identify the Time Entry
-                example: WYscpLQXR4J-2m6pSFxRzcF2-2mYzTtly89Lq-3j5ZpPT4RDbT-4kbT4BYLMLhv-QbQFGnqPDDs
-              EntityKey:
-                type: string
-                description: A Karbon-generated key used to identify the entity this Time Entry is related to
-                example: 2m6pSFxRzcF2
-              WorkItemKey:
-                type: string
-                description: A Karbon-generated key used to identify the Work Item this Time Entry is related to
-                example: 2m6pSFxRzcF2
-              ClientKey:
-                type: string
-                description: A Karbon-generated key used to identify the Client this Time Entry is related to
-                example: 2mYzTtly89Lq
-              ClientType:
-                type: string
-                description: The type of Client
-                example: Organization
-              RoleName:
-                type: string
-                description: The role of the user for whom the Time Entry was created
-                example: Accountant
-              TaskTypeName:
-                type: string
-                description: The type of task performed by the user
-                example: Auditing
-              Minutes:
-                type: integer
-                description: The total time (in minutes) spent on the task
-                example: 360
-              HourlyRate:
-                type: number
-                format: decimal
-                description: The hourly rate of the user who worked on the task
-                example: 80
-              Descriptions:
-                type: array
-                description: Free-form text that has more information about the Time Entry
-                items:
-                  type:
-                  - string
-                  - 'null'
-                  example: Continued working on the end-year accounting
-                example:
-                - Continued working on the end-year accounting
-              BilledStatus:
-                type: string
-                description: An indicator that represents whether the time entry has been or is in the process of being billed
-                example: Draft
-                enum:
-                - Unbilled
-                - Draft
-                - InterimBilled
-                - Billed
     ErrorMessages:
       description: The details of an error associated with an API request
       required:
@@ -931,41 +940,20 @@ components:
           type: string
           example: https://api.karbonhq.com/v3/Timesheets?$skip=100
           description: The link to next set of Timesheets. @odata.nextLink field will only appear if you have more than 100 Timesheets.
-  parameters:
-    SkipRecords:
-      in: query
-      name: $skip
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 100
-      example: 50
-      description: Skip the first n items
-    SkipRecordsUnbounded:
-      in: query
-      name: $skip
-      schema:
-        type: integer
-        minimum: 0
-      example: 1000
-      description: Skip the first n items. There is no upper limit on this value.
-    TopRecords:
-      in: query
-      name: $top
-      schema:
-        type: integer
-        minimum: 0
-      example: 10
-      description: Limit the number of items returned
-    TopRecordsLimitedTo1000:
-      in: query
-      name: $top
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 1000
-      example: 1000
-      description: Limit the number of items returned. Maximum value is 1000.
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
   securitySchemes:
     BearerAuth:
       description: The Application ID for your API application, supplied by secure message when your Application is first registered
@@ -980,6 +968,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

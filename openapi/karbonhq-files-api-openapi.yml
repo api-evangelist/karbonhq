@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Files API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Files API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Files across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -211,9 +211,6 @@ paths:
                   $ref: '#/components/examples/Unsupported_File_Type'
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/FileDetails/{key}:
     get:
       tags:
@@ -269,9 +266,6 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/FileDetails/{key}/Download:
     get:
       tags:
@@ -329,9 +323,6 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/FileList/{EntityType}:
     get:
       tags:
@@ -461,54 +452,22 @@ paths:
                   $ref: '#/components/examples/Unsupported_File_Type'
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
-  examples:
-    Unsupported_option:
-      description: The error returned when the query option in a request is not allowed for by the API
-      value:
-        error:
-          code: '4002'
-          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
-    Unsupported_File_Type:
-      description: The error returned when attempting to upload an unsupported File Type
-      value:
-        error:
-          code: '5001'
-          message: Unsupported file type
-    FileEntityNotFound:
-      description: The error returned when a file is not found
-      value:
-        error:
-          code: '4004'
-          message: File entity is not found for permakey a3bXVhdMHgc9P
-    elongated_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
-    HTTP_Resource_Not_Found:
-      description: The error returned when the request path and request method does not match any configured API path and method
-      value:
-        error:
-          code: '4002'
-          message: No HTTP resource was found that matches the request URI 'http://api.karbonhq.com/v3/<endpoint>
-    UnauthorizedAccess:
-      description: A generic response shown when the API cannot confirm the authentication creditials provided
-      value:
-        error:
-          statusCode: '401'
-          message: JWT not present.
-    InvalidAttachmentToken:
-      description: The details of an error associated with an API request
-      value:
-        error:
-          code: '4001'
-          message: Attachment token could not be validated.
   schemas:
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
     ResourceNotFound:
       description: A generic response shown when the API cannot find a requested entity
       type: object
@@ -568,20 +527,6 @@ components:
           type: boolean
           example: true
           description: Whether the client can see the file. Files uploaded by a client, or attached to a Client Task, External Comment, Approval or eSignature, are always shared. Read-only.
-    RateLimitErrorMessage:
-      description: The error message returned when the API rate limit is hit
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '429'
-        message:
-          type: string
-          description: The error message
-          example: Rate limit is exceeded. Try again in 10 seconds.
     FileList:
       description: A collection of files associated with an entity in Karbon
       type: object
@@ -627,6 +572,49 @@ components:
               type: string
               example: The record could not be found
               description: The error message
+  examples:
+    FileEntityNotFound:
+      description: The error returned when a file is not found
+      value:
+        error:
+          code: '4004'
+          message: File entity is not found for permakey a3bXVhdMHgc9P
+    HTTP_Resource_Not_Found:
+      description: The error returned when the request path and request method does not match any configured API path and method
+      value:
+        error:
+          code: '4002'
+          message: No HTTP resource was found that matches the request URI 'http://api.karbonhq.com/v3/<endpoint>
+    Unsupported_File_Type:
+      description: The error returned when attempting to upload an unsupported File Type
+      value:
+        error:
+          code: '5001'
+          message: Unsupported file type
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    InvalidAttachmentToken:
+      description: The details of an error associated with an API request
+      value:
+        error:
+          code: '4001'
+          message: Attachment token could not be validated.
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
   securitySchemes:
     BearerAuth:
       description: The Application ID for your API application, supplied by secure message when your Application is first registered
@@ -641,6 +629,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

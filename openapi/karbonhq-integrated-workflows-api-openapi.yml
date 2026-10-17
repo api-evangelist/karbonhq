@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Integrated Workflows API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Integrated Workflows API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Integrated Workflows across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -34,9 +34,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IntegrationTaskDefinitions'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/IntegrationTasks:
     get:
       operationId: ListIntegrationTasks
@@ -54,9 +51,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IntegrationTasks'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/IntegrationTasks/{IntegrationTaskKey}:
     get:
       operationId: GetIntegrationTask
@@ -113,19 +107,21 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/IntegrationTaskWriteable'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
   parameters:
-    IntegrationTaskKey:
-      in: path
-      name: IntegrationTaskKey
+    IntegrationTaskListOrderBy:
+      in: query
+      name: $orderby
       schema:
         type: string
-      required: true
-      example: zmMgWgPRqCy
-      description: The unique key for a specific integration task
+      examples:
+        orderByCreatedAtDesc:
+          value: CreatedAt desc
+          summary: Order results by CreatedAt timestamp, newest to oldest (default)
+        orderByCreatedAtAsc:
+          value: CreatedAt
+          summary: Order results by CreatedAt timestamp, oldest to newest
+      description: Order responses by invoice date
     IntegrationTaskListFilter:
       in: query
       name: $filter
@@ -145,25 +141,81 @@ components:
           value: WorkIteClientKey eq '4f4gnvcDT2yQ'
           summary: Return Integration tasks that relate to a specific client
       description: The a filter applied to the list of integration tasks before they are returned
-    IntegrationTaskListOrderBy:
-      in: query
-      name: $orderby
+    IntegrationTaskKey:
+      in: path
+      name: IntegrationTaskKey
       schema:
         type: string
-      examples:
-        orderByCreatedAtDesc:
-          value: CreatedAt desc
-          summary: Order results by CreatedAt timestamp, newest to oldest (default)
-        orderByCreatedAtAsc:
-          value: CreatedAt
-          summary: Order results by CreatedAt timestamp, oldest to newest
-      description: Order responses by invoice date
+      required: true
+      example: zmMgWgPRqCy
+      description: The unique key for a specific integration task
   schemas:
-    IntegrationTask:
-      description: A single Integration Task
-      allOf:
-      - $ref: '#/components/schemas/IntegrationTaskReadOnly'
-      - $ref: '#/components/schemas/IntegrationTaskWriteable'
+    IntegrationTaskDefinitions:
+      description: A list of Integration Task Definitions
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          format: uri
+          example: https://api.karbonhq.com/v3/$metadata#IntegrationTaskDefinitions
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/IntegrationTaskDefinition'
+    IntegrationTaskData:
+      type: object
+      description: Optional integration task data key/value pairs
+      properties:
+        Key:
+          type: string
+          example: Last updated
+        Value:
+          type: string
+          example: 17 hours ago by client
+    IntegrationTaskReadOnly:
+      type: object
+      description: The read-only properties of an Integration Task
+      properties:
+        CreatedAt:
+          type: string
+          example: '2025-04-16T03:22:19Z'
+        TaskDefinitionKey:
+          type: string
+          example: b50e1712-2603-4707-b0d9-915050711267
+          description: The unique ID of the integration task definition
+        TaskKey:
+          type: string
+          example: yqjhtSrxQ6S
+          description: The unique key of the specific Integration Task Definition for the associated Karbon account
+        Locale:
+          description: The list of locales and languages the integration task definition is suitable for use with, useful when different definitions are required for different languages or locales
+          type: string
+          example: en-US
+        WorkItemKey:
+          type: string
+          example: 3lHtWNMVcTVQ
+        WorkItemClientKey:
+          type: string
+          example: 4f4gnvcDT2yQ
+        WorkType:
+          type: string
+          example: Tax
+    IntegrationTasks:
+      type: object
+      description: A list of Integration Tasks
+      properties:
+        '@odata.context':
+          type: string
+          format: uri
+          example: https://api-dev.karbonhq.com/v3/$metadata#IntegrationTasks
+        '@odata.count':
+          type: number
+          format: int32
+          example: 3
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/IntegrationTask'
     IntegrationTaskWriteable:
       type: object
       description: The writable properties of an Integration Task
@@ -227,50 +279,6 @@ components:
             Value: 1/9 items complete
           items:
             $ref: '#/components/schemas/IntegrationTaskData'
-    IntegrationTaskReadOnly:
-      type: object
-      description: The read-only properties of an Integration Task
-      properties:
-        CreatedAt:
-          type: string
-          example: '2025-04-16T03:22:19Z'
-        TaskDefinitionKey:
-          type: string
-          example: b50e1712-2603-4707-b0d9-915050711267
-          description: The unique ID of the integration task definition
-        TaskKey:
-          type: string
-          example: yqjhtSrxQ6S
-          description: The unique key of the specific Integration Task Definition for the associated Karbon account
-        Locale:
-          description: The list of locales and languages the integration task definition is suitable for use with, useful when different definitions are required for different languages or locales
-          type: string
-          example: en-US
-        WorkItemKey:
-          type: string
-          example: 3lHtWNMVcTVQ
-        WorkItemClientKey:
-          type: string
-          example: 4f4gnvcDT2yQ
-        WorkType:
-          type: string
-          example: Tax
-    IntegrationTasks:
-      type: object
-      description: A list of Integration Tasks
-      properties:
-        '@odata.context':
-          type: string
-          format: uri
-          example: https://api-dev.karbonhq.com/v3/$metadata#IntegrationTasks
-        '@odata.count':
-          type: number
-          format: int32
-          example: 3
-        value:
-          type: array
-          items:
-            $ref: '#/components/schemas/IntegrationTask'
     IntegrationTaskDefinition:
       description: A list of Integration Task Definitions
       type: object
@@ -325,16 +333,6 @@ components:
           items:
             type: string
             example: https://www.example.com
-    IntegrationTaskData:
-      type: object
-      description: Optional integration task data key/value pairs
-      properties:
-        Key:
-          type: string
-          example: Last updated
-        Value:
-          type: string
-          example: 17 hours ago by client
     ErrorMessages:
       description: The details of an error associated with an API request
       required:
@@ -355,18 +353,11 @@ components:
               type: string
               example: The record could not be found
               description: The error message
-    IntegrationTaskDefinitions:
-      description: A list of Integration Task Definitions
-      type: object
-      properties:
-        '@odata.context':
-          type: string
-          format: uri
-          example: https://api.karbonhq.com/v3/$metadata#IntegrationTaskDefinitions
-        values:
-          type: array
-          items:
-            $ref: '#/components/schemas/IntegrationTaskDefinition'
+    IntegrationTask:
+      description: A single Integration Task
+      allOf:
+      - $ref: '#/components/schemas/IntegrationTaskReadOnly'
+      - $ref: '#/components/schemas/IntegrationTaskWriteable'
   examples:
     Conflict_StaleObjectState:
       description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
@@ -388,6 +379,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

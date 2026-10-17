@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Contacts API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Contacts API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Contacts across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -339,9 +339,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateContact'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/Contacts/GetContactByUserDefinedIdentifier(UserDefinedIdentifier='{UserDefinedIdentifier}'):
     get:
       tags:
@@ -508,9 +505,6 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/Contacts/{Contactkey}:
     get:
       tags:
@@ -1012,147 +1006,36 @@ paths:
                   type: string
                   description: The suffix of the Contact
                   example: Jr.
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
-  examples:
-    Unsupported_option:
-      description: The error returned when the query option in a request is not allowed for by the API
-      value:
-        error:
-          code: '4002'
-          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
-    Unsupported_Property_Filter:
-      description: The error returned when an unsupported filter is used in a request
-      value:
-        error:
-          code: '4002'
-          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
-    Missing_Update_Data:
-      description: The error returned when the payload for an update is missing or invalid
-      value:
-        error:
-          code: '4005'
-          message: 'Required payload data is missing: update'
-    Missing_Create_Data:
-      description: The error returned when the request payload is missing a required value
-      value:
-        error:
-          code: '4005'
-          message: 'Required payload data is missing: <Entity>'
-    UnauthorizedAccess:
-      description: A generic response shown when the API cannot confirm the authentication creditials provided
-      value:
-        error:
-          statusCode: '401'
-          message: JWT not present.
-    Shortened_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Internal Error.
-    Duplicate_UDI:
-      description: The error returned when the request payload includes a User Defined Identifier which is already in use
-      value:
-        error:
-          code: '5001'
-          message: User defined identifier already in use
-    UDI_Is_Empty:
-      description: The error returned when a Client Group request cannot be fulfilled because a User Defined Identifier has not been provided
-      value:
-        error:
-          code: '4002'
-          message: UserDefinedIdentifier is missing or empty
-    Orderby_Unsupported_Property:
-      description: The error returned when an unsupported sort order is used in a request
-      value:
-        error:
-          code: '4002'
-          message: The property '<Property Name>' cannot be used in the $orderby query option.
-    ContactKey_Not_Found:
-      description: The error returned when a Contact cannot be found for the provided Contact Key
-      value:
-        error:
-          code: '4004'
-          message: No Contact found for provided key
-    ResourceNotFound:
-      description: A generic response shown when the API cannot find a requested path
-      value:
-        statusCode: '404'
-        message: Resource not found
-    elongated_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
-    RestrictionLevel_Permission_Denied:
-      description: The error returned when a request sets RestrictionLevel to a value the calling API application does not have permission to use
-      value:
-        error:
-          code: '4021'
-          message: This API application does not have permission to set RestrictionLevel to Hidden.
-    Invalid_Property:
-      description: The error returned when attempting to use PATCH to update a property that can only be updated as part of a PUT
-      value:
-        error:
-          code: '4002'
-          message: Invalid property to update. Only <Property name> can be patched.
-    UDI_Not_Found_Contact:
-      description: The error returned when a Contact request cannot be fulfilled because the provided User Defined Identifier does not exist
-      value:
-        error:
-          code: '4004'
-          message: No Contact found for provided UserDefinedIdentifer
-    Limit_Exceeded_Top:
-      description: The error returned when the limit is used in a request exceeds the maximum set for the API
-      value:
-        error:
-          code: '4002'
-          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
-    Conflict_StaleObjectState:
-      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
-      value:
-        error:
-          code: '4020'
-          message: The resource was modified by another request. Refetch the latest version and retry.
-    Update_Unsupported_Property:
-      description: The error returned when attempting to update a property on an Organization other than the FullName
-      value:
-        error:
-          code: '4002'
-          message: Invalid property to update. Only FullName can be patched
   schemas:
-    ResourceNotFound:
-      description: A generic response shown when the API cannot find a requested entity
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '404'
-        message:
-          type: string
-          description: The error message
-          example: Resource not found
-    RateLimitErrorMessage:
-      description: The error message returned when the API rate limit is hit
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '429'
-        message:
-          type: string
-          description: The error message
-          example: Rate limit is exceeded. Try again in 10 seconds.
+    ClientAccess:
+      description: A list of Organizations and People that the contact has been granted access to view in Karbon for Clients
+      readOnly: true
+      type: array
+      items:
+        type: object
+        properties:
+          ClientKey:
+            type: string
+            example: JTphCpQqQYg
+            description: The unique key of the Client
+          ClientType:
+            type: string
+            example: Contact
+            description: Whether the Client is an Organization or a Person
+            enum:
+            - Contact
+            - Organization
+          AccessLevel:
+            type:
+            - string
+            - 'null'
+            example: Limited
+            description: The level of access this contact has when viewing the specified client in Karbon for Clients
+            enum:
+            - Limited
+            - FullAccess
+            - null
     CreateContact:
       description: A single Contact
       required:
@@ -1231,6 +1114,20 @@ components:
           $ref: '#/components/schemas/DetailsOfAccounting'
         ClientTeam:
           $ref: '#/components/schemas/ClientTeam'
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
     ResponseCreateContact:
       description: A single Contact
       required:
@@ -1428,6 +1325,168 @@ components:
           type: string
           example: https://api.karbonhq.com/v3/Contacts?$skip=100
           description: The link to next set of Contacts. @odata.nextLink field will only appear if you have more than 100 Contacts.
+    BusinessCardRequest:
+      description: A business card associated with a contact or organization
+      type: object
+      properties:
+        BusinessCardKey:
+          type: string
+          description: A Karbon-generated unique identifier for the Business Card
+          example: ''
+          required: true
+        EntityType:
+          type: string
+          description: The type of entity this Business Card belongs to.
+          example: Contact
+          enum:
+          - Contact
+          - Organization
+          - ClientGroup
+        EntityKey:
+          type: string
+          description: A Karbon-generated key to indicate the entity (Contact, Organization, or ClientGroup) this Business Card belongs to.
+          example: 67zlxNyJSr8e
+        IsPrimaryCard:
+          type: boolean
+          description: Set to true, if this business card is also the primary business card for this entity.
+          example: true
+        OrganizationKey:
+          type:
+          - string
+          - 'null'
+          description: Used on the Business Card for a Contact to specify the Organization that the Contact is related to. Will always be null for an Organization business card.
+          example: 7NN1ySxv89B
+        WebSites:
+          description: The websites associated with this Business card.
+          type: array
+          items:
+            type: string
+          example:
+          - www.website.one
+          - www.website.two
+        EmailAddresses:
+          description: The email addresses associated with this Business card.
+          type: array
+          items:
+            type: string
+          example:
+          - sample@example.com
+          - sample.two@example.com
+        RoleOrTitle:
+          type:
+          - string
+          - 'null'
+          description: The business role or title of the contact this Business Cards belongs to
+          example: COO
+        FacebookLink:
+          type: string
+          description: The URL to the entity's Facebook profile
+          example: facebook.com/sampleName
+        LinkedInLink:
+          type: string
+          description: The URL to the entity's LinkedIn profile
+          example: linkedin.com/sampleName
+        TwitterLink:
+          type: string
+          description: The URL to the entity's Twitter profile
+          example: twitter.com/sampleName
+        SkypeLink:
+          type: string
+          description: The URL to the entity's Skype profile
+          example: skype.com/sampleName
+        Addresses:
+          type: array
+          items:
+            type: object
+            properties:
+              AddressLines:
+                type: string
+                description: Street Address
+                example: 45 Sample Street
+                maxLength: 200
+              City:
+                type: string
+                description: City
+                example: Alexandria
+                maxLength: 100
+              StateProvinceCounty:
+                type: string
+                description: State / Province / County
+                example: NSW
+                maxLength: 100
+              ZipCode:
+                type: string
+                description: ZipCode / PostCode
+                example: '2015'
+                maxLength: 20
+              CountryCode:
+                type: string
+                format: ISO 3166-1 alpha-2
+                description: Two letter Country Code
+                example: AU
+              Label:
+                type: string
+                description: The tag to indicate the type of Address
+                example: Physical
+                enum:
+                - Physical
+                - Mailing
+                - Legal
+                - Home
+        PhoneNumbers:
+          type: array
+          items:
+            type: object
+            properties:
+              Number:
+                type: string
+                description: The phone number of the entity
+                example: '1234567890'
+                maxLength: 20
+              CountryCode:
+                type: string
+                description: The phone number country code
+                example: AU
+              Label:
+                type: string
+                description: The tag to indicate the type of phone number
+                example: Work
+                enum:
+                - Work
+                - Mobile
+                - Office
+                - Fax
+                - Home
+                - Other
+    ClientTeam:
+      description: The Client Team associated with a contact or organization
+      type: array
+      items:
+        type: object
+        properties:
+          MemberKey:
+            type: string
+            example: JTphCpQqQYg
+            description: The unique key of the user or team assigned to the client team role
+          MemberType:
+            type: string
+            example: User
+            description: The type of member assigned to the client team, can be either User or Team
+            enum:
+            - User
+            - Team
+          RoleType:
+            type:
+            - string
+            - 'null'
+            example: ClientOwner
+            description: The specific role the user or team is assigned to, can be null if a member of the client team without a specific role
+            enum:
+            - ClientOwner
+            - ClientManager
+            - UserDefinedRole1
+            - UserDefinedRole2
+            - null
     ErrorMessages:
       description: The details of an error associated with an API request
       required:
@@ -1448,34 +1507,20 @@ components:
               type: string
               example: The record could not be found
               description: The error message
-    ClientAccess:
-      description: A list of Organizations and People that the contact has been granted access to view in Karbon for Clients
-      readOnly: true
-      type: array
-      items:
-        type: object
-        properties:
-          ClientKey:
-            type: string
-            example: JTphCpQqQYg
-            description: The unique key of the Client
-          ClientType:
-            type: string
-            example: Contact
-            description: Whether the Client is an Organization or a Person
-            enum:
-            - Contact
-            - Organization
-          AccessLevel:
-            type:
-            - string
-            - 'null'
-            example: Limited
-            description: The level of access this contact has when viewing the specified client in Karbon for Clients
-            enum:
-            - Limited
-            - FullAccess
-            - null
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
     DetailsOfAccounting:
       type: object
       description: The details specific to the Accounting firm related to this entity
@@ -1883,168 +1928,114 @@ components:
                 - System
                 - Owner
                 - Officer
-    ClientTeam:
-      description: The Client Team associated with a contact or organization
-      type: array
-      items:
-        type: object
-        properties:
-          MemberKey:
-            type: string
-            example: JTphCpQqQYg
-            description: The unique key of the user or team assigned to the client team role
-          MemberType:
-            type: string
-            example: User
-            description: The type of member assigned to the client team, can be either User or Team
-            enum:
-            - User
-            - Team
-          RoleType:
-            type:
-            - string
-            - 'null'
-            example: ClientOwner
-            description: The specific role the user or team is assigned to, can be null if a member of the client team without a specific role
-            enum:
-            - ClientOwner
-            - ClientManager
-            - UserDefinedRole1
-            - UserDefinedRole2
-            - null
-    BusinessCardRequest:
-      description: A business card associated with a contact or organization
-      type: object
-      properties:
-        BusinessCardKey:
-          type: string
-          description: A Karbon-generated unique identifier for the Business Card
-          example: ''
-          required: true
-        EntityType:
-          type: string
-          description: The type of entity this Business Card belongs to.
-          example: Contact
-          enum:
-          - Contact
-          - Organization
-          - ClientGroup
-        EntityKey:
-          type: string
-          description: A Karbon-generated key to indicate the entity (Contact, Organization, or ClientGroup) this Business Card belongs to.
-          example: 67zlxNyJSr8e
-        IsPrimaryCard:
-          type: boolean
-          description: Set to true, if this business card is also the primary business card for this entity.
-          example: true
-        OrganizationKey:
-          type:
-          - string
-          - 'null'
-          description: Used on the Business Card for a Contact to specify the Organization that the Contact is related to. Will always be null for an Organization business card.
-          example: 7NN1ySxv89B
-        WebSites:
-          description: The websites associated with this Business card.
-          type: array
-          items:
-            type: string
-          example:
-          - www.website.one
-          - www.website.two
-        EmailAddresses:
-          description: The email addresses associated with this Business card.
-          type: array
-          items:
-            type: string
-          example:
-          - sample@example.com
-          - sample.two@example.com
-        RoleOrTitle:
-          type:
-          - string
-          - 'null'
-          description: The business role or title of the contact this Business Cards belongs to
-          example: COO
-        FacebookLink:
-          type: string
-          description: The URL to the entity's Facebook profile
-          example: facebook.com/sampleName
-        LinkedInLink:
-          type: string
-          description: The URL to the entity's LinkedIn profile
-          example: linkedin.com/sampleName
-        TwitterLink:
-          type: string
-          description: The URL to the entity's Twitter profile
-          example: twitter.com/sampleName
-        SkypeLink:
-          type: string
-          description: The URL to the entity's Skype profile
-          example: skype.com/sampleName
-        Addresses:
-          type: array
-          items:
-            type: object
-            properties:
-              AddressLines:
-                type: string
-                description: Street Address
-                example: 45 Sample Street
-                maxLength: 200
-              City:
-                type: string
-                description: City
-                example: Alexandria
-                maxLength: 100
-              StateProvinceCounty:
-                type: string
-                description: State / Province / County
-                example: NSW
-                maxLength: 100
-              ZipCode:
-                type: string
-                description: ZipCode / PostCode
-                example: '2015'
-                maxLength: 20
-              CountryCode:
-                type: string
-                format: ISO 3166-1 alpha-2
-                description: Two letter Country Code
-                example: AU
-              Label:
-                type: string
-                description: The tag to indicate the type of Address
-                example: Physical
-                enum:
-                - Physical
-                - Mailing
-                - Legal
-                - Home
-        PhoneNumbers:
-          type: array
-          items:
-            type: object
-            properties:
-              Number:
-                type: string
-                description: The phone number of the entity
-                example: '1234567890'
-                maxLength: 20
-              CountryCode:
-                type: string
-                description: The phone number country code
-                example: AU
-              Label:
-                type: string
-                description: The tag to indicate the type of phone number
-                example: Work
-                enum:
-                - Work
-                - Mobile
-                - Office
-                - Fax
-                - Home
-                - Other
+  examples:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested path
+      value:
+        statusCode: '404'
+        message: Resource not found
+    Conflict_StaleObjectState:
+      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
+      value:
+        error:
+          code: '4020'
+          message: The resource was modified by another request. Refetch the latest version and retry.
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    UDI_Not_Found_Contact:
+      description: The error returned when a Contact request cannot be fulfilled because the provided User Defined Identifier does not exist
+      value:
+        error:
+          code: '4004'
+          message: No Contact found for provided UserDefinedIdentifer
+    Update_Unsupported_Property:
+      description: The error returned when attempting to update a property on an Organization other than the FullName
+      value:
+        error:
+          code: '4002'
+          message: Invalid property to update. Only FullName can be patched
+    Duplicate_UDI:
+      description: The error returned when the request payload includes a User Defined Identifier which is already in use
+      value:
+        error:
+          code: '5001'
+          message: User defined identifier already in use
+    UDI_Is_Empty:
+      description: The error returned when a Client Group request cannot be fulfilled because a User Defined Identifier has not been provided
+      value:
+        error:
+          code: '4002'
+          message: UserDefinedIdentifier is missing or empty
+    Missing_Create_Data:
+      description: The error returned when the request payload is missing a required value
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: <Entity>'
+    Unsupported_Property_Filter:
+      description: The error returned when an unsupported filter is used in a request
+      value:
+        error:
+          code: '4002'
+          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
+    Invalid_Property:
+      description: The error returned when attempting to use PATCH to update a property that can only be updated as part of a PUT
+      value:
+        error:
+          code: '4002'
+          message: Invalid property to update. Only <Property name> can be patched.
+    Orderby_Unsupported_Property:
+      description: The error returned when an unsupported sort order is used in a request
+      value:
+        error:
+          code: '4002'
+          message: The property '<Property Name>' cannot be used in the $orderby query option.
+    Limit_Exceeded_Top:
+      description: The error returned when the limit is used in a request exceeds the maximum set for the API
+      value:
+        error:
+          code: '4002'
+          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
+    RestrictionLevel_Permission_Denied:
+      description: The error returned when a request sets RestrictionLevel to a value the calling API application does not have permission to use
+      value:
+        error:
+          code: '4021'
+          message: This API application does not have permission to set RestrictionLevel to Hidden.
+    Shortened_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Internal Error.
+    ContactKey_Not_Found:
+      description: The error returned when a Contact cannot be found for the provided Contact Key
+      value:
+        error:
+          code: '4004'
+          message: No Contact found for provided key
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Missing_Update_Data:
+      description: The error returned when the payload for an update is missing or invalid
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: update'
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
   parameters:
     SkipRecords:
       in: query
@@ -2077,6 +2068,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

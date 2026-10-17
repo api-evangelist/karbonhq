@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Client Groups API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Client Groups API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Client Groups across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -246,9 +246,6 @@ paths:
               - MemberKey: 2q2wx44pTBNh
                 MemberType: User
                 RoleType: ClientManager
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/ClientGroups/GetClientGroupByUserDefinedIdentifier(UserDefinedIdentifier='{UserDefinedIdentifier}'):
     get:
       tags:
@@ -394,9 +391,6 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/ClientGroups/{ClientGroupkey}:
     get:
       tags:
@@ -773,155 +767,99 @@ paths:
                   example: Abigail Silvers
             example:
               FullName: Abigail Silvers
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
-  examples:
-    Unsupported_option:
-      description: The error returned when the query option in a request is not allowed for by the API
-      value:
-        error:
-          code: '4002'
-          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
-    Unsupported_Property_Filter:
-      description: The error returned when an unsupported filter is used in a request
-      value:
-        error:
-          code: '4002'
-          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
-    Missing_Update_Data:
-      description: The error returned when the payload for an update is missing or invalid
-      value:
-        error:
-          code: '4005'
-          message: 'Required payload data is missing: update'
-    Key_Not_Found:
-      description: The error returned when a Client Group cannot be found using the requested Client Group Key
-      value:
-        error:
-          code: '4004'
-          message: No Client Group found for provided key
-    Missing_Create_Data:
-      description: The error returned when the request payload is missing a required value
-      value:
-        error:
-          code: '4005'
-          message: 'Required payload data is missing: <Entity>'
-    UnauthorizedAccess:
-      description: A generic response shown when the API cannot confirm the authentication creditials provided
-      value:
-        error:
-          statusCode: '401'
-          message: JWT not present.
-    Shortened_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Internal Error.
-    Duplicate_UDI:
-      description: The error returned when the request payload includes a User Defined Identifier which is already in use
-      value:
-        error:
-          code: '5001'
-          message: User defined identifier already in use
-    UDI_Is_Empty:
-      description: The error returned when a Client Group request cannot be fulfilled because a User Defined Identifier has not been provided
-      value:
-        error:
-          code: '4002'
-          message: UserDefinedIdentifier is missing or empty
-    Orderby_Unsupported_Property:
-      description: The error returned when an unsupported sort order is used in a request
-      value:
-        error:
-          code: '4002'
-          message: The property '<Property Name>' cannot be used in the $orderby query option.
-    ResourceNotFound:
-      description: A generic response shown when the API cannot find a requested path
-      value:
-        statusCode: '404'
-        message: Resource not found
-    UDI_Not_Found:
-      description: The error returned when a Client Group request cannot be fulfilled because the provided User Defined Identifier does not exist
-      value:
-        error:
-          code: '4004'
-          message: No Client Group found for provided UserDefinedIdentifer
-    elongated_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
-    Limit_Exceeded_Top:
-      description: The error returned when the limit is used in a request exceeds the maximum set for the API
-      value:
-        error:
-          code: '4002'
-          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
-    Conflict_StaleObjectState:
-      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
-      value:
-        error:
-          code: '4020'
-          message: The resource was modified by another request. Refetch the latest version and retry.
-    Update_Unsupported_Property:
-      description: The error returned when attempting to update a property on an Organization other than the FullName
-      value:
-        error:
-          code: '4002'
-          message: Invalid property to update. Only FullName can be patched
   schemas:
-    ResourceNotFound:
-      description: A generic response shown when the API cannot find a requested entity
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '404'
-        message:
-          type: string
-          description: The error message
-          example: Resource not found
-    RateLimitErrorMessage:
-      description: The error message returned when the API rate limit is hit
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '429'
-        message:
-          type: string
-          description: The error message
-          example: Rate limit is exceeded. Try again in 10 seconds.
-    ErrorMessages:
-      description: The details of an error associated with an API request
+    ResponseCreateClientGroup:
+      description: A single Client Group
       required:
-      - error
+      - ClientGroupKey
+      - FullName
+      - RestrictionLevel
+      - UserDefinedIdentifier
       type: object
       properties:
-        error:
-          required:
-          - code
-          - message
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#ClientGroups/$entity
+        '@odata.type':
+          type: string
+          description: The information about Karbon Objects generating this response.
+          example: '#KarbonService.ClientGroupDTO'
+        ClientGroupKey:
+          type: string
+          description: A Karbon-generated value that is used to identify the Client Group
+          example: 38zlxNyJSr8y
+        FullName:
+          type: string
+          description: The full name of the Client Group
+          example: Abigail Silvers
+        ClientOwner:
+          type: string
+          description: The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the clients in this Client Group. You can only use the UserKey or the email address of an existing team member.
+          example: rodney.muller@samplecompany.com
+        ClientManager:
+          type: string
+          description: The team member in your firm who manages the work for the clients in this Client Group. You can only use the UserKey or the email address of an existing team member.
+          example: jessica.tse@samplecompany.com
+        ContactType:
+          type: string
+          description: The Contact Type for this Client Group. You can only use existing Contact Type.
+          example: Client
+        UserDefinedIdentifier:
+          type: string
+          description: A unique key that you can use to identify this Client Group.
+          example: SILVERS
+        RestrictionLevel:
+          type: string
+          description: 'The privacy level for this Client Group.
+
+
+            <ul><li>Public Client Groups can be managed by anyone in the firm</li> <li>Private Client Groups can only be managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team). Basic details (name of the Contacts and the Work Items) related to such Client Groups are visible to anyone in the firm.</li> <li>Hidden Client Groups are only be visible to and managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team).</li>
+
+            '
+          example: Public
+          default: Public
+          enum:
+          - Public
+          - Private
+          - Hidden
+        PrimaryContact:
+          type: string
+          description: The main contact for a client with multiple contact details.
+          example: Duncan Moore
+        LastModifiedDateTime:
+          type: string
+          format: date-time
+          description: The date and time at which this Client Group was last modified.
+          example: '2022-07-05T07:30:13.7188114Z'
+        Members:
+          description: The members of the Client Group
+          type: array
+          items:
+            type:
+            - object
+            - 'null'
+            properties:
+              ContactKey:
+                type:
+                - string
+                - 'null'
+                description: A Karbon-generated value that is used to identify the Contact
+                example: 34yxkY51knn7
+              OrganizationKey:
+                type:
+                - string
+                - 'null'
+                description: A Karbon-generated value that is used to identify the Organization
+                example: 4ncPZ7q96SGc
+        EntityDescription:
           type: object
           properties:
-            code:
+            Text:
               type: string
-              example: '4004'
-              description: A Karbon-generated code to identify the error
-            message:
-              type: string
-              example: The record could not be found
-              description: The error message
+              description: Free-form text that can be used to add more information about the Client Group
+              example: Bicycle rental service in the New jersey area.
     CreateClientGroup:
       description: A single Client Group
       required:
@@ -993,6 +931,276 @@ components:
                 - 'null'
                 description: A Karbon-generated value that is used to identify the Organization
                 example: 4ncPZ7q96SGc
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    GetClientGroup:
+      description: A list of Client Groups
+      required:
+      - value
+      - '@odata.context'
+      - '@odata.count'
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#ClientGroups/KarbonService.ClientGroupSummaryDTO
+        '@odata.count':
+          type: integer
+          format: int64
+          example: 323
+          description: The total number of Client Groups that satisfy the query criteria.
+        value:
+          type: array
+          items:
+            required:
+            - FullName
+            - LastModifiedDateTime
+            - ClientGroupKey
+            - '@odata.type'
+            type: object
+            properties:
+              '@odata.type':
+                type: string
+                example: '#KarbonService.ClientGroupSummaryDTO'
+                description: The information about Karbon Objects generating this response.
+              FullName:
+                type: string
+                example: Sample Management Team
+                description: The full name of the Client Group
+              PhoneNumber:
+                type:
+                - string
+                - 'null'
+                example: 0987888686
+                description: The phone number associated with the Client Group
+              Website:
+                type:
+                - string
+                - 'null'
+                example: www.samplemanagement.com
+                description: The website associated with the Client Group
+              LastModifiedDateTime:
+                type: string
+                format: date-time
+                description: The date and time at which the Client Group was most recently modified.
+                example: '2021-12-29T07:01:53Z'
+              ClientGroupKey:
+                type: string
+                description: A Karbon-generated unique identifier for the Client Group
+                example: 4DHFn8T3J7N5
+        '@odata.nextLink':
+          type: string
+          example: https://api.karbonhq.com/v3/ClientGroups?$skip=100
+          description: The link to next set of Client Groups. @odata.nextLink field will only appear if you have more than 100 Client Groups.
+    BusinessCardRequest:
+      description: A business card associated with a contact or organization
+      type: object
+      properties:
+        BusinessCardKey:
+          type: string
+          description: A Karbon-generated unique identifier for the Business Card
+          example: ''
+          required: true
+        EntityType:
+          type: string
+          description: The type of entity this Business Card belongs to.
+          example: Contact
+          enum:
+          - Contact
+          - Organization
+          - ClientGroup
+        EntityKey:
+          type: string
+          description: A Karbon-generated key to indicate the entity (Contact, Organization, or ClientGroup) this Business Card belongs to.
+          example: 67zlxNyJSr8e
+        IsPrimaryCard:
+          type: boolean
+          description: Set to true, if this business card is also the primary business card for this entity.
+          example: true
+        OrganizationKey:
+          type:
+          - string
+          - 'null'
+          description: Used on the Business Card for a Contact to specify the Organization that the Contact is related to. Will always be null for an Organization business card.
+          example: 7NN1ySxv89B
+        WebSites:
+          description: The websites associated with this Business card.
+          type: array
+          items:
+            type: string
+          example:
+          - www.website.one
+          - www.website.two
+        EmailAddresses:
+          description: The email addresses associated with this Business card.
+          type: array
+          items:
+            type: string
+          example:
+          - sample@example.com
+          - sample.two@example.com
+        RoleOrTitle:
+          type:
+          - string
+          - 'null'
+          description: The business role or title of the contact this Business Cards belongs to
+          example: COO
+        FacebookLink:
+          type: string
+          description: The URL to the entity's Facebook profile
+          example: facebook.com/sampleName
+        LinkedInLink:
+          type: string
+          description: The URL to the entity's LinkedIn profile
+          example: linkedin.com/sampleName
+        TwitterLink:
+          type: string
+          description: The URL to the entity's Twitter profile
+          example: twitter.com/sampleName
+        SkypeLink:
+          type: string
+          description: The URL to the entity's Skype profile
+          example: skype.com/sampleName
+        Addresses:
+          type: array
+          items:
+            type: object
+            properties:
+              AddressLines:
+                type: string
+                description: Street Address
+                example: 45 Sample Street
+                maxLength: 200
+              City:
+                type: string
+                description: City
+                example: Alexandria
+                maxLength: 100
+              StateProvinceCounty:
+                type: string
+                description: State / Province / County
+                example: NSW
+                maxLength: 100
+              ZipCode:
+                type: string
+                description: ZipCode / PostCode
+                example: '2015'
+                maxLength: 20
+              CountryCode:
+                type: string
+                format: ISO 3166-1 alpha-2
+                description: Two letter Country Code
+                example: AU
+              Label:
+                type: string
+                description: The tag to indicate the type of Address
+                example: Physical
+                enum:
+                - Physical
+                - Mailing
+                - Legal
+                - Home
+        PhoneNumbers:
+          type: array
+          items:
+            type: object
+            properties:
+              Number:
+                type: string
+                description: The phone number of the entity
+                example: '1234567890'
+                maxLength: 20
+              CountryCode:
+                type: string
+                description: The phone number country code
+                example: AU
+              Label:
+                type: string
+                description: The tag to indicate the type of phone number
+                example: Work
+                enum:
+                - Work
+                - Mobile
+                - Office
+                - Fax
+                - Home
+                - Other
+    ClientTeam:
+      description: The Client Team associated with a contact or organization
+      type: array
+      items:
+        type: object
+        properties:
+          MemberKey:
+            type: string
+            example: JTphCpQqQYg
+            description: The unique key of the user or team assigned to the client team role
+          MemberType:
+            type: string
+            example: User
+            description: The type of member assigned to the client team, can be either User or Team
+            enum:
+            - User
+            - Team
+          RoleType:
+            type:
+            - string
+            - 'null'
+            example: ClientOwner
+            description: The specific role the user or team is assigned to, can be null if a member of the client team without a specific role
+            enum:
+            - ClientOwner
+            - ClientManager
+            - UserDefinedRole1
+            - UserDefinedRole2
+            - null
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
     BusinessCard:
       description: A business card associated with a contact or organization
       type: object
@@ -1129,319 +1337,102 @@ components:
                 - Fax
                 - Home
                 - Other
-    GetClientGroup:
-      description: A list of Client Groups
-      required:
-      - value
-      - '@odata.context'
-      - '@odata.count'
-      type: object
-      properties:
-        '@odata.context':
-          type: string
-          description: The information about Karbon controllers generating this response.
-          example: https://api.karbonhq.com/v3/$metadata#ClientGroups/KarbonService.ClientGroupSummaryDTO
-        '@odata.count':
-          type: integer
-          format: int64
-          example: 323
-          description: The total number of Client Groups that satisfy the query criteria.
-        value:
-          type: array
-          items:
-            required:
-            - FullName
-            - LastModifiedDateTime
-            - ClientGroupKey
-            - '@odata.type'
-            type: object
-            properties:
-              '@odata.type':
-                type: string
-                example: '#KarbonService.ClientGroupSummaryDTO'
-                description: The information about Karbon Objects generating this response.
-              FullName:
-                type: string
-                example: Sample Management Team
-                description: The full name of the Client Group
-              PhoneNumber:
-                type:
-                - string
-                - 'null'
-                example: 0987888686
-                description: The phone number associated with the Client Group
-              Website:
-                type:
-                - string
-                - 'null'
-                example: www.samplemanagement.com
-                description: The website associated with the Client Group
-              LastModifiedDateTime:
-                type: string
-                format: date-time
-                description: The date and time at which the Client Group was most recently modified.
-                example: '2021-12-29T07:01:53Z'
-              ClientGroupKey:
-                type: string
-                description: A Karbon-generated unique identifier for the Client Group
-                example: 4DHFn8T3J7N5
-        '@odata.nextLink':
-          type: string
-          example: https://api.karbonhq.com/v3/ClientGroups?$skip=100
-          description: The link to next set of Client Groups. @odata.nextLink field will only appear if you have more than 100 Client Groups.
-    ClientTeam:
-      description: The Client Team associated with a contact or organization
-      type: array
-      items:
-        type: object
-        properties:
-          MemberKey:
-            type: string
-            example: JTphCpQqQYg
-            description: The unique key of the user or team assigned to the client team role
-          MemberType:
-            type: string
-            example: User
-            description: The type of member assigned to the client team, can be either User or Team
-            enum:
-            - User
-            - Team
-          RoleType:
-            type:
-            - string
-            - 'null'
-            example: ClientOwner
-            description: The specific role the user or team is assigned to, can be null if a member of the client team without a specific role
-            enum:
-            - ClientOwner
-            - ClientManager
-            - UserDefinedRole1
-            - UserDefinedRole2
-            - null
-    BusinessCardRequest:
-      description: A business card associated with a contact or organization
-      type: object
-      properties:
-        BusinessCardKey:
-          type: string
-          description: A Karbon-generated unique identifier for the Business Card
-          example: ''
-          required: true
-        EntityType:
-          type: string
-          description: The type of entity this Business Card belongs to.
-          example: Contact
-          enum:
-          - Contact
-          - Organization
-          - ClientGroup
-        EntityKey:
-          type: string
-          description: A Karbon-generated key to indicate the entity (Contact, Organization, or ClientGroup) this Business Card belongs to.
-          example: 67zlxNyJSr8e
-        IsPrimaryCard:
-          type: boolean
-          description: Set to true, if this business card is also the primary business card for this entity.
-          example: true
-        OrganizationKey:
-          type:
-          - string
-          - 'null'
-          description: Used on the Business Card for a Contact to specify the Organization that the Contact is related to. Will always be null for an Organization business card.
-          example: 7NN1ySxv89B
-        WebSites:
-          description: The websites associated with this Business card.
-          type: array
-          items:
-            type: string
-          example:
-          - www.website.one
-          - www.website.two
-        EmailAddresses:
-          description: The email addresses associated with this Business card.
-          type: array
-          items:
-            type: string
-          example:
-          - sample@example.com
-          - sample.two@example.com
-        RoleOrTitle:
-          type:
-          - string
-          - 'null'
-          description: The business role or title of the contact this Business Cards belongs to
-          example: COO
-        FacebookLink:
-          type: string
-          description: The URL to the entity's Facebook profile
-          example: facebook.com/sampleName
-        LinkedInLink:
-          type: string
-          description: The URL to the entity's LinkedIn profile
-          example: linkedin.com/sampleName
-        TwitterLink:
-          type: string
-          description: The URL to the entity's Twitter profile
-          example: twitter.com/sampleName
-        SkypeLink:
-          type: string
-          description: The URL to the entity's Skype profile
-          example: skype.com/sampleName
-        Addresses:
-          type: array
-          items:
-            type: object
-            properties:
-              AddressLines:
-                type: string
-                description: Street Address
-                example: 45 Sample Street
-                maxLength: 200
-              City:
-                type: string
-                description: City
-                example: Alexandria
-                maxLength: 100
-              StateProvinceCounty:
-                type: string
-                description: State / Province / County
-                example: NSW
-                maxLength: 100
-              ZipCode:
-                type: string
-                description: ZipCode / PostCode
-                example: '2015'
-                maxLength: 20
-              CountryCode:
-                type: string
-                format: ISO 3166-1 alpha-2
-                description: Two letter Country Code
-                example: AU
-              Label:
-                type: string
-                description: The tag to indicate the type of Address
-                example: Physical
-                enum:
-                - Physical
-                - Mailing
-                - Legal
-                - Home
-        PhoneNumbers:
-          type: array
-          items:
-            type: object
-            properties:
-              Number:
-                type: string
-                description: The phone number of the entity
-                example: '1234567890'
-                maxLength: 20
-              CountryCode:
-                type: string
-                description: The phone number country code
-                example: AU
-              Label:
-                type: string
-                description: The tag to indicate the type of phone number
-                example: Work
-                enum:
-                - Work
-                - Mobile
-                - Office
-                - Fax
-                - Home
-                - Other
-    ResponseCreateClientGroup:
-      description: A single Client Group
-      required:
-      - ClientGroupKey
-      - FullName
-      - RestrictionLevel
-      - UserDefinedIdentifier
-      type: object
-      properties:
-        '@odata.context':
-          type: string
-          description: The information about Karbon controllers generating this response.
-          example: https://api.karbonhq.com/v3/$metadata#ClientGroups/$entity
-        '@odata.type':
-          type: string
-          description: The information about Karbon Objects generating this response.
-          example: '#KarbonService.ClientGroupDTO'
-        ClientGroupKey:
-          type: string
-          description: A Karbon-generated value that is used to identify the Client Group
-          example: 38zlxNyJSr8y
-        FullName:
-          type: string
-          description: The full name of the Client Group
-          example: Abigail Silvers
-        ClientOwner:
-          type: string
-          description: The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the clients in this Client Group. You can only use the UserKey or the email address of an existing team member.
-          example: rodney.muller@samplecompany.com
-        ClientManager:
-          type: string
-          description: The team member in your firm who manages the work for the clients in this Client Group. You can only use the UserKey or the email address of an existing team member.
-          example: jessica.tse@samplecompany.com
-        ContactType:
-          type: string
-          description: The Contact Type for this Client Group. You can only use existing Contact Type.
-          example: Client
-        UserDefinedIdentifier:
-          type: string
-          description: A unique key that you can use to identify this Client Group.
-          example: SILVERS
-        RestrictionLevel:
-          type: string
-          description: 'The privacy level for this Client Group.
-
-
-            <ul><li>Public Client Groups can be managed by anyone in the firm</li> <li>Private Client Groups can only be managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team). Basic details (name of the Contacts and the Work Items) related to such Client Groups are visible to anyone in the firm.</li> <li>Hidden Client Groups are only be visible to and managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team).</li>
-
-            '
-          example: Public
-          default: Public
-          enum:
-          - Public
-          - Private
-          - Hidden
-        PrimaryContact:
-          type: string
-          description: The main contact for a client with multiple contact details.
-          example: Duncan Moore
-        LastModifiedDateTime:
-          type: string
-          format: date-time
-          description: The date and time at which this Client Group was last modified.
-          example: '2022-07-05T07:30:13.7188114Z'
-        Members:
-          description: The members of the Client Group
-          type: array
-          items:
-            type:
-            - object
-            - 'null'
-            properties:
-              ContactKey:
-                type:
-                - string
-                - 'null'
-                description: A Karbon-generated value that is used to identify the Contact
-                example: 34yxkY51knn7
-              OrganizationKey:
-                type:
-                - string
-                - 'null'
-                description: A Karbon-generated value that is used to identify the Organization
-                example: 4ncPZ7q96SGc
-        EntityDescription:
-          type: object
-          properties:
-            Text:
-              type: string
-              description: Free-form text that can be used to add more information about the Client Group
-              example: Bicycle rental service in the New jersey area.
+  examples:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested path
+      value:
+        statusCode: '404'
+        message: Resource not found
+    Conflict_StaleObjectState:
+      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
+      value:
+        error:
+          code: '4020'
+          message: The resource was modified by another request. Refetch the latest version and retry.
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    Update_Unsupported_Property:
+      description: The error returned when attempting to update a property on an Organization other than the FullName
+      value:
+        error:
+          code: '4002'
+          message: Invalid property to update. Only FullName can be patched
+    Duplicate_UDI:
+      description: The error returned when the request payload includes a User Defined Identifier which is already in use
+      value:
+        error:
+          code: '5001'
+          message: User defined identifier already in use
+    Key_Not_Found:
+      description: The error returned when a Client Group cannot be found using the requested Client Group Key
+      value:
+        error:
+          code: '4004'
+          message: No Client Group found for provided key
+    UDI_Is_Empty:
+      description: The error returned when a Client Group request cannot be fulfilled because a User Defined Identifier has not been provided
+      value:
+        error:
+          code: '4002'
+          message: UserDefinedIdentifier is missing or empty
+    Unsupported_Property_Filter:
+      description: The error returned when an unsupported filter is used in a request
+      value:
+        error:
+          code: '4002'
+          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
+    Missing_Create_Data:
+      description: The error returned when the request payload is missing a required value
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: <Entity>'
+    Orderby_Unsupported_Property:
+      description: The error returned when an unsupported sort order is used in a request
+      value:
+        error:
+          code: '4002'
+          message: The property '<Property Name>' cannot be used in the $orderby query option.
+    Limit_Exceeded_Top:
+      description: The error returned when the limit is used in a request exceeds the maximum set for the API
+      value:
+        error:
+          code: '4002'
+          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
+    Shortened_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Internal Error.
+    UDI_Not_Found:
+      description: The error returned when a Client Group request cannot be fulfilled because the provided User Defined Identifier does not exist
+      value:
+        error:
+          code: '4004'
+          message: No Client Group found for provided UserDefinedIdentifer
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Missing_Update_Data:
+      description: The error returned when the payload for an update is missing or invalid
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: update'
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
   parameters:
     SkipRecords:
       in: query
@@ -1474,6 +1465,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

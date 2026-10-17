@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Tenant Settings API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Tenant Settings API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Tenant Settings across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -137,11 +137,93 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RateLimitErrorMessage'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
   schemas:
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    SettingWorkType:
+      description: The schema for a single Work Type entry
+      type: object
+      properties:
+        Name:
+          type: string
+          description: The name assigned to the Work Type
+          example: Tax
+        WorkTypeKey:
+          type: string
+          description: The unique key assigned to the Work Type
+          example: a1b2c3d4e5
+        AvailableStatuses:
+          type: object
+          properties:
+            primary:
+              type: array
+              items:
+                type: string
+                description: The name of the Primary Status
+                example: Active
+            secondary:
+              type: array
+              items:
+                type: string
+                description: The unique key of the secondary Work Status that can be used with this Work Type
+                example: r2t4p6m72
+    SettingServiceType:
+      description: The schema for a single Service Type entry
+      type: object
+      properties:
+        Name:
+          type: string
+          description: The name assigned to the Service Type
+          example: Tax Compliance
+        ServiceTypeKey:
+          type: string
+          description: The unique key assigned to the Service Type
+          example: 5kQr8VtLm2xP
+        WorkTypeKeys:
+          type: array
+          items:
+            type: string
+            description: The unique key of a Work Type belonging to this Service Type, matching a WorkTypeKey in the WorkTypes array
+            example: nTlQkTQnNz7
+    SettingContactType:
+      description: 'The name and unique key for a Contact Type '
+      type: object
+      properties:
+        Name:
+          type: string
+          description: The name assigned to the Customer Type
+          example: Customer
+        ContactTypeKey:
+          type: string
+          description: The unique key assigned to the Customer Type
+          example: z9p3q3d1e3
     GetTenantSettings:
       description: A collection of customer specific Contact and Work settings
       type: object
@@ -170,64 +252,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SettingServiceType'
-    ResourceNotFound:
-      description: A generic response shown when the API cannot find a requested entity
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '404'
-        message:
-          type: string
-          description: The error message
-          example: Resource not found
-    SettingContactType:
-      description: 'The name and unique key for a Contact Type '
-      type: object
-      properties:
-        Name:
-          type: string
-          description: The name assigned to the Customer Type
-          example: Customer
-        ContactTypeKey:
-          type: string
-          description: The unique key assigned to the Customer Type
-          example: z9p3q3d1e3
-    RateLimitErrorMessage:
-      description: The error message returned when the API rate limit is hit
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '429'
-        message:
-          type: string
-          description: The error message
-          example: Rate limit is exceeded. Try again in 10 seconds.
-    SettingServiceType:
-      description: The schema for a single Service Type entry
-      type: object
-      properties:
-        Name:
-          type: string
-          description: The name assigned to the Service Type
-          example: Tax Compliance
-        ServiceTypeKey:
-          type: string
-          description: The unique key assigned to the Service Type
-          example: 5kQr8VtLm2xP
-        WorkTypeKeys:
-          type: array
-          items:
-            type: string
-            description: The unique key of a Work Type belonging to this Service Type, matching a WorkTypeKey in the WorkTypes array
-            example: nTlQkTQnNz7
     SettingWorkStatus:
       description: A Work Status, its child statuses with Name, Type and unique Key
       type: object
@@ -263,33 +287,6 @@ components:
                 type: string
                 example: 2mwflHRTqsdv
                 description: ' The unique key of the Work Status'
-    SettingWorkType:
-      description: The schema for a single Work Type entry
-      type: object
-      properties:
-        Name:
-          type: string
-          description: The name assigned to the Work Type
-          example: Tax
-        WorkTypeKey:
-          type: string
-          description: The unique key assigned to the Work Type
-          example: a1b2c3d4e5
-        AvailableStatuses:
-          type: object
-          properties:
-            primary:
-              type: array
-              items:
-                type: string
-                description: The name of the Primary Status
-                example: Active
-            secondary:
-              type: array
-              items:
-                type: string
-                description: The unique key of the secondary Work Status that can be used with this Work Type
-                example: r2t4p6m72
   examples:
     UnauthorizedAccess:
       description: A generic response shown when the API cannot confirm the authentication creditials provided
@@ -311,6 +308,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

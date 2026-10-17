@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Comments API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Comments API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Comments across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -89,42 +89,22 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
-  examples:
-    Unsupported_option:
-      description: The error returned when the query option in a request is not allowed for by the API
-      value:
-        error:
-          code: '4002'
-          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
-    elongated_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
-    CommentKey_Not_Found:
-      description: The error returned when a Comment cannot be found for the provided Comment Key
-      value:
-        error:
-          code: '4004'
-          message: 'Unable to find commentkey: <CommentKey>'
-    Missing_Update_Data:
-      description: The error returned when the payload for an update is missing or invalid
-      value:
-        error:
-          code: '4005'
-          message: 'Required payload data is missing: update'
-    UnauthorizedAccess:
-      description: A generic response shown when the API cannot confirm the authentication creditials provided
-      value:
-        error:
-          statusCode: '401'
-          message: JWT not present.
   schemas:
+    RateLimitErrorMessage:
+      description: The error message returned when the API rate limit is hit
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '429'
+        message:
+          type: string
+          description: The error message
+          example: Rate limit is exceeded. Try again in 10 seconds.
     ResourceNotFound:
       description: A generic response shown when the API cannot find a requested entity
       type: object
@@ -139,6 +119,26 @@ components:
           type: string
           description: The error message
           example: Resource not found
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
     GetComment:
       description: A comment on a Work Item, Note or Contact
       required:
@@ -181,40 +181,37 @@ components:
           type: string
           example: OgCjeo4gwu
           description: A random value that indicates the email address of the Karbon user who created the comment.
-    RateLimitErrorMessage:
-      description: The error message returned when the API rate limit is hit
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '429'
-        message:
-          type: string
-          description: The error message
-          example: Rate limit is exceeded. Try again in 10 seconds.
-    ErrorMessages:
-      description: The details of an error associated with an API request
-      required:
-      - error
-      type: object
-      properties:
+  examples:
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
         error:
-          required:
-          - code
-          - message
-          type: object
-          properties:
-            code:
-              type: string
-              example: '4004'
-              description: A Karbon-generated code to identify the error
-            message:
-              type: string
-              example: The record could not be found
-              description: The error message
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    Missing_Update_Data:
+      description: The error returned when the payload for an update is missing or invalid
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: update'
+    CommentKey_Not_Found:
+      description: The error returned when a Comment cannot be found for the provided Comment Key
+      value:
+        error:
+          code: '4004'
+          message: 'Unable to find commentkey: <CommentKey>'
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
   securitySchemes:
     BearerAuth:
       description: The Application ID for your API application, supplied by secure message when your Application is first registered
@@ -229,6 +226,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

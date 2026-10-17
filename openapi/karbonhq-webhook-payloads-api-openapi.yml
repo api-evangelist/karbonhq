@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Webhook Payloads API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Webhook Payloads API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Webhook Payloads across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -36,9 +36,6 @@ webhooks:
               $ref: '#/components/schemas/contact-webhook'
       summary: Create contact
       x-summary-source: derived
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   customfield:
     post:
       tags:
@@ -54,9 +51,6 @@ webhooks:
               $ref: '#/components/schemas/customfield-webhook'
       summary: Create customfield
       x-summary-source: derived
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   estimate-summary:
     post:
       tags:
@@ -72,9 +66,6 @@ webhooks:
               $ref: '#/components/schemas/estimate-summary-webhook'
       summary: Create estimate summary
       x-summary-source: derived
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   integration-task:
     post:
       tags:
@@ -90,9 +81,6 @@ webhooks:
               $ref: '#/components/schemas/integration-task-webhook'
       summary: Create integration task
       x-summary-source: derived
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   invoice:
     post:
       tags:
@@ -108,9 +96,6 @@ webhooks:
               $ref: '#/components/schemas/invoice-webhook'
       summary: Create invoice
       x-summary-source: derived
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   note:
     post:
       tags:
@@ -126,9 +111,6 @@ webhooks:
               $ref: '#/components/schemas/note-webhook'
       summary: Create note
       x-summary-source: derived
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   note-comment:
     post:
       tags:
@@ -144,9 +126,6 @@ webhooks:
               $ref: '#/components/schemas/note-comment-webhook'
       summary: Create note comment
       x-summary-source: derived
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   user:
     post:
       tags:
@@ -162,9 +141,6 @@ webhooks:
               $ref: '#/components/schemas/user-webhook'
       summary: Create user
       x-summary-source: derived
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   work:
     post:
       tags:
@@ -180,9 +156,6 @@ webhooks:
               $ref: '#/components/schemas/work-webhook'
       summary: Create work
       x-summary-source: derived
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   batch:
     post:
       tags:
@@ -198,11 +171,50 @@ webhooks:
               $ref: '#/components/schemas/webhook-batch'
       summary: Create batch
       x-summary-source: derived
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
+  parameters:
+    WebhookRequestHeader:
+      in: header
+      name: Signature
+      schema:
+        type: string
+      examples:
+        WebhookPayloadSignature:
+          value: Signed webhook payload
+          summary: 8c42dd0e4779a2e8a56d3b8ef962238ca26f95ddc2d9abb0e76f04991a3442f3
+      description: The HMAC signature generated when a webhook subscription payload includes the SigningKey property
   schemas:
+    note-webhook:
+      description: The schema for Note webhook payloads
+      type: object
+      properties:
+        ResourcePermaKey:
+          type: string
+          description: The key for the resource that has been created or updated
+          example: kCsVf7svWQw
+          readOnly: true
+        ResourceType:
+          type: string
+          enum:
+          - Note
+          description: The type of resource that has been created or updated
+          example: Note
+          readOnly: true
+        ActionType:
+          type: string
+          description: The action that triggered the webhook notification to be sent
+          enum:
+          - Inserted
+          - Updated
+          - Deleted
+          example: Updated
+          readOnly: true
+        TimeStamp:
+          type: string
+          format: date-time
+          description: The timestamp the associated resource was last altered
+          example: '2024-08-01T21:54:36Z'
+          readOnly: true
     customfield-webhook:
       description: The schema for Custom Field webhook payloads
       type: object
@@ -246,8 +258,8 @@ components:
           - Organization
           example: Organization
           readOnly: true
-    estimate-summary-webhook:
-      description: The schema for EstimateSummary webhook payloads
+    invoice-webhook:
+      description: The schema for Invoice webhook payloads
       type: object
       properties:
         ResourcePermaKey:
@@ -258,66 +270,15 @@ components:
         ResourceType:
           type: string
           enum:
-          - Estimate
+          - Invoice
           description: The type of resource that has been created or updated
-          example: Estimate
+          example: Invoice
           readOnly: true
         ActionType:
           type: string
           description: The action that triggered the webhook notification to be sent
           enum:
           - Updated
-          example: Updated
-          readOnly: true
-        TimeStamp:
-          type: string
-          format: date-time
-          description: The timestamp the associated resource was last altered
-          example: '2024-08-01T21:54:36Z'
-          readOnly: true
-    webhook-batch:
-      description: The schema for a batched webhook delivery, sent instead of a single-event payload when a Webhook Subscription has `BatchSize` set to more than 1
-      type: object
-      properties:
-        BatchId:
-          type: string
-          format: uuid
-          description: A unique identifier for this batch
-          example: 70575b82-9a31-4576-a4e7-61e20c42189d
-          readOnly: true
-        Count:
-          type: integer
-          description: The number of events in this batch
-          example: 3
-          readOnly: true
-        Events:
-          type: array
-          description: The events in this batch, in the order they occurred
-          items:
-            $ref: '#/components/schemas/webhook-batch-event'
-    note-webhook:
-      description: The schema for Note webhook payloads
-      type: object
-      properties:
-        ResourcePermaKey:
-          type: string
-          description: The key for the resource that has been created or updated
-          example: kCsVf7svWQw
-          readOnly: true
-        ResourceType:
-          type: string
-          enum:
-          - Note
-          description: The type of resource that has been created or updated
-          example: Note
-          readOnly: true
-        ActionType:
-          type: string
-          description: The action that triggered the webhook notification to be sent
-          enum:
-          - Inserted
-          - Updated
-          - Deleted
           example: Updated
           readOnly: true
         TimeStamp:
@@ -354,6 +315,176 @@ components:
           format: date-time
           description: The timestamp the associated resource was altered. Note the casing differs from `TimeStamp` on the single-event payloads above.
           example: '2026-09-02T03:49:42Z'
+          readOnly: true
+    note-comment-webhook:
+      description: The schema for Note webhook payloads
+      type: object
+      properties:
+        ResourcePermaKey:
+          type: string
+          description: The key for the resource that has been created or updated
+          example: kCsVf7svWQw
+          readOnly: true
+        ResourceType:
+          type: string
+          enum:
+          - NoteComment
+          description: The type of resource that has been created or updated
+          example: NoteComment
+          readOnly: true
+        ActionType:
+          type: string
+          description: The action that triggered the webhook notification to be sent
+          enum:
+          - Inserted
+          - Updated
+          - Deleted
+          example: Updated
+          readOnly: true
+        TimeStamp:
+          type: string
+          format: date-time
+          description: The timestamp the associated resource was last altered
+          example: '2024-08-01T21:54:36Z'
+          readOnly: true
+        ParentEntityType:
+          type: string
+          enum:
+          - Note
+          description: The resource type of the parent entity the note comment was created on
+          example: Note
+          readOnly: true
+        ParentEntityKey:
+          type: string
+          description: The key for the parent of the resource that has been created or updated
+          example: 2TTFWz8L5SSt
+          readOnly: true
+    integration-task-webhook:
+      description: The schema for Integration Task webhook payloads
+      type: object
+      properties:
+        ResourcePermaKey:
+          type: string
+          description: The key for the resource that has been created or updated
+          example: kCsVf7svWQw
+          readOnly: true
+        ResourceType:
+          type: string
+          enum:
+          - IntegrationTask
+          description: The type of resource that has been created or updated
+          example: IntegrationTask
+          readOnly: true
+        ActionType:
+          type: string
+          description: The action that triggered the webhook notification to be sent
+          enum:
+          - Inserted
+          example: Inserted
+          readOnly: true
+        TimeStamp:
+          type: string
+          format: date-time
+          description: The timestamp the associated resource was last altered
+          example: '2024-08-01T21:54:36Z'
+          readOnly: true
+        ClientKey:
+          type: string
+          description: The key for the client related to the integration task
+          example: 44dSBb94ZXlR
+          readOnly: true
+        ClientType:
+          type: string
+          description: 'The type of client related to the integration task '
+          enum:
+          - Contact
+          - Organization
+          example: Organization
+          readOnly: true
+        WorkItemKey:
+          type: string
+          description: The key for the Work Item that the Integration Task was added to
+          example: qkG7YMW541L
+          readOnly: true
+    work-webhook:
+      description: The schema for Work webhook payloads
+      type: object
+      properties:
+        ResourcePermaKey:
+          type: string
+          description: The key for the resource that has been created or updated
+          example: kCsVf7svWQw
+          readOnly: true
+        ResourceType:
+          type: string
+          enum:
+          - Work
+          description: The type of resource that has been created or updated
+          example: Work
+          readOnly: true
+        ActionType:
+          type: string
+          description: The action that triggered the webhook notification to be sent
+          enum:
+          - Inserted
+          - Updated
+          - Deleted
+          example: Updated
+          readOnly: true
+        TimeStamp:
+          type: string
+          format: date-time
+          description: The timestamp the associated resource was last altered
+          example: '2024-08-01T21:54:36Z'
+          readOnly: true
+    webhook-batch:
+      description: The schema for a batched webhook delivery, sent instead of a single-event payload when a Webhook Subscription has `BatchSize` set to more than 1
+      type: object
+      properties:
+        BatchId:
+          type: string
+          format: uuid
+          description: A unique identifier for this batch
+          example: 70575b82-9a31-4576-a4e7-61e20c42189d
+          readOnly: true
+        Count:
+          type: integer
+          description: The number of events in this batch
+          example: 3
+          readOnly: true
+        Events:
+          type: array
+          description: The events in this batch, in the order they occurred
+          items:
+            $ref: '#/components/schemas/webhook-batch-event'
+    estimate-summary-webhook:
+      description: The schema for EstimateSummary webhook payloads
+      type: object
+      properties:
+        ResourcePermaKey:
+          type: string
+          description: The key for the resource that has been created or updated
+          example: kCsVf7svWQw
+          readOnly: true
+        ResourceType:
+          type: string
+          enum:
+          - Estimate
+          description: The type of resource that has been created or updated
+          example: Estimate
+          readOnly: true
+        ActionType:
+          type: string
+          description: The action that triggered the webhook notification to be sent
+          enum:
+          - Updated
+          example: Updated
+          readOnly: true
+        TimeStamp:
+          type: string
+          format: date-time
+          description: The timestamp the associated resource was last altered
+          example: '2024-08-01T21:54:36Z'
           readOnly: true
     contact-webhook:
       description: The schema for Contact webhook payloads
@@ -415,167 +546,6 @@ components:
           description: The timestamp the associated resource was last altered
           example: '2024-08-01T21:54:36Z'
           readOnly: true
-    invoice-webhook:
-      description: The schema for Invoice webhook payloads
-      type: object
-      properties:
-        ResourcePermaKey:
-          type: string
-          description: The key for the resource that has been created or updated
-          example: kCsVf7svWQw
-          readOnly: true
-        ResourceType:
-          type: string
-          enum:
-          - Invoice
-          description: The type of resource that has been created or updated
-          example: Invoice
-          readOnly: true
-        ActionType:
-          type: string
-          description: The action that triggered the webhook notification to be sent
-          enum:
-          - Updated
-          example: Updated
-          readOnly: true
-        TimeStamp:
-          type: string
-          format: date-time
-          description: The timestamp the associated resource was last altered
-          example: '2024-08-01T21:54:36Z'
-          readOnly: true
-    work-webhook:
-      description: The schema for Work webhook payloads
-      type: object
-      properties:
-        ResourcePermaKey:
-          type: string
-          description: The key for the resource that has been created or updated
-          example: kCsVf7svWQw
-          readOnly: true
-        ResourceType:
-          type: string
-          enum:
-          - Work
-          description: The type of resource that has been created or updated
-          example: Work
-          readOnly: true
-        ActionType:
-          type: string
-          description: The action that triggered the webhook notification to be sent
-          enum:
-          - Inserted
-          - Updated
-          - Deleted
-          example: Updated
-          readOnly: true
-        TimeStamp:
-          type: string
-          format: date-time
-          description: The timestamp the associated resource was last altered
-          example: '2024-08-01T21:54:36Z'
-          readOnly: true
-    integration-task-webhook:
-      description: The schema for Integration Task webhook payloads
-      type: object
-      properties:
-        ResourcePermaKey:
-          type: string
-          description: The key for the resource that has been created or updated
-          example: kCsVf7svWQw
-          readOnly: true
-        ResourceType:
-          type: string
-          enum:
-          - IntegrationTask
-          description: The type of resource that has been created or updated
-          example: IntegrationTask
-          readOnly: true
-        ActionType:
-          type: string
-          description: The action that triggered the webhook notification to be sent
-          enum:
-          - Inserted
-          example: Inserted
-          readOnly: true
-        TimeStamp:
-          type: string
-          format: date-time
-          description: The timestamp the associated resource was last altered
-          example: '2024-08-01T21:54:36Z'
-          readOnly: true
-        ClientKey:
-          type: string
-          description: The key for the client related to the integration task
-          example: 44dSBb94ZXlR
-          readOnly: true
-        ClientType:
-          type: string
-          description: 'The type of client related to the integration task '
-          enum:
-          - Contact
-          - Organization
-          example: Organization
-          readOnly: true
-        WorkItemKey:
-          type: string
-          description: The key for the Work Item that the Integration Task was added to
-          example: qkG7YMW541L
-          readOnly: true
-    note-comment-webhook:
-      description: The schema for Note webhook payloads
-      type: object
-      properties:
-        ResourcePermaKey:
-          type: string
-          description: The key for the resource that has been created or updated
-          example: kCsVf7svWQw
-          readOnly: true
-        ResourceType:
-          type: string
-          enum:
-          - NoteComment
-          description: The type of resource that has been created or updated
-          example: NoteComment
-          readOnly: true
-        ActionType:
-          type: string
-          description: The action that triggered the webhook notification to be sent
-          enum:
-          - Inserted
-          - Updated
-          - Deleted
-          example: Updated
-          readOnly: true
-        TimeStamp:
-          type: string
-          format: date-time
-          description: The timestamp the associated resource was last altered
-          example: '2024-08-01T21:54:36Z'
-          readOnly: true
-        ParentEntityType:
-          type: string
-          enum:
-          - Note
-          description: The resource type of the parent entity the note comment was created on
-          example: Note
-          readOnly: true
-        ParentEntityKey:
-          type: string
-          description: The key for the parent of the resource that has been created or updated
-          example: 2TTFWz8L5SSt
-          readOnly: true
-  parameters:
-    WebhookRequestHeader:
-      in: header
-      name: Signature
-      schema:
-        type: string
-      examples:
-        WebhookPayloadSignature:
-          value: Signed webhook payload
-          summary: 8c42dd0e4779a2e8a56d3b8ef962238ca26f95ddc2d9abb0e76f04991a3442f3
-      description: The HMAC signature generated when a webhook subscription payload includes the SigningKey property
   securitySchemes:
     BearerAuth:
       description: The Application ID for your API application, supplied by secure message when your Application is first registered
@@ -590,6 +560,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

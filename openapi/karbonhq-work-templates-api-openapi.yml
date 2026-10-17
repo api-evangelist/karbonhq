@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Work Templates API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Work Templates API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Work Templates across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -174,9 +174,6 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/WorkTemplates/{WorkTemplatekey}:
     get:
       tags:
@@ -248,11 +245,38 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
   examples:
+    WorkTemplates_Limit_Exceeded_Top:
+      description: The error returned when the limit is used in a request exceeds the maximum set for the API
+      value:
+        error:
+          code: '4002'
+          message: The limit of '10' for Top query has been exceeded. The value from the incoming request is '130'.
+    Orderby_Unsupported_Property:
+      description: The error returned when an unsupported sort order is used in a request
+      value:
+        error:
+          code: '4002'
+          message: The property '<Property Name>' cannot be used in the $orderby query option.
+    WorkTemplate_Key_Not_Found_404:
+      description: The error returned when a Work Template cannot be found for the provided Work Template Key
+      value:
+        error:
+          code: '4004'
+          message: No Work Template found for provided key
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
     Unsupported_option:
       description: The error returned when the query option in a request is not allowed for by the API
       value:
@@ -265,51 +289,7 @@ components:
         error:
           code: '4002'
           message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
-    WorkTemplate_Key_Not_Found_404:
-      description: The error returned when a Work Template cannot be found for the provided Work Template Key
-      value:
-        error:
-          code: '4004'
-          message: No Work Template found for provided key
-    WorkTemplates_Limit_Exceeded_Top:
-      description: The error returned when the limit is used in a request exceeds the maximum set for the API
-      value:
-        error:
-          code: '4002'
-          message: The limit of '10' for Top query has been exceeded. The value from the incoming request is '130'.
-    elongated_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
-    Orderby_Unsupported_Property:
-      description: The error returned when an unsupported sort order is used in a request
-      value:
-        error:
-          code: '4002'
-          message: The property '<Property Name>' cannot be used in the $orderby query option.
-    UnauthorizedAccess:
-      description: A generic response shown when the API cannot confirm the authentication creditials provided
-      value:
-        error:
-          statusCode: '401'
-          message: JWT not present.
   schemas:
-    ResourceNotFound:
-      description: A generic response shown when the API cannot find a requested entity
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '404'
-        message:
-          type: string
-          description: The error message
-          example: Resource not found
     GetWorkTemplates:
       description: A collection of Work Templates
       required:
@@ -349,26 +329,6 @@ components:
           type: string
           description: The error message
           example: Rate limit is exceeded. Try again in 10 seconds.
-    ErrorMessages:
-      description: The details of an error associated with an API request
-      required:
-      - error
-      type: object
-      properties:
-        error:
-          required:
-          - code
-          - message
-          type: object
-          properties:
-            code:
-              type: string
-              example: '4004'
-              description: A Karbon-generated code to identify the error
-            message:
-              type: string
-              example: The record could not be found
-              description: The error message
     GetSingleWorkTemplate:
       description: A single Work Template
       required:
@@ -450,6 +410,40 @@ components:
                 type: string
                 description: The name of the user role
                 example: Accountant
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
   parameters:
     TopRecords:
       in: query
@@ -482,6 +476,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

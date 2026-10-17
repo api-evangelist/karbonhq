@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Custom Fields API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Custom Fields API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Custom Fields across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -83,9 +83,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CustomFieldDefinition'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/CustomFields/{CustomFieldDefinitionKey}:
     delete:
       tags:
@@ -113,9 +110,6 @@ paths:
               examples:
                 Unsupported Option:
                   $ref: '#/components/examples/NotFound'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/CustomFieldValues/{EntityKey}:
     get:
       tags:
@@ -211,96 +205,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CustomFieldValues'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
-  examples:
-    Bad_Request_Update_Custom_Field_Values:
-      description: There is an issue with the data or structure of the request that must be fixed before the request can be processed
-      value:
-        error:
-          code: '4002'
-          message: Only one value allowed for type Text
-    NotFound:
-      description: A generic response shown when the API cannot find a requested entity
-      value:
-        error:
-          code: '4004'
-          message: Not Found
-    Conflict_StaleObjectState:
-      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
-      value:
-        error:
-          code: '4020'
-          message: The resource was modified by another request. Refetch the latest version and retry.
   schemas:
-    CustomFieldValues:
-      type: object
-      description: The set custom fields for a contact or organization and the associated values and options
-      properties:
-        EntityKey:
-          type: string
-          example: Lm4zGNmtYyZ
-        CustomFieldValues:
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomFieldValue'
-    CustomFieldDefinition:
-      type: object
-      description: The structure that defines a Custom Field in Karbon
-      properties:
-        Name:
-          type: string
-          example: Industry Type
-          maxLength: 100
-        Type:
-          type: string
-          example: ListSingleSelect
-          enum:
-          - Text
-          - Number
-          - Date
-          - Boolean
-          - Colleague
-          - ListSingleSelect
-          - ListMultipleSelect
-        IsVisibleToContacts:
-          type: boolean
-          example: true
-        IsVisibleToOrganizations:
-          type: boolean
-          example: false
-        ListOptions:
-          descriptions: A value or values assigned to the Custom Field, note that all values for all types are strings - this includes `number` and `boolean` types
-          type: array
-          items:
-            type: string
-            maxLength: 256
-            examples:
-            - Agriculture
-            - Manufacturing
-            - Professional, Scientific and Technical Services
-    ErrorMessages:
-      description: The details of an error associated with an API request
-      required:
-      - error
-      type: object
-      properties:
-        error:
-          required:
-          - code
-          - message
-          type: object
-          properties:
-            code:
-              type: string
-              example: '4004'
-              description: A Karbon-generated code to identify the error
-            message:
-              type: string
-              example: The record could not be found
-              description: The error message
     CustomFieldDefinitions:
       type: object
       description: A list of the available custom fields in Karbon
@@ -351,6 +257,91 @@ components:
             type: string
             maxLength: 256
             example: Professional Services
+    CustomFieldDefinition:
+      type: object
+      description: The structure that defines a Custom Field in Karbon
+      properties:
+        Name:
+          type: string
+          example: Industry Type
+          maxLength: 100
+        Type:
+          type: string
+          example: ListSingleSelect
+          enum:
+          - Text
+          - Number
+          - Date
+          - Boolean
+          - Colleague
+          - ListSingleSelect
+          - ListMultipleSelect
+        IsVisibleToContacts:
+          type: boolean
+          example: true
+        IsVisibleToOrganizations:
+          type: boolean
+          example: false
+        ListOptions:
+          descriptions: A value or values assigned to the Custom Field, note that all values for all types are strings - this includes `number` and `boolean` types
+          type: array
+          items:
+            type: string
+            maxLength: 256
+            examples:
+            - Agriculture
+            - Manufacturing
+            - Professional, Scientific and Technical Services
+    CustomFieldValues:
+      type: object
+      description: The set custom fields for a contact or organization and the associated values and options
+      properties:
+        EntityKey:
+          type: string
+          example: Lm4zGNmtYyZ
+        CustomFieldValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomFieldValue'
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+  examples:
+    NotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      value:
+        error:
+          code: '4004'
+          message: Not Found
+    Conflict_StaleObjectState:
+      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
+      value:
+        error:
+          code: '4020'
+          message: The resource was modified by another request. Refetch the latest version and retry.
+    Bad_Request_Update_Custom_Field_Values:
+      description: There is an issue with the data or structure of the request that must be fixed before the request can be processed
+      value:
+        error:
+          code: '4002'
+          message: Only one value allowed for type Text
   securitySchemes:
     BearerAuth:
       description: The Application ID for your API application, supplied by secure message when your Application is first registered
@@ -365,6 +356,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

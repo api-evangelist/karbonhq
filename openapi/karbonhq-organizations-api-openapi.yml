@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Organizations API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Organizations API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Organizations across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -353,9 +353,6 @@ paths:
               - MemberKey: 2q2wx44pTBNh
                 MemberType: User
                 RoleType: ClientManager
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/Organizations/GetOrganizationByUserDefinedIdentifier(UserDefinedIdentifier='{UserDefinedIdentifier}'):
     get:
       tags:
@@ -518,9 +515,6 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/Organizations/{Organizationkey}:
     get:
       tags:
@@ -1092,127 +1086,130 @@ paths:
                   type: string
                   description: The full name of the Organization
                   example: Sample Company Pty. Ltd.
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
-  examples:
-    Unsupported_option:
-      description: The error returned when the query option in a request is not allowed for by the API
-      value:
-        error:
-          code: '4002'
-          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
-    Unsupported_Property_Filter:
-      description: The error returned when an unsupported filter is used in a request
-      value:
-        error:
-          code: '4002'
-          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
-    Organization_Key_Not_Found_404:
-      description: The error returned when an Organization cannot be found for the provided Organization Key
-      value:
-        error:
-          code: '4004'
-          message: No organization exists with a key of <OrganizationKey>.
-    Missing_Update_Data:
-      description: The error returned when the payload for an update is missing or invalid
-      value:
-        error:
-          code: '4005'
-          message: 'Required payload data is missing: update'
-    UnauthorizedAccess:
-      description: A generic response shown when the API cannot confirm the authentication creditials provided
-      value:
-        error:
-          statusCode: '401'
-          message: JWT not present.
-    Shortened_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Internal Error.
-    Duplicate_UDI:
-      description: The error returned when the request payload includes a User Defined Identifier which is already in use
-      value:
-        error:
-          code: '5001'
-          message: User defined identifier already in use
-    HTTP_Resource_Not_Found:
-      description: The error returned when the request path and request method does not match any configured API path and method
-      value:
-        error:
-          code: '4002'
-          message: No HTTP resource was found that matches the request URI 'http://api.karbonhq.com/v3/<endpoint>
-    Orderby_Unsupported_Property:
-      description: The error returned when an unsupported sort order is used in a request
-      value:
-        error:
-          code: '4002'
-          message: The property '<Property Name>' cannot be used in the $orderby query option.
-    UDI_Is_Empty:
-      description: The error returned when a Client Group request cannot be fulfilled because a User Defined Identifier has not been provided
-      value:
-        error:
-          code: '4002'
-          message: UserDefinedIdentifier is missing or empty
-    ResourceNotFound:
-      description: A generic response shown when the API cannot find a requested path
-      value:
-        statusCode: '404'
-        message: Resource not found
-    elongated_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
-    RestrictionLevel_Permission_Denied:
-      description: The error returned when a request sets RestrictionLevel to a value the calling API application does not have permission to use
-      value:
-        error:
-          code: '4021'
-          message: This API application does not have permission to set RestrictionLevel to Hidden.
-    Invalid_Property:
-      description: The error returned when attempting to use PATCH to update a property that can only be updated as part of a PUT
-      value:
-        error:
-          code: '4002'
-          message: Invalid property to update. Only <Property name> can be patched.
-    Limit_Exceeded_Top:
-      description: The error returned when the limit is used in a request exceeds the maximum set for the API
-      value:
-        error:
-          code: '4002'
-          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
-    Conflict_StaleObjectState:
-      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
-      value:
-        error:
-          code: '4020'
-          message: The resource was modified by another request. Refetch the latest version and retry.
-    UDI_Not_Found_Organization:
-      description: The error returned when an Organization request cannot be fulfilled because the provided User Defined Identifier does not exist
-      value:
-        error:
-          code: '4004'
-          message: No Organization found for provided UserDefinedIdentifer
   schemas:
-    ResourceNotFound:
-      description: A generic response shown when the API cannot find a requested entity
+    UpdateOrganization:
+      description: A single Organization
+      required:
+      - FullName
       type: object
       properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '404'
-        message:
+        FullName:
           type: string
-          description: The error message
-          example: Resource not found
+          description: The full name of the Organization
+        ClientOwner:
+          type: string
+          description: The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
+        ClientManager:
+          type: string
+          description: The team member in your firm who manages the work for the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
+        ContactType:
+          type: string
+          description: The Contact Type for this Organization. You can only use existing Contact Type.
+        UserDefinedIdentifier:
+          type: string
+          description: A unique key that you can use to identify this Organization.
+        RestrictionLevel:
+          type: string
+          description: 'The privacy level for this Organization.
+
+
+            <ul><li>Public Organization can be managed by anyone in the firm</li> <li>Private Organization can only be managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team). Basic details (name of the Organization and the Work Items) related to such Organization are visible to anyone in the firm.</li> <li>Hidden Organization are only be visible to and managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team).</li>
+
+            Setting `Private` requires the calling API application to have the `IncludePrivate` permission; setting `Hidden` requires `IncludeHidden`. `Public` is always allowed. Omitting this field leaves the existing value unchanged.
+
+            '
+          default: Public
+          enum:
+          - Public
+          - Private
+          - Hidden
+        AccountingDetail:
+          $ref: '#/components/schemas/DetailsOfAccounting'
+        BusinessCards:
+          type: array
+          items:
+            $ref: '#/components/schemas/BusinessCardRequest'
+        EntityDescription:
+          type: object
+          properties:
+            Text:
+              type: string
+              description: Free-form text that can be used to add more information about the Organization
+        ClientTeam:
+          $ref: '#/components/schemas/ClientTeam'
+    GetOrganizations:
+      description: A list of Organizations
+      required:
+      - value
+      - '@odata.context'
+      - '@odata.count'
+      type: object
+      properties:
+        '@odata.context':
+          type: string
+          description: The information about Karbon controllers generating this response.
+          example: https://api.karbonhq.com/v3/$metadata#Organizations/KarbonService.OrganizationSummaryDTO
+        '@odata.count':
+          type: integer
+          format: int64
+          example: 323
+          description: The total number of Organizations that satisfy the query criteria.
+        value:
+          type: array
+          items:
+            required:
+            - FullName
+            - LastModifiedDateTime
+            - OrganizationKey
+            - '@odata.type'
+            type: object
+            properties:
+              '@odata.type':
+                type: string
+                example: '#KarbonService.OrganizationSummaryDTO'
+                description: The information about Karbon Objects generating this response.
+              OrganizationKey:
+                type: string
+                example: 29YXnqWcqCf3
+                description: A Karbon-generated unique identifier for the Organization
+              FullName:
+                type: string
+                example: Sample Company
+                description: The full name of the Organization
+              PhoneNumber:
+                type:
+                - string
+                - 'null'
+                example: 0987888686
+                description: The phone number associated with the Organization
+              EmailAddress:
+                type: string
+                example: info@samplecompany.com
+                description: The Email Address of the Organization
+              Website:
+                type: string
+                example: www.samplecompany.com
+                description: The website of the Organization
+              ContactType:
+                type: string
+                example: Client
+                description: The Contact Type for this Organization. You can only use existing Contact Types, these are available from the TenantSettings endpoint.
+              LastModifiedDateTime:
+                type: string
+                format: date-time
+                description: The date and time at which the Organization was most recently modified.
+                example: '2021-12-29T07:01:53Z'
+              UserDefinedIdentifier:
+                type:
+                - string
+                - 'null'
+                example: ACME-001
+                description: Your own identifier for the Organization, if one has been set. This matches the behaviour already available on /v3/Contacts.
+        '@odata.nextLink':
+          type: string
+          example: https://api.karbonhq.com/v3/Organizations?$skip=100
+          description: The link to next set of Organizations. @odata.nextLink field will only appear if you have more than 100 Organizations.
     RateLimitErrorMessage:
       description: The error message returned when the API rate limit is hit
       type: object
@@ -1227,85 +1224,6 @@ components:
           type: string
           description: The error message
           example: Rate limit is exceeded. Try again in 10 seconds.
-    ContactsCardOrganization:
-      description: A contact related to an Organization
-      type: object
-      properties:
-        ContactKey:
-          type: string
-          example: m29BvD0lyT
-          description: A Karbon-generated value that is used to identify the Contact
-        FullName:
-          type: string
-          example: Jane River
-          description: The full name of the Contact
-        PreferredName:
-          type: string
-          example: Jane
-          description: The preferred name of the Contact
-        Salutation:
-          type: string
-          example: Ms
-          description: The title to address the Contact
-        ClientOwner:
-          type:
-          - string
-          - 'null'
-          example: jessica.tse@samplecompany.com
-          description: The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the Contact. You can only use the UserKey or the email address of an existing team member.
-        ClientManager:
-          type:
-          - string
-          - 'null'
-          example: rodney.muller@samplecompany.com
-          description: The team member in your firm who manages the work for Contact. You can only use the UserKey or the email address of an existing team member.
-        Address:
-          type:
-          - string
-          - 'null'
-          example: ''
-          description: The Address of the Contact
-        EmailAddress:
-          type: string
-          description: The Email Address of the Contact
-        PhoneNumber:
-          oneOf:
-          - type: string
-            maxLength: 20
-            example: 555-1234
-          - type: 'null'
-          description: The phone number associated with the Contact
-        RoleOrTitle:
-          type: string
-          example: COO
-          description: The business role or title of the Contact
-        UserDefinedIdentifier:
-          type: string
-          example: JR_1001_2022
-          description: A unique key that you can use to identify this Contact.
-        LastModifiedDateTime:
-          type: string
-          format: date-time
-          example: '2023-06-12T14:00:00Z'
-          description: The date and time at which this Contact was last modified.
-    WithBusinessCardsCreateOrganizationResponse:
-      description: The response returned when a business card is created and $expand=BusinessCards is specified in the URL
-      allOf:
-      - $ref: '#/components/schemas/CreateOrganizationResponse'
-      - type: object
-        properties:
-          BusinessCards:
-            $ref: '#/components/schemas/BusinessCardsRequestAsArray'
-    BusinessCardsRequestAsArray:
-      description: A collection of business cards
-      type: array
-      items:
-        $ref: '#/components/schemas/BusinessCardRequest'
-    ContactsCardList:
-      type: array
-      items:
-        $ref: '#/components/schemas/ContactsCardOrganization'
-      Description: A list of contacts related to an Organization via their Business Cards
     CreateOrganization:
       description: A single Organization
       required:
@@ -1361,76 +1279,6 @@ components:
               example: This organization has a sibling Organization called Example Trust
         AccountingDetail:
           $ref: '#/components/schemas/DetailsOfAccounting'
-        ClientTeam:
-          $ref: '#/components/schemas/ClientTeam'
-    ErrorMessages:
-      description: The details of an error associated with an API request
-      required:
-      - error
-      type: object
-      properties:
-        error:
-          required:
-          - code
-          - message
-          type: object
-          properties:
-            code:
-              type: string
-              example: '4004'
-              description: A Karbon-generated code to identify the error
-            message:
-              type: string
-              example: The record could not be found
-              description: The error message
-    UpdateOrganization:
-      description: A single Organization
-      required:
-      - FullName
-      type: object
-      properties:
-        FullName:
-          type: string
-          description: The full name of the Organization
-        ClientOwner:
-          type: string
-          description: The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
-        ClientManager:
-          type: string
-          description: The team member in your firm who manages the work for the clients in this Organization. You can only use the UserKey or the email address of an existing team member.
-        ContactType:
-          type: string
-          description: The Contact Type for this Organization. You can only use existing Contact Type.
-        UserDefinedIdentifier:
-          type: string
-          description: A unique key that you can use to identify this Organization.
-        RestrictionLevel:
-          type: string
-          description: 'The privacy level for this Organization.
-
-
-            <ul><li>Public Organization can be managed by anyone in the firm</li> <li>Private Organization can only be managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team). Basic details (name of the Organization and the Work Items) related to such Organization are visible to anyone in the firm.</li> <li>Hidden Organization are only be visible to and managed by the [Client Team](https://help.karbonhq.com/en/articles/1524707-create-a-client-team).</li>
-
-            Setting `Private` requires the calling API application to have the `IncludePrivate` permission; setting `Hidden` requires `IncludeHidden`. `Public` is always allowed. Omitting this field leaves the existing value unchanged.
-
-            '
-          default: Public
-          enum:
-          - Public
-          - Private
-          - Hidden
-        AccountingDetail:
-          $ref: '#/components/schemas/DetailsOfAccounting'
-        BusinessCards:
-          type: array
-          items:
-            $ref: '#/components/schemas/BusinessCardRequest'
-        EntityDescription:
-          type: object
-          properties:
-            Text:
-              type: string
-              description: Free-form text that can be used to add more information about the Organization
         ClientTeam:
           $ref: '#/components/schemas/ClientTeam'
     CreateOrganizationResponse:
@@ -1501,6 +1349,276 @@ components:
               example: Birthday on June 23.
         AccountingDetail:
           $ref: '#/components/schemas/DetailsOfAccounting'
+    BusinessCardsRequestAsArray:
+      description: A collection of business cards
+      type: array
+      items:
+        $ref: '#/components/schemas/BusinessCardRequest'
+    BusinessCardRequest:
+      description: A business card associated with a contact or organization
+      type: object
+      properties:
+        BusinessCardKey:
+          type: string
+          description: A Karbon-generated unique identifier for the Business Card
+          example: ''
+          required: true
+        EntityType:
+          type: string
+          description: The type of entity this Business Card belongs to.
+          example: Contact
+          enum:
+          - Contact
+          - Organization
+          - ClientGroup
+        EntityKey:
+          type: string
+          description: A Karbon-generated key to indicate the entity (Contact, Organization, or ClientGroup) this Business Card belongs to.
+          example: 67zlxNyJSr8e
+        IsPrimaryCard:
+          type: boolean
+          description: Set to true, if this business card is also the primary business card for this entity.
+          example: true
+        OrganizationKey:
+          type:
+          - string
+          - 'null'
+          description: Used on the Business Card for a Contact to specify the Organization that the Contact is related to. Will always be null for an Organization business card.
+          example: 7NN1ySxv89B
+        WebSites:
+          description: The websites associated with this Business card.
+          type: array
+          items:
+            type: string
+          example:
+          - www.website.one
+          - www.website.two
+        EmailAddresses:
+          description: The email addresses associated with this Business card.
+          type: array
+          items:
+            type: string
+          example:
+          - sample@example.com
+          - sample.two@example.com
+        RoleOrTitle:
+          type:
+          - string
+          - 'null'
+          description: The business role or title of the contact this Business Cards belongs to
+          example: COO
+        FacebookLink:
+          type: string
+          description: The URL to the entity's Facebook profile
+          example: facebook.com/sampleName
+        LinkedInLink:
+          type: string
+          description: The URL to the entity's LinkedIn profile
+          example: linkedin.com/sampleName
+        TwitterLink:
+          type: string
+          description: The URL to the entity's Twitter profile
+          example: twitter.com/sampleName
+        SkypeLink:
+          type: string
+          description: The URL to the entity's Skype profile
+          example: skype.com/sampleName
+        Addresses:
+          type: array
+          items:
+            type: object
+            properties:
+              AddressLines:
+                type: string
+                description: Street Address
+                example: 45 Sample Street
+                maxLength: 200
+              City:
+                type: string
+                description: City
+                example: Alexandria
+                maxLength: 100
+              StateProvinceCounty:
+                type: string
+                description: State / Province / County
+                example: NSW
+                maxLength: 100
+              ZipCode:
+                type: string
+                description: ZipCode / PostCode
+                example: '2015'
+                maxLength: 20
+              CountryCode:
+                type: string
+                format: ISO 3166-1 alpha-2
+                description: Two letter Country Code
+                example: AU
+              Label:
+                type: string
+                description: The tag to indicate the type of Address
+                example: Physical
+                enum:
+                - Physical
+                - Mailing
+                - Legal
+                - Home
+        PhoneNumbers:
+          type: array
+          items:
+            type: object
+            properties:
+              Number:
+                type: string
+                description: The phone number of the entity
+                example: '1234567890'
+                maxLength: 20
+              CountryCode:
+                type: string
+                description: The phone number country code
+                example: AU
+              Label:
+                type: string
+                description: The tag to indicate the type of phone number
+                example: Work
+                enum:
+                - Work
+                - Mobile
+                - Office
+                - Fax
+                - Home
+                - Other
+    ContactsCardOrganization:
+      description: A contact related to an Organization
+      type: object
+      properties:
+        ContactKey:
+          type: string
+          example: m29BvD0lyT
+          description: A Karbon-generated value that is used to identify the Contact
+        FullName:
+          type: string
+          example: Jane River
+          description: The full name of the Contact
+        PreferredName:
+          type: string
+          example: Jane
+          description: The preferred name of the Contact
+        Salutation:
+          type: string
+          example: Ms
+          description: The title to address the Contact
+        ClientOwner:
+          type:
+          - string
+          - 'null'
+          example: jessica.tse@samplecompany.com
+          description: The team member in your firm who looks after client relationship or is responsible for the vast majority of the work of the Contact. You can only use the UserKey or the email address of an existing team member.
+        ClientManager:
+          type:
+          - string
+          - 'null'
+          example: rodney.muller@samplecompany.com
+          description: The team member in your firm who manages the work for Contact. You can only use the UserKey or the email address of an existing team member.
+        Address:
+          type:
+          - string
+          - 'null'
+          example: ''
+          description: The Address of the Contact
+        EmailAddress:
+          type: string
+          description: The Email Address of the Contact
+        PhoneNumber:
+          oneOf:
+          - type: string
+            maxLength: 20
+            example: 555-1234
+          - type: 'null'
+          description: The phone number associated with the Contact
+        RoleOrTitle:
+          type: string
+          example: COO
+          description: The business role or title of the Contact
+        UserDefinedIdentifier:
+          type: string
+          example: JR_1001_2022
+          description: A unique key that you can use to identify this Contact.
+        LastModifiedDateTime:
+          type: string
+          format: date-time
+          example: '2023-06-12T14:00:00Z'
+          description: The date and time at which this Contact was last modified.
+    ClientTeam:
+      description: The Client Team associated with a contact or organization
+      type: array
+      items:
+        type: object
+        properties:
+          MemberKey:
+            type: string
+            example: JTphCpQqQYg
+            description: The unique key of the user or team assigned to the client team role
+          MemberType:
+            type: string
+            example: User
+            description: The type of member assigned to the client team, can be either User or Team
+            enum:
+            - User
+            - Team
+          RoleType:
+            type:
+            - string
+            - 'null'
+            example: ClientOwner
+            description: The specific role the user or team is assigned to, can be null if a member of the client team without a specific role
+            enum:
+            - ClientOwner
+            - ClientManager
+            - UserDefinedRole1
+            - UserDefinedRole2
+            - null
+    ErrorMessages:
+      description: The details of an error associated with an API request
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          required:
+          - code
+          - message
+          type: object
+          properties:
+            code:
+              type: string
+              example: '4004'
+              description: A Karbon-generated code to identify the error
+            message:
+              type: string
+              example: The record could not be found
+              description: The error message
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
+    WithBusinessCardsCreateOrganizationResponse:
+      description: The response returned when a business card is created and $expand=BusinessCards is specified in the URL
+      allOf:
+      - $ref: '#/components/schemas/CreateOrganizationResponse'
+      - type: object
+        properties:
+          BusinessCards:
+            $ref: '#/components/schemas/BusinessCardsRequestAsArray'
     DetailsOfAccounting:
       type: object
       description: The details specific to the Accounting firm related to this entity
@@ -1908,240 +2026,113 @@ components:
                 - System
                 - Owner
                 - Officer
-    GetOrganizations:
-      description: A list of Organizations
-      required:
-      - value
-      - '@odata.context'
-      - '@odata.count'
-      type: object
-      properties:
-        '@odata.context':
-          type: string
-          description: The information about Karbon controllers generating this response.
-          example: https://api.karbonhq.com/v3/$metadata#Organizations/KarbonService.OrganizationSummaryDTO
-        '@odata.count':
-          type: integer
-          format: int64
-          example: 323
-          description: The total number of Organizations that satisfy the query criteria.
-        value:
-          type: array
-          items:
-            required:
-            - FullName
-            - LastModifiedDateTime
-            - OrganizationKey
-            - '@odata.type'
-            type: object
-            properties:
-              '@odata.type':
-                type: string
-                example: '#KarbonService.OrganizationSummaryDTO'
-                description: The information about Karbon Objects generating this response.
-              OrganizationKey:
-                type: string
-                example: 29YXnqWcqCf3
-                description: A Karbon-generated unique identifier for the Organization
-              FullName:
-                type: string
-                example: Sample Company
-                description: The full name of the Organization
-              PhoneNumber:
-                type:
-                - string
-                - 'null'
-                example: 0987888686
-                description: The phone number associated with the Organization
-              EmailAddress:
-                type: string
-                example: info@samplecompany.com
-                description: The Email Address of the Organization
-              Website:
-                type: string
-                example: www.samplecompany.com
-                description: The website of the Organization
-              ContactType:
-                type: string
-                example: Client
-                description: The Contact Type for this Organization. You can only use existing Contact Types, these are available from the TenantSettings endpoint.
-              LastModifiedDateTime:
-                type: string
-                format: date-time
-                description: The date and time at which the Organization was most recently modified.
-                example: '2021-12-29T07:01:53Z'
-              UserDefinedIdentifier:
-                type:
-                - string
-                - 'null'
-                example: ACME-001
-                description: Your own identifier for the Organization, if one has been set. This matches the behaviour already available on /v3/Contacts.
-        '@odata.nextLink':
-          type: string
-          example: https://api.karbonhq.com/v3/Organizations?$skip=100
-          description: The link to next set of Organizations. @odata.nextLink field will only appear if you have more than 100 Organizations.
-    ClientTeam:
-      description: The Client Team associated with a contact or organization
+    ContactsCardList:
       type: array
       items:
-        type: object
-        properties:
-          MemberKey:
-            type: string
-            example: JTphCpQqQYg
-            description: The unique key of the user or team assigned to the client team role
-          MemberType:
-            type: string
-            example: User
-            description: The type of member assigned to the client team, can be either User or Team
-            enum:
-            - User
-            - Team
-          RoleType:
-            type:
-            - string
-            - 'null'
-            example: ClientOwner
-            description: The specific role the user or team is assigned to, can be null if a member of the client team without a specific role
-            enum:
-            - ClientOwner
-            - ClientManager
-            - UserDefinedRole1
-            - UserDefinedRole2
-            - null
-    BusinessCardRequest:
-      description: A business card associated with a contact or organization
-      type: object
-      properties:
-        BusinessCardKey:
-          type: string
-          description: A Karbon-generated unique identifier for the Business Card
-          example: ''
-          required: true
-        EntityType:
-          type: string
-          description: The type of entity this Business Card belongs to.
-          example: Contact
-          enum:
-          - Contact
-          - Organization
-          - ClientGroup
-        EntityKey:
-          type: string
-          description: A Karbon-generated key to indicate the entity (Contact, Organization, or ClientGroup) this Business Card belongs to.
-          example: 67zlxNyJSr8e
-        IsPrimaryCard:
-          type: boolean
-          description: Set to true, if this business card is also the primary business card for this entity.
-          example: true
-        OrganizationKey:
-          type:
-          - string
-          - 'null'
-          description: Used on the Business Card for a Contact to specify the Organization that the Contact is related to. Will always be null for an Organization business card.
-          example: 7NN1ySxv89B
-        WebSites:
-          description: The websites associated with this Business card.
-          type: array
-          items:
-            type: string
-          example:
-          - www.website.one
-          - www.website.two
-        EmailAddresses:
-          description: The email addresses associated with this Business card.
-          type: array
-          items:
-            type: string
-          example:
-          - sample@example.com
-          - sample.two@example.com
-        RoleOrTitle:
-          type:
-          - string
-          - 'null'
-          description: The business role or title of the contact this Business Cards belongs to
-          example: COO
-        FacebookLink:
-          type: string
-          description: The URL to the entity's Facebook profile
-          example: facebook.com/sampleName
-        LinkedInLink:
-          type: string
-          description: The URL to the entity's LinkedIn profile
-          example: linkedin.com/sampleName
-        TwitterLink:
-          type: string
-          description: The URL to the entity's Twitter profile
-          example: twitter.com/sampleName
-        SkypeLink:
-          type: string
-          description: The URL to the entity's Skype profile
-          example: skype.com/sampleName
-        Addresses:
-          type: array
-          items:
-            type: object
-            properties:
-              AddressLines:
-                type: string
-                description: Street Address
-                example: 45 Sample Street
-                maxLength: 200
-              City:
-                type: string
-                description: City
-                example: Alexandria
-                maxLength: 100
-              StateProvinceCounty:
-                type: string
-                description: State / Province / County
-                example: NSW
-                maxLength: 100
-              ZipCode:
-                type: string
-                description: ZipCode / PostCode
-                example: '2015'
-                maxLength: 20
-              CountryCode:
-                type: string
-                format: ISO 3166-1 alpha-2
-                description: Two letter Country Code
-                example: AU
-              Label:
-                type: string
-                description: The tag to indicate the type of Address
-                example: Physical
-                enum:
-                - Physical
-                - Mailing
-                - Legal
-                - Home
-        PhoneNumbers:
-          type: array
-          items:
-            type: object
-            properties:
-              Number:
-                type: string
-                description: The phone number of the entity
-                example: '1234567890'
-                maxLength: 20
-              CountryCode:
-                type: string
-                description: The phone number country code
-                example: AU
-              Label:
-                type: string
-                description: The tag to indicate the type of phone number
-                example: Work
-                enum:
-                - Work
-                - Mobile
-                - Office
-                - Fax
-                - Home
-                - Other
+        $ref: '#/components/schemas/ContactsCardOrganization'
+      Description: A list of contacts related to an Organization via their Business Cards
+  examples:
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested path
+      value:
+        statusCode: '404'
+        message: Resource not found
+    UDI_Not_Found_Organization:
+      description: The error returned when an Organization request cannot be fulfilled because the provided User Defined Identifier does not exist
+      value:
+        error:
+          code: '4004'
+          message: No Organization found for provided UserDefinedIdentifer
+    Conflict_StaleObjectState:
+      description: The error returned when two requests race to update the same resource and the later commit is rejected by optimistic concurrency control.
+      value:
+        error:
+          code: '4020'
+          message: The resource was modified by another request. Refetch the latest version and retry.
+    UnauthorizedAccess:
+      description: A generic response shown when the API cannot confirm the authentication creditials provided
+      value:
+        error:
+          statusCode: '401'
+          message: JWT not present.
+    Organization_Key_Not_Found_404:
+      description: The error returned when an Organization cannot be found for the provided Organization Key
+      value:
+        error:
+          code: '4004'
+          message: No organization exists with a key of <OrganizationKey>.
+    Duplicate_UDI:
+      description: The error returned when the request payload includes a User Defined Identifier which is already in use
+      value:
+        error:
+          code: '5001'
+          message: User defined identifier already in use
+    UDI_Is_Empty:
+      description: The error returned when a Client Group request cannot be fulfilled because a User Defined Identifier has not been provided
+      value:
+        error:
+          code: '4002'
+          message: UserDefinedIdentifier is missing or empty
+    Unsupported_Property_Filter:
+      description: The error returned when an unsupported filter is used in a request
+      value:
+        error:
+          code: '4002'
+          message: Could not find a property named '<Property Name>' on type 'KarbonService.<KarbonEntity>SummaryDTO'.
+    Invalid_Property:
+      description: The error returned when attempting to use PATCH to update a property that can only be updated as part of a PUT
+      value:
+        error:
+          code: '4002'
+          message: Invalid property to update. Only <Property name> can be patched.
+    Orderby_Unsupported_Property:
+      description: The error returned when an unsupported sort order is used in a request
+      value:
+        error:
+          code: '4002'
+          message: The property '<Property Name>' cannot be used in the $orderby query option.
+    Limit_Exceeded_Top:
+      description: The error returned when the limit is used in a request exceeds the maximum set for the API
+      value:
+        error:
+          code: '4002'
+          message: The limit of '100' for Top query has been exceeded. The value from the incoming request is '130'.
+    RestrictionLevel_Permission_Denied:
+      description: The error returned when a request sets RestrictionLevel to a value the calling API application does not have permission to use
+      value:
+        error:
+          code: '4021'
+          message: This API application does not have permission to set RestrictionLevel to Hidden.
+    Shortened_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Internal Error.
+    HTTP_Resource_Not_Found:
+      description: The error returned when the request path and request method does not match any configured API path and method
+      value:
+        error:
+          code: '4002'
+          message: No HTTP resource was found that matches the request URI 'http://api.karbonhq.com/v3/<endpoint>
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Missing_Update_Data:
+      description: The error returned when the payload for an update is missing or invalid
+      value:
+        error:
+          code: '4005'
+          message: 'Required payload data is missing: update'
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
   parameters:
     SkipRecords:
       in: query
@@ -2174,6 +2165,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml

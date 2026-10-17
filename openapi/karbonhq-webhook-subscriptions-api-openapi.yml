@@ -1,15 +1,15 @@
 openapi: 3.2.0
 info:
-  title: Karbonhq Webhook Subscriptions API
+  description: '> 📖 **Agent/developer quick-reference:** See KARBON_API.md in this repository.'
   version: v3
+  title: Karbon Webhook Subscriptions API
+  termsOfService: https://karbonhq.com/terms-of-use/
   contact:
     name: API Support
     url: https://developers.karbonhq.com/issues/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://karbonhq.com/terms-of-use/
-  description: 'Operations tagged Webhook Subscriptions across 2 of this provider''s published API definitions: KarbonAPI.json, karbonhq-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.karbonhq.com
   description: The production API server
@@ -253,9 +253,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorMessages'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
   /v3/WebhookSubscriptions:
     post:
       tags:
@@ -425,74 +422,57 @@ paths:
               examples:
                 Undefined Error:
                   $ref: '#/components/examples/elongated_5001'
-    servers:
-    - url: https://api.karbonhq.com
-      description: The production API server
 components:
   examples:
-    Unsupported_option:
-      description: The error returned when the query option in a request is not allowed for by the API
-      value:
-        error:
-          code: '4002'
-          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
-    Webhook_Subscription_Key_Not_Found_404:
-      description: The error returned when a Webhook Subscription request cannot be fulfilled because there are no Webhook Subscriptions for the provided Webhook Type
-      value:
-        error:
-          code: '4004'
-          message: No existing webhook subscription for Contact
-    Webhook_Subscription_Type_Not_Found_404:
-      description: The error returned when a Webhook Subscription request cannot be fulfilled because the provided Webhook Type is not one of the valid types
-      value:
-        error:
-          code: '4004'
-          message: 'No Webhook Type found for the provided WebhookType input value : <Input type>. Valid WebhookTypes are Contact, Work, Note'
-    elongated_5001:
-      description: A response shown when the API encounters an exception
-      value:
-        error:
-          code: '5001'
-          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
     Missing_Create_Data:
       description: The error returned when the request payload is missing a required value
       value:
         error:
           code: '4005'
           message: 'Required payload data is missing: <Entity>'
-    Bad_Model:
-      description: A response shown when a badly formed Webhook Subscription request is sent
-      value:
-        error:
-          code: '4002'
-          message: WebhookSubscription model cannot be null.
     HTTP_Resource_Not_Found:
       description: The error returned when the request path and request method does not match any configured API path and method
       value:
         error:
           code: '4002'
           message: No HTTP resource was found that matches the request URI 'http://api.karbonhq.com/v3/<endpoint>
+    Webhook_Subscription_Key_Not_Found_404:
+      description: The error returned when a Webhook Subscription request cannot be fulfilled because there are no Webhook Subscriptions for the provided Webhook Type
+      value:
+        error:
+          code: '4004'
+          message: No existing webhook subscription for Contact
+    elongated_5001:
+      description: A response shown when the API encounters an exception
+      value:
+        error:
+          code: '5001'
+          message: Unexpected Internal Error. Please contact Karbon HQ Technical support with API Request Id of 63792674374107265425.
+    Bad_Model:
+      description: A response shown when a badly formed Webhook Subscription request is sent
+      value:
+        error:
+          code: '4002'
+          message: WebhookSubscription model cannot be null.
+    Webhook_Subscription_Type_Not_Found_404:
+      description: The error returned when a Webhook Subscription request cannot be fulfilled because the provided Webhook Type is not one of the valid types
+      value:
+        error:
+          code: '4004'
+          message: 'No Webhook Type found for the provided WebhookType input value : <Input type>. Valid WebhookTypes are Contact, Work, Note'
     UnauthorizedAccess:
       description: A generic response shown when the API cannot confirm the authentication creditials provided
       value:
         error:
           statusCode: '401'
           message: JWT not present.
+    Unsupported_option:
+      description: The error returned when the query option in a request is not allowed for by the API
+      value:
+        error:
+          code: '4002'
+          message: Query option '<Option Name>' is not allowed. To allow it, set the 'AllowedQueryOptions' property on EnableQueryAttribute or QueryValidationSettings.
   schemas:
-    ResourceNotFound:
-      description: A generic response shown when the API cannot find a requested entity
-      type: object
-      properties:
-        statusCode:
-          type:
-          - string
-          - 'null'
-          description: The generic HTTP Error code
-          example: '404'
-        message:
-          type: string
-          description: The error message
-          example: Resource not found
     RateLimitErrorMessage:
       description: The error message returned when the API rate limit is hit
       type: object
@@ -507,6 +487,20 @@ components:
           type: string
           description: The error message
           example: Rate limit is exceeded. Try again in 10 seconds.
+    ResourceNotFound:
+      description: A generic response shown when the API cannot find a requested entity
+      type: object
+      properties:
+        statusCode:
+          type:
+          - string
+          - 'null'
+          description: The generic HTTP Error code
+          example: '404'
+        message:
+          type: string
+          description: The error message
+          example: Resource not found
     GetWebhookSubscriptions:
       description: The details of a specific Webhook Subscription
       type: object
@@ -585,6 +579,3 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
-x-refined-from:
-- KarbonAPI.json
-- karbonhq-openapi.yml
