@@ -12,18 +12,30 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 6
+edge_count: 7
 edges:
 - tag: Timesheets and Time Entries
   spec_file: karbonhq-timesheets-and-time-entries-api-openapi.yml
   capability_id: BC-4330.10
   capability_id_l1: BC-4330
   capability_name: Timekeeping Management
+  confidence: 0.9
+  evidence: GET /v3/IndividualTimeEntries getAllIndividualTimeEntries 'Gets a list of individual time
+    entries'; GET /v3/Timesheets getAllTimesheets
+  reason: Timesheets and individual time entries for professionals in an accounting firm are precisely
+    professional time capture feeding chargeable work, matching Timekeeping Management.
+- tag: Billing
+  spec_file: karbonhq-billing-api-openapi.yml
+  capability_id: BC-4330
+  capability_id_l1: BC-4330
+  capability_name: Time and Engagement Billing Management
   confidence: 0.85
-  evidence: GET /v3/Timesheets  getAllTimesheets  Gets a list of Timesheets; GET /v3/IndividualTimeEntries  getAllIndividualTimeEntries  Gets
-    a list of individual time entries
-  reason: Timesheet and individual time entry retrieval in accounting practice management software is
-    professional time capture feeding chargeable work — Timekeeping Management.
+  evidence: GET /v3/Invoices  getInvoices  Gets a list of Invoices; POST /v3/ManualPayments  createManualPayment  Create
+    a manual payment against an Invoice; POST /v3/Expenses  createExpense
+  reason: Accounting practice management billing surface covering engagement invoices, payments against
+    invoices and expense capture, with schemas such as BillingInvoiceDataWorkTimeEntry tying billing to
+    work time — this is engagement billing for a professional firm. No single L2 chosen because the operations
+    span invoicing, payments and disbursements.
 - tag: Billing
   spec_file: karbonhq-billing-api-openapi.yml
   capability_id: BC-200.30
