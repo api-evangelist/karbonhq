@@ -3,6 +3,7 @@ provider: Karbon
 generated_by: planning/capability-mapping/scripts/classify_capabilities.py
 model: claude-opus-5
 frame:
+- Professional Services
 - Software & Technology
 min_confidence: 0.7
 capability_model:
@@ -11,8 +12,18 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 5
+edge_count: 6
 edges:
+- tag: Timesheets and Time Entries
+  spec_file: karbonhq-timesheets-and-time-entries-api-openapi.yml
+  capability_id: BC-4330.10
+  capability_id_l1: BC-4330
+  capability_name: Timekeeping Management
+  confidence: 0.85
+  evidence: GET /v3/Timesheets  getAllTimesheets  Gets a list of Timesheets; GET /v3/IndividualTimeEntries  getAllIndividualTimeEntries  Gets
+    a list of individual time entries
+  reason: Timesheet and individual time entry retrieval in accounting practice management software is
+    professional time capture feeding chargeable work — Timekeeping Management.
 - tag: Billing
   spec_file: karbonhq-billing-api-openapi.yml
   capability_id: BC-200.30
