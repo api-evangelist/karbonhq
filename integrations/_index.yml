@@ -28,3 +28,16 @@
     builder: unknown (not in the directory record)
   status: not-a-workflow
   arazzo: null
+- slug: karbonhq-xero-own
+  label: Xero (own)
+  partner: xero
+  partner_name: Xero (own)
+  category: Accountant tools
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://apps.xero.com/us/app/karbon
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null

@@ -25,8 +25,26 @@ edges:
     builder: unknown (not in the directory record)
   detected_by: sweep-workflow-automation.py
   first_seen: '2026-10-15'
+- partner_name: Xero (own)
+  partner: xero
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://apps.xero.com/us/app/karbon
+  mirror_of: xero/integrations/xero-integration-edges.yml
+  apps:
+  - Karbon
+  listing_count: 1
+  detected: '2026-10-20'
+  detected_by: mirror-platform-listings.py
+  category: Accountant tools
 method: searched
 checked:
 - https://zapier.com/api/v4/apps/
+- xero/integrations/xero-integration-edges.yml
 source:
 - https://zapier.com/api/v4/apps/
