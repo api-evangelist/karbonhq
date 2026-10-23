@@ -26,6 +26,14 @@ tags:
 - Company
 - Accounting
 - Practice Management
+- Workflows
+- Collaboration
+- Professional Services
+- Software-as-a-Service
+tags_raw:
+- Company
+- Accounting
+- Practice Management
 - Workflow
 - Collaboration
 - Professional Services
@@ -331,6 +339,8 @@ apis:
   humanURL: https://developers.karbonhq.com/
   baseURL: https://api.karbonhq.com
   tags:
+  - File
+  tags_raw:
   - Files
   properties:
   - type: OpenAPI
@@ -416,6 +426,8 @@ apis:
   humanURL: https://developers.karbonhq.com/
   baseURL: https://api.karbonhq.com
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -500,6 +512,8 @@ apis:
   humanURL: https://developers.karbonhq.com/
   baseURL: https://api.karbonhq.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
