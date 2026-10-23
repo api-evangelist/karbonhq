@@ -452,3 +452,9 @@ components:
 externalDocs:
   description: Karbon Developers - API release notes
   url: https://developers.karbonhq.com/release-notes/
+x-provenance:
+  method: harvested
+  publisher: Karbon
+  source: https://karbonhq.github.io/karbon-api-reference/KarbonAPI.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
