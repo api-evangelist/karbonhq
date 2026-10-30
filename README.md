@@ -64,5 +64,176 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Karbon is a company surfaced via the API Evangelist harvest backlog (source: spectral-ruleset-github) and added to the network as a stub for full-pipeline profiling.
-- https://karbonhq.com/
+Karbon is accounting practice management software for accounting firms, built to enhance visibility, efficiency, and connectivity for a firm no matter where its people are located. Through the Karbon Developer Center (developers.karbonhq.com) it publishes a public REST API reference plus guides covering authentication, pagination, rate limits, webhooks, work items, clients, custom fields, budgets and time, invoices and payments, and file uploads.
+
+**Areas:** Company · Accounting · Practice Management · Workflows · Collaboration · Professional Services · Software-as-a-Service
+
+## Karbon on APIs.io
+
+Everything profiled for Karbon is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/karbonhq/](https://apis.io/providers/karbonhq/)** — or go straight to one of the APIs or properties below.
+
+### APIs (19)
+
+- [Karbon Billing API](https://apis.io/apis/karbonhq/karbonhq-billing-api/) — List and view an Invoice and associated line items
+- [Karbon Business Cards API](https://apis.io/apis/karbonhq/karbonhq-business-cards-api/) — View or update the Business Card attached to a Contact and/or Organization
+- [Karbon Client Groups API](https://apis.io/apis/karbonhq/karbonhq-client-groups-api/) — Create a client group to manage related contacts, create work for them, and see all related jobs in a single view. [Read…
+- [Karbon Comments API](https://apis.io/apis/karbonhq/karbonhq-comments-api/) — Use comments on tasks to add notes or bring a colleague into the conversation to collaborate on the task. [Read…
+- [Karbon Contacts API](https://apis.io/apis/karbonhq/karbonhq-contacts-api/) — Manage your contacts and get the full overview over clients, whether they are individuals or organizations. [Read…
+- [Karbon Custom Fields API](https://apis.io/apis/karbonhq/karbonhq-custom-fields-api/) — Endpoints to manage Custom Fields on Contacts and Organizations in Karbon, refer to the Karbon help and support content for more information on [creating…
+- [Karbon Estimate Summaries API](https://apis.io/apis/karbonhq/karbonhq-estimate-summaries-api/) — Estimate and track time to understand jobs that are on-budget, allocate resources, and uncover performance insights to transform your firm. [Read…
+- [Karbon Files API](https://apis.io/apis/karbonhq/karbonhq-files-api/) — Handle files and attachments. [Read more](https://help.karbonhq.com/en/articles/5714089-files-and-attachments)
+- [Karbon Integrated Workflows API](https://apis.io/apis/karbonhq/karbonhq-integrated-workflows-api/) — Endpoints that enable Karbon Integration Partners to manage integrated workflow tasks enabled for their integrations. Note that these endpoints cannot be…
+- [Karbon Notes API](https://apis.io/apis/karbonhq/karbonhq-notes-api/) — Hold a conversation internally within your company. Unlike an email, Notes are viewed only by members of your team. [Read…
+- [Karbon Organizations API](https://apis.io/apis/karbonhq/karbonhq-organizations-api/) — Create an organization to represent marriages and couples and client groups to represent families. [Read…
+- [Karbon Tenant Settings API](https://apis.io/apis/karbonhq/karbonhq-tenant-settings-api/) — Retrieve lists of valid Contact Types, Work Types and Work Statuses
+- [Karbon Timesheets and Time Entries API](https://apis.io/apis/karbonhq/karbonhq-timesheets-and-time-entries-api/) — Retrieve individual (non-aggregated) time entries, each record represents a single time entry for a specific day, user, and work item. [Read…
+- [Karbon Users API](https://apis.io/apis/karbonhq/karbonhq-users-api/) — Create and view the basics & defaults for colleagues, teams and job roles to customize Karbon to represent the way you and your team work. [Read…
+- [Karbon Webhook Payloads API](https://apis.io/apis/karbonhq/karbonhq-webhook-payloads-api/) — Details of the different payloads sent for Karbon Webhook subscriptions
+- [Karbon Webhook Subscriptions API](https://apis.io/apis/karbonhq/karbonhq-webhook-subscriptions-api/) — Integrate your system with Karbon to receive changes made to your data in Karbon. Note: Webhook payloads take the following form: ```JSON {…
+- [Karbon Work Items API](https://apis.io/apis/karbonhq/karbonhq-work-items-api/) — Manage a Work Item to best fit your workflow, including timelines, tasks and work teams. [Read…
+- [Karbon Work Schedules API](https://apis.io/apis/karbonhq/karbonhq-work-schedules-api/) — Set a Work Item to repeat on a defined schedule. [Read more](https://help.karbonhq.com/en/articles/6096234-setup-repeating-work-on-a-schedule)
+- [Karbon Work Templates API](https://apis.io/apis/karbonhq/karbonhq-work-templates-api/) — Find and review templates that you created to fit your firm's unique workflows. [Read…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Karbonhq Webhooks](https://apis.io/asyncapis/karbonhq/karbonhq-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [karbonhq](https://apis.io/servers/karbonhq/karbonhq/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Karbonhq Agentic Access](https://apis.io/agentic-access/karbonhq/karbonhq-agentic-access/)
+
+#### JSON Schema (6)
+
+The data models the API reads and writes.
+
+- [BusinessCard](https://apis.io/schemas/karbonhq/karbonhq-business-card/)
+- [BusinessCardRequest](https://apis.io/schemas/karbonhq/karbonhq-business-card-request/)
+- [GetWorkSchedule](https://apis.io/schemas/karbonhq/karbonhq-get-work-schedule/)
+- [ResponseCreateClientGroup](https://apis.io/schemas/karbonhq/karbonhq-response-create-client-group/)
+- [ResponseCreateContact](https://apis.io/schemas/karbonhq/karbonhq-response-create-contact/)
+- [WorkScheduleRequest](https://apis.io/schemas/karbonhq/karbonhq-work-schedule-request/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Karbonhq Context](https://apis.io/jsonld/karbonhq/karbonhq-context/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Karbonhq Karbon Api Overlay](https://apis.io/overlays/karbonhq/karbonhq-karbon-api-overlay/)
+
+#### Governance rules (2)
+
+Spectral rulesets for the provider's contracts.
+
+- [Karbon — karbon api reference rules](https://apis.io/rules/karbonhq/karbonhq-karbon-api-reference-spectral-rules/)
+- [Karbon API Rules](https://apis.io/rules/karbonhq/karbonhq-rules/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Karbonhq Authentication](https://apis.io/security/karbonhq/karbonhq-authentication/)
+- [Karbonhq Domain Security](https://apis.io/security/karbonhq/karbonhq-domain-security/)
+- [Karbonhq Vulnerability Disclosure](https://apis.io/security/karbonhq/karbonhq-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Karbonhq Plans Pricing](https://apis.io/plans/karbonhq/karbonhq-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Karbonhq Rate Limits](https://apis.io/rate-limits/karbonhq/karbonhq-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://karbonhq.com/)
+- [Documentation](https://developers.karbonhq.com/)
+- [Getting started](https://karbonhq.com/get-started)
+- [API reference](https://karbonhq.github.io/karbon-api-reference/)
+- [Pricing](https://karbonhq.com/pricing/)
+- [Support](https://help.karbonhq.com/)
+- [Changelog](https://developers.karbonhq.com/release-notes/2026-09-23/)
+- [Security](https://karbonhq.com/security/)
+- [Terms of service](https://karbonhq.com/terms/)
+- [Privacy policy](https://karbonhq.com/privacy-policy/)
+- [GitHub](https://github.com/karbonhq)
+- [Status](https://status.karbonhq.com/)
+
+## API Evangelist rating
+
+**Kin Score 71.2** — exemplar · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 76.7 |
+| Contract quality | 76.4 |
+| Contract governance | 35.6 |
+| Operational transparency | 84.2 |
+| Developer ergonomics | 56.5 |
+| Access clarity | 76.3 |
+
+**Agent readiness 54.4** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 30.4** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/karbonhq/](https://apis.io/providers/karbonhq/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Karbon: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/karbonhq/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
